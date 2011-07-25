@@ -14,7 +14,7 @@ Blog posts highlights, image gallery, custom slideshows!
 Combo Slideshow is a photo and image viewing mash-up plugin that integrates the features of the best javascript slideshow effects and WordPress plugins available on the net.
 It works natively in conjunction with the WordPress image upload and gallery system, through the javascript frameworks JQuery or MooTools.
 
-Enjoy:
+= Enjoy: = 
 * Full control over speed, transition and navigation options
 * Nivo Slider slideshow themes supported, 3 preset available
 * Custom CSS supported
@@ -34,7 +34,7 @@ Plugin homepage: http://www.3dolab.net/en/combo-slideshow/
 
 == Installation ==
 
-Manual Installation:
+= Manual Installation: = 
 1. Extract the package to obtain the `combo-slideshow` folder
 2. Upload the `combo-slideshow` folder to the `/wp-content/plugins/` directory
 3. Activate the plugin through the 'Plugins' menu in WordPress
