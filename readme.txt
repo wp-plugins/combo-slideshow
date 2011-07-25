@@ -4,7 +4,7 @@ Donate link: http://www.3dolab.net/en/combo-slideshow
 Tags: slideshow, slide show, combo, slideshow gallery, slides, image, gallery, content, highlight, showcase, javascript, jquery, mootools, nivo, nivo slider
 Requires at least: 2.8
 Tested up to: 3.1.3
-Stable tag: 1.0.0
+Stable tag: 1.0
 Combo Slideshow is a mash-up plugin that showcases the features of the best slideshow javascript and WordPress plugins.
 Blog posts highlights, image gallery, custom slideshows!
 
