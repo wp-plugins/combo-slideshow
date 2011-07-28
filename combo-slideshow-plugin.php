@@ -1,6 +1,6 @@
 <?php
 class NSGalleryPlugin {
-	var $version = '1.0';
+	var $version = '1.1';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
@@ -351,7 +351,7 @@ if ($use_themes != '0'){
 
 		    if($js_framework == 'mootools') {
 
-			wp_register_script('moocore', '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/mootools-core-1.3.2-full-nocompat-yc', false, '1.3');
+			wp_register_script('moocore', '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/mootools-core-1.3.2-full-nocompat-yc.js', false, '1.3');
 			wp_register_script('moomore', '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/mootools-more-1.3.2.1-yc.js', false, '1.3');
 			wp_enqueue_script('moocore');
 			wp_enqueue_script('moomore');
@@ -706,24 +706,27 @@ if ($this -> get_option('imagesbox') == "T")
 	}elseif ($jsframe == 'mootools'){
 			$slideshow_id = get_the_ID();
 			$append .= "<script type='text/javascript'>
-			      document.addEvent('domready', function(){";
+			      document.addEvent('domready', function(){
+			      ";
 		if ($controlnav=="Y" || $thumbnails_temp=="Y" ){
 			$append .= "var navItems = $('ngslideshow-".$slideshow_id."').getElements('.nivo-controlNav a.nivo-control');
 				    var navMenu = $('ngslideshow-".$slideshow_id."').getElement('div.nivo-controlNav');
 				    navMenu.inject($('ngslideshow-".$slideshow_id."'),'after');
 				    //navMenu.setStyle('bottom',0);
-				    navItems[0].addClass('active');";
+				    navItems[0].addClass('active');
+				    ";
 		}
 			$append .= "$('ngslideshow-".$slideshow_id."').addClass('nivoSlider');
 				    $('ngslideshow-".$slideshow_id."').setStyle('overflow','hidden');
 				    $$('.slider-wrapper .nivoSlider img').setStyle('display','block');
-				    $('ngslideshow-".$slideshow_id."').getParent().setStyle('position','relative');";
+				    $('ngslideshow-".$slideshow_id."').getParent().setStyle('position','relative');
+				    ";
 		if ($information_temp == "Y"){
 			$append .= "var capWrap = $('ngslideshow-".$slideshow_id."').getElement('div.nivo-caption');
 				    capWrap.setStyles({ width: $('ngslideshow-".$slideshow_id."').getSize().x,
 					    height: '1.6em',
 					    margin: $('ngslideshow-".$slideshow_id."').getStyle('margin'),
-					    bottom: 0,
+					    bottom: 0
 				    });
 				    capWrap.inject($('ngslideshow-".$slideshow_id."'),'after');
 				    var slideCaptions = $$('div.nivo-html-caption').setStyles({display: 'block',
@@ -733,44 +736,54 @@ if ($this -> get_option('imagesbox') == "T")
 					    'z-index': 9,
 					    top:0,
 					    left:0,
-					    width: '". $style['width'] ."px',
+					    width: '". $style['width'] ."px'
 				    });
 				    slideCaptions.inject(capWrap,'inside');
-				    slideCaptions[0].fade('in');";
+				    slideCaptions[0].fade('in');
+				    ";
 		} elseif ($information_temp == "N"){
-			$append .= "var slideCaptions = $$('div.nivo-html-caption').setStyle('display','none');";
+			$append .= "var slideCaptions = $$('div.nivo-html-caption').setStyle('display','none');
+				   ";
 		}
 			$append .= "var slideItems = $('ngslideshow-".$slideshow_id."').getElements('a').setStyle('position','absolute');
-				    var comboSlideShow = new SlideShow($('ngslideshow-".$slideshow_id."'),  {";
+				    var comboSlideShow = new SlideShow($('ngslideshow-".$slideshow_id."'),  {
+					";
 		if ($csstransform!="Y")
 			$append .= "transition: '".$wprfss_effect."',";
 		else
 			$append .= "transition: '".$wprfss_cssfx."',";
-			$append .= "delay: '".$autospeed."',";
-			$append .= "duration: '".$fadespeed."',";
+			$append .= "delay: '".$autospeed."',
+				    duration: '".$fadespeed."',";
 		if ($autoslide_temp=="Y")
 			$append .= "autoplay: true,";
 		else
 			$append .= "autoplay: false,";
 			$append .= "initialSlideIndex: 0,";
 		if ($controlnav=="Y" || $information_temp == "Y"){
-			$append .= "onShow: function(data){";
+			$append .= "onShow: function(data){
+				   ";
 		  if ($information_temp == "Y"){
 			$append .= "	slideCaptions[data.previous.index].removeClass('active');
+					//alert(slideCaptions.length+'-'+data.next.index);
 					slideCaptions[data.next.index].addClass('active');
 					slideCaptions[data.previous.index].fade('out');
-					slideCaptions[data.next.index].fade('in');";
+					slideCaptions[data.next.index].fade('in');
+					";
 		  }
 		  if ($controlnav == "Y"){
-			$append .= "	navItems[data.previous.index].removeClass('active');
-					navItems[data.next.index].addClass('active');";
+			$append .= "navItems[data.previous.index].removeClass('active');
+					navItems[data.next.index].addClass('active');
+					";
 		  }
-			$append .= "},";
+			$append .= "},
+				   ";
 		}
-			$append .= "selector: 'a'
-				    });";
+			$append .= "	selector: 'a'
+				    });
+				   ";
 		if ($csstransform=="Y")
-			$append .= "comboSlideShow.useCSS();";
+			$append .= "comboSlideShow.useCSS();
+				   ";
 		if ($controlnav == "Y"){
 			$append .= "navItems.each(function(item, index){";
 		    if ($style['controlnumbers']=="Y"){
@@ -783,7 +796,8 @@ if ($this -> get_option('imagesbox') == "T")
 				    var transition = (comboSlideShow.index < index) ? 'pushLeft' : 'pushRight';
 				    comboSlideShow.show(index, {transition: transition});
 				});
-			});";
+			});
+			";
 		    if ($wprfss_tips=="Y"){
 			$append .= "new Tips(navItems, {
 				      fixed: true,
@@ -804,7 +818,7 @@ if ($this -> get_option('imagesbox') == "T")
 	}
 		$append .= '<div id="ngslideshow-'.get_the_ID().'" class="ngslideshow">';
 			  while( $slided->have_posts() ) : $slided->the_post();
-$full_image_href = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'full', false);
+$full_image_href = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'large', false);
 $thumbnail_link = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'thumbnail', false);
 if ( NSG_PRO ) {
 	 require NSG_PLUGIN_DIR . '/pro/image_tall_frompost.php';
@@ -843,13 +857,14 @@ $captitle = 'title="#'. $post -> ID .'-'.$post -> post_title.'"';
 	if ($jsframe == 'mootools' && ($controlnav == "Y" || $thumbnails_temp == "Y")){
 				$append .= "<div class='nivo-controlNav'>";
 			  while( $slided->have_posts() ) : $slided->the_post();
-				$append .= "<a class='nivo-control' href='#slide-". $slide -> ID ."' title='".$slide -> post_title."'>";
+				$append .= "<a class='nivo-control' href='#slide-". $slided -> ID ."' title='".$slided -> post_title."'>";
 		if ($thumbnails_temp == "Y"){
-				$thumbnail_link = wp_get_attachment_image_src($slide -> ID, 'thumbnail', false);
-				$append .= "<img src='".$thumbnail_link[0]."' alt='slideshow-thumbnail-".$slide -> ID."' />";
+				$thumbnail_link = wp_get_attachment_image_src($slided -> ID, 'thumbnail', false);
+				$append .= "<img src='".$thumbnail_link[0]."' alt='slideshow-thumbnail-".$slided -> ID."' />";
 		} else{
 				$append .= $index+1;
 		}
+				$append .= "</a>";
 			  endwhile;
 				$append .= '</div>';
 	}

@@ -8,7 +8,7 @@ Description: Slideshow plugin that integrates with the WordPress image attachmen
 Version: 1.0.0
 */
 define('DS', DIRECTORY_SEPARATOR);
-define( 'NSG_VERSION', '1.0' );
+define( 'NSG_VERSION', '1.1' );
 if ( ! defined( 'NSG_PLUGIN_BASENAME' ) )
 	define( 'NSG_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 if ( ! defined( 'NSG_PLUGIN_NAME' ) )

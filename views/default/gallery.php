@@ -127,7 +127,7 @@ $('ngslideshow-<?php echo get_the_ID(); ?>').getParent().setStyle('position','re
 			capWrap.setStyles({ width: $('ngslideshow-<?php echo get_the_ID(); ?>').getSize().x,
 					    height: '1.6em',
 					    margin: $('ngslideshow-<?php echo get_the_ID(); ?>').getStyle('margin'),
-					    bottom: 0,
+					    bottom: 0
 				});
 			capWrap.inject($('ngslideshow-<?php echo get_the_ID(); ?>'),'after');
 			var slideCaptions = $$('div.nivo-html-caption').setStyles({display: 'block',
@@ -137,7 +137,7 @@ position:'absolute',
 'z-index': 9,
 										   top:0,
 										   left:0,
-										   width: '<?php echo $style['width'];?>px',
+										   width: '<?php echo $style['width'];?>px'
 									});
 			slideCaptions.inject(capWrap,'inside');
 			slideCaptions[0].fade('in');
