@@ -30,6 +30,7 @@ Administration and Settings are heavily borrowed from the Slideshow Gallery Pro 
 The selectable front-end effect scripts are the Nivo Slider plugin (on jQuery framework) or SlideShow by Ryan Florence (on MooTools).
 
 Plugin homepage: http://www.3dolab.net/en/combo-slideshow/
+
 Running demo: http://www.3dolab.net/en/
 
 == Installation ==
