@@ -5,7 +5,7 @@ Tags: slideshow, slide show, combo, slideshow gallery, slides, image, gallery, c
 Requires at least: 2.8
 Tested up to: 3.1.3
 Stable tag: 1.1
-A mash-up plugin that showcases the features of the best slideshow javascript and WordPress plugins.
+A mash-up plugin that showcases the features of the best slideshow javascript.
 Blog posts highlights, image gallery, custom slideshows!
 
 
