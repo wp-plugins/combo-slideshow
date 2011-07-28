@@ -5,7 +5,7 @@ Plugin URI: http://www.3dolab.net/en
 Author: 3dolab
 Author URI: http://www.3dolab.net
 Description: Slideshow plugin that integrates with the WordPress image attachment feature, as well as a custom slide manager. Thumbnails and captions galore! Use this <code>[slideshow]</code> into its content with optional <code>post_id</code>, <code>exclude</code>, <code>auto</code>, <code>nolink</code>, and <code>caption</code> parameters. More being updated all the time!
-Version: 1.0.0
+Version: 1.1
 */
 define('DS', DIRECTORY_SEPARATOR);
 define( 'NSG_VERSION', '1.1' );
