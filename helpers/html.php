@@ -1,5 +1,5 @@
 <?php
-class GalleryHtmlHelper extends NSGalleryPlugin {
+class GalleryHtmlHelper extends CMBSLD_GalleryPlugin {
 	function link($name = '', $href = '/', $args = array()) {
 		$defaults = array(
 			'title'			=>	(empty($args['title'])) ? $title : $args['title'],

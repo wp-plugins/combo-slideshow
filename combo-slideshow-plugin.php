@@ -1,6 +1,6 @@
 <?php
-class NSGalleryPlugin {
-	var $version = '1.1';
+class CMBSLD_GalleryPlugin {
+	var $version = '1.2';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
@@ -9,7 +9,7 @@ class NSGalleryPlugin {
 	var $sections = array(
 		'gallery'		=>	'gallery-slides',
 		'settings'		=>	'gallery',
-	);	
+	);
 	var $helpers = array('Db', 'Html', 'Form', 'Metabox');
 	var $models = array('Slide');
 	
@@ -34,7 +34,7 @@ class NSGalleryPlugin {
 			error_reporting(E_ALL);
 			@ini_set('display_errors', 1);
 		}
-		$this -> add_action( 'wp_print_styles', 'nsg_enqueue_styles' );
+		$this -> add_action( 'wp_print_styles', 'cmbsld_enqueue_styles' );
 		return true;
 	}
 	
@@ -247,14 +247,14 @@ class NSGalleryPlugin {
 		return false;
 	}
 	
-//	IF ( NSG_LOAD_CSS )
-	function nsg_enqueue_styles() {
+//	IF ( CMBSLD_LOAD_CSS )
+	function cmbsld_enqueue_styles() {
 		global $version;
-		$galleryStyleUrl = NSG_PLUGIN_URL . '/css/gallery-css.php?v='. $version .'&amp;pID=' . $GLOBALS['post']->ID;
+		$galleryStyleUrl = CMBSLD_PLUGIN_URL . '/css/gallery-css.php?v='. $version .'&amp;pID=' . $GLOBALS['post']->ID;
 		if($_SERVER['HTTPS']) {
 			$galleryStyleUrl = str_replace("http:","https:",$galleryStyleUrl);
 		}		
-        $galleryStyleFile = NSG_PLUGIN_DIR . '/css/gallery-css.php';
+        $galleryStyleFile = CMBSLD_PLUGIN_DIR . '/css/gallery-css.php';
 //		$src = WP_PLUGIN_DIR.'/' . $this -> plugin_name . '/css/gallery-css.php?2=1&site='.WP_PLUGIN_DIR;
 //		define $infogal = $this;
 		$infogal = $this;
@@ -292,7 +292,7 @@ class NSGalleryPlugin {
 					$galleryStyleUrl .= "&amp;thumbs=Y";
 			}
 			wp_register_style( 'combo-slideshow', $galleryStyleUrl);
-			wp_enqueue_style( 'combo-slideshow', $galleryStyleUrl,	array(), NSGVERSION, 'all' );
+			wp_enqueue_style( 'combo-slideshow', $galleryStyleUrl,	array(), CMBSLDVERSION, 'all' );
 		}
 
 $use_themes = $this -> get_option('slide_theme');
@@ -301,21 +301,21 @@ if ($use_themes != '0'){
 			$use_themes = $this -> get_option('customtheme');
 			$galleryThemeUrl = get_stylesheet_directory_uri().'/'.$use_themes.'/'.$use_themes.'.css';
 		}
-		$galleryThemeUrl = NSG_PLUGIN_URL . '/css/'.$use_themes.'/'.$use_themes.'.css';
+		$galleryThemeUrl = CMBSLD_PLUGIN_URL . '/css/'.$use_themes.'/'.$use_themes.'.css';
 			wp_register_style( 'combo-slideshow-'.$use_themes, $galleryThemeUrl);
-			wp_enqueue_style( 'combo-slideshow-'.$use_themes, $galleryThemeUrl, array(), NSGVERSION, 'all' );
+			wp_enqueue_style( 'combo-slideshow-'.$use_themes, $galleryThemeUrl, array(), CMBSLDVERSION, 'all' );
 }
 
-/*		function nsg_style_head($url) {
+/*		function cmbsld_style_head($url) {
 			print "<link rel='stylesheet' type='text/css' href='" . get_bloginfo('wpurl') . "/wp-content/plugins/combo-slideshow-2/?my-custom-content=css'/>";
 		}
-		function nsg_style_cheat( $wp ) {
+		function cmbsld_style_cheat( $wp ) {
 			print"<link id='combo-slideshow' rel='stylesheet' type='text/css' href='" . $wp . "'/>";
 		}
 		/* Known Issue - passing a function into the second string makes the link info go above <html> */
 		/* FIX for QTranslate - Uncomment for this plugin */
 	/*	if (!is_admin) {
-			add_filter('wp_print_styles', nsg_style_cheat($galleryStyleUrl) );
+			add_filter('wp_print_styles', cmbsld_style_cheat($galleryStyleUrl) );
 		}*/
 		
 		
@@ -367,7 +367,7 @@ if ($use_themes != '0'){
 
 			wp_enqueue_script('jquery');
 
-			wp_enqueue_script($this -> plugin_name, '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/jquery.nivo.slider.js', array('jquery'), '2.3' );
+			wp_enqueue_script($this -> plugin_name, '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/jquery.nivo.slider.js', array('jquery'), '2.6' );
 			
 			if ($this -> get_option('imagesbox') == "T") {
 				add_thickbox();
@@ -820,8 +820,8 @@ if ($this -> get_option('imagesbox') == "T")
 			  while( $slided->have_posts() ) : $slided->the_post();
 $full_image_href = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'large', false);
 $thumbnail_link = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'thumbnail', false);
-if ( NSG_PRO ) {
-	 require NSG_PLUGIN_DIR . '/pro/image_tall_frompost.php';
+if ( CMBSLD_PRO ) {
+	 require CMBSLD_PLUGIN_DIR . '/pro/image_tall_frompost.php';
 } else { // echo "<h4>&nbsp;</h4>";
 } if ($thumbnails_temp == "Y") {
 $thumbrel = 'rel="'. $thumbnail_link[0] .'" ';

@@ -17,7 +17,7 @@
 				<span class="howto"><?php _e('Should images be resized proportionally to fit the width of the slideshow area', $this -> plugin_name); ?></span>
 			</td>
 		</tr>
-        <?php if ( NSG_PRO ) { $resize2 = "type='radio'"; } else { 
+        <?php if ( CMBSLD_PRO ) { $resize2 = "type='radio'"; } else { 
 			//$resize2 = "type='radio' disabled";
 			$resize2 = "type='radio'"; 
 			//$styles['resizeimages2'] = "N";

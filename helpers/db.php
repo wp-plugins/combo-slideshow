@@ -1,5 +1,5 @@
 <?php
-class GalleryDbHelper extends NSGalleryPlugin {
+class GalleryDbHelper extends CMBSLD_GalleryPlugin {
 	var $name = 'Db';
 	
 	function find($conditions = array(), $fields = false, $order = array('id', "DESC"), $assign = true, $atts = array()) {

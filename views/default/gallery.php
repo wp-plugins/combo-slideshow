@@ -250,8 +250,8 @@ position:'absolute',
 				<?php // echo $slide -> post_title;
 				$full_image_href = wp_get_attachment_image_src($slide -> ID, 'full', false);
 				$thumbnail_link = wp_get_attachment_image_src($slide -> ID, 'thumbnail', false);
-				if ( NSG_PRO ) {
-					require NSG_PLUGIN_DIR . '/pro/image_tall_frompost.php';
+				if ( CMBSLD_PRO ) {
+					require CMBSLD_PLUGIN_DIR . '/pro/image_tall_frompost.php';
 				} else {
 					// echo "<h4>&nbsp;</h4>";
 				} if ($thumbnails_temp == "Y") {
@@ -308,8 +308,8 @@ position:'absolute',
 				<div id="ngslideshow-<?php echo get_the_ID(); ?>" class="ngslideshow">
 			<?php foreach ($slides as $slide) : ?>
 				<?php // echo $slide -> title;
-				if ( NSG_PRO ) {
-					require NSG_PLUGIN_DIR . '/pro/image_tall_custom.php';
+				if ( CMBSLD_PRO ) {
+					require CMBSLD_PLUGIN_DIR . '/pro/image_tall_custom.php';
 				} else {
 					// echo "<h4>&nbsp;</h4>";
 				} if ($thumbnails_temp == "Y") {
@@ -332,7 +332,7 @@ position:'absolute',
 				<?php else : ?>
 					<a href="<?php echo $this -> Html -> image_url($slide -> image); ?>" title="<?php echo $slide -> title; ?>">
 				<?php endif; ?>
-					<img id="slide-<?php echo $slide -> ID; ?>" src="<?php echo NSG_UPLOAD_URL ?>/<?php echo $slide -> image; ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" <?php echo $thumbrel.$captitle.$resize; ?> />
+					<img id="slide-<?php echo $slide -> ID; ?>" src="<?php echo CMBSLD_UPLOAD_URL ?>/<?php echo $slide -> image; ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" <?php echo $thumbrel.$captitle.$resize; ?> />
 					</a>
 			<?php endforeach; ?>
 			<?php if ($jsframe == 'mootools' && $information_temp == "Y") : ?>

@@ -5,30 +5,30 @@ Plugin URI: http://www.3dolab.net/en
 Author: 3dolab
 Author URI: http://www.3dolab.net
 Description: Slideshow plugin that integrates with the WordPress image attachment feature, as well as a custom slide manager. Thumbnails and captions galore! Use this <code>[slideshow]</code> into its content with optional <code>post_id</code>, <code>exclude</code>, <code>auto</code>, <code>nolink</code>, and <code>caption</code> parameters. More being updated all the time!
-Version: 1.1
+Version: 1.2
 */
 define('DS', DIRECTORY_SEPARATOR);
-define( 'NSG_VERSION', '1.1' );
-if ( ! defined( 'NSG_PLUGIN_BASENAME' ) )
-	define( 'NSG_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
-if ( ! defined( 'NSG_PLUGIN_NAME' ) )
-	define( 'NSG_PLUGIN_NAME', trim( dirname( NSG_PLUGIN_BASENAME ), '/' ) );
-if ( ! defined( 'NSG_PLUGIN_DIR' ) )
-	define( 'NSG_PLUGIN_DIR', WP_PLUGIN_DIR . '/' . NSG_PLUGIN_NAME );
-if ( ! defined( 'NSG_PLUGIN_URL' ) )
-	define( 'NSG_PLUGIN_URL', WP_PLUGIN_URL . '/' . NSG_PLUGIN_NAME );
-if ( ! defined( 'NSG_UPLOAD_URL' ) )
-	define( 'NSG_UPLOAD_URL', get_bloginfo('wpurl')."/wp-content/uploads/". NSG_PLUGIN_NAME );
-if ( ! file_exists( NSG_PLUGIN_DIR . '/pro/' ) )
-	define( 'NSG_PRO', false );
+define( 'CMBSLD_VERSION', '1.2' );
+if ( ! defined( 'CMBSLD_PLUGIN_BASENAME' ) )
+	define( 'CMBSLD_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
+if ( ! defined( 'CMBSLD_PLUGIN_NAME' ) )
+	define( 'CMBSLD_PLUGIN_NAME', trim( dirname( CMBSLD_PLUGIN_BASENAME ), '/' ) );
+if ( ! defined( 'CMBSLD_PLUGIN_DIR' ) )
+	define( 'CMBSLD_PLUGIN_DIR', WP_PLUGIN_DIR . '/' . CMBSLD_PLUGIN_NAME );
+if ( ! defined( 'CMBSLD_PLUGIN_URL' ) )
+	define( 'CMBSLD_PLUGIN_URL', WP_PLUGIN_URL . '/' . CMBSLD_PLUGIN_NAME );
+if ( ! defined( 'CMBSLD_UPLOAD_URL' ) )
+	define( 'CMBSLD_UPLOAD_URL', get_bloginfo('wpurl')."/wp-content/uploads/". CMBSLD_PLUGIN_NAME );
+if ( ! file_exists( CMBSLD_PLUGIN_DIR . '/pro/' ) )
+	define( 'CMBSLD_PRO', false );
 else
-	define( 'NSG_PRO', true );
+	define( 'CMBSLD_PRO', true );
 	
-require_once NSG_PLUGIN_DIR . '/combo-slideshow-plugin.php';
+require_once CMBSLD_PLUGIN_DIR . '/combo-slideshow-plugin.php';
  add_theme_support('post-thumbnails');
-// add_filter( 'the_content', 'homepage_nivo_slider' );
+// add_filter( 'the_content', 'auto_combo_slider' );
 	
-class NSGallery extends NSGalleryPlugin {
+class CMBSLD_Gallery extends CMBSLD_GalleryPlugin {
 	function __construct() {
 		$url = explode("&", $_SERVER['REQUEST_URI']);
 		$this -> url = $url[0];
@@ -39,7 +39,7 @@ class NSGallery extends NSGalleryPlugin {
 		$this -> add_action('admin_menu');
 		$this -> add_action('admin_head');
 		$this -> add_action('admin_notices');
-		// $this -> add_action('nsg_enqueue_styles');
+		// $this -> add_action('cmbsld_enqueue_styles');
 		
 		//WordPress filter hooks
 		$this -> add_filter('mce_buttons');
@@ -77,7 +77,7 @@ class NSGallery extends NSGalleryPlugin {
 	}
 */
 	function admin_menu() {
-		add_menu_page(__('Combo Slideshow', $this -> plugin_name), __('Combo Slideshow', $this -> plugin_name), 'manage_options', "gallery", array($this, 'admin_settings'), NSG_PLUGIN_URL . '/images/icon.png');
+		add_menu_page(__('Combo Slideshow', $this -> plugin_name), __('Combo Slideshow', $this -> plugin_name), 'manage_options', "gallery", array($this, 'admin_settings'), CMBSLD_PLUGIN_URL . '/images/icon.png');
 		$this -> menus['gallery'] = add_submenu_page("gallery", __('Configuration', $this -> plugin_name), __('Configuration', $this -> plugin_name), 'manage_options', "gallery", array($this, 'admin_settings'));
 		$this -> menus['gallery-slides'] = add_submenu_page("gallery", __('Manage Slides', $this -> plugin_name), __('Manage Slides', $this -> plugin_name), 'manage_options', "gallery-slides", array($this, 'admin_slides'));		
 		
@@ -114,7 +114,7 @@ class NSGallery extends NSGalleryPlugin {
 	}
 	
 	function mce_external_plugins($plugins) {
-		$plugins['gallery'] = NSG_PLUGIN_URL . '/js/tinymce/editor_plugin.js';
+		$plugins['gallery'] = CMBSLD_PLUGIN_URL . '/js/tinymce/editor_plugin.js';
 		return $plugins;
 	}
 
@@ -124,8 +124,8 @@ class NSGallery extends NSGalleryPlugin {
 		$args = func_get_args();
 		global $wpdb;
 		$post_id_orig = $post -> ID;
-		if ( ((! empty($width)) || (! empty($height))) && NSG_PRO ) {
-			require NSG_PLUGIN_DIR . '/pro/custom_sizing.php';
+		if ( ((! empty($width)) || (! empty($height))) && CMBSLD_PRO ) {
+			require CMBSLD_PLUGIN_DIR . '/pro/custom_sizing.php';
 		}
 		
 //		$this -> add_action( 'wp_print_styles', 'gs_enqueue_styles' );
@@ -186,8 +186,8 @@ class NSGallery extends NSGalleryPlugin {
 			$this -> update_option('autoslide_temp', 'N'); 
 		}
 		/******** PRO ONLY **************/
-		if ( NSG_PRO ) {
-			require NSG_PLUGIN_DIR . '/pro/custom_sizing.php';
+		if ( CMBSLD_PRO ) {
+			require CMBSLD_PLUGIN_DIR . '/pro/custom_sizing.php';
 		}
 		//$this -> add_action(array($this, 'pro_custom_wh'));
 		/******** END PRO ONLY **************/
@@ -347,5 +347,5 @@ class NSGallery extends NSGalleryPlugin {
 	
 }
 //initialize a Gallery object
-$NSGallery = new NSGallery();
+$CMBSLD_Gallery = new CMBSLD_Gallery();
 ?>

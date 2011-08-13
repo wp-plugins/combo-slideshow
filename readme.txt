@@ -3,10 +3,10 @@ Contributors: 3dolab
 Donate link: http://www.3dolab.net/en/combo-slideshow
 Tags: slideshow, slide show, combo, slideshow gallery, slides, image, gallery, content, highlight, showcase, javascript, jquery, mootools, nivo, nivo slider
 Requires at least: 2.8
-Tested up to: 3.1.3
-Stable tag: 1.1
-A mash-up plugin that showcases the features of the best slideshow javascript.
-Blog posts highlights, image gallery, custom slideshows!
+Tested up to: 3.2.1
+Stable tag: 1.2
+The features of the best slideshow javascript effects and WP plugins.
+Blog posts highlights, image gallery, custom slides!
 
 
 == Description ==
@@ -74,6 +74,11 @@ In /views/default/gallery.php find this line: slideshow.letterbox = "#000"; Chan
 4. Different styles/colors.
 
 == Changelog ==
+
+= 1.2 (2011.08.13) = 
+* Nivo Slider updated to 2.6 and YUI compressed
+* Bugfix: 'title is undefined' .attr() error with jQuery 1.6+
+* Bugfix: blank admin screens
 
 = 1.1 (2011.07.28) = 
 * Bugfix: invalid markup in post slideshows
