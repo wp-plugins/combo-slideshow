@@ -51,7 +51,7 @@ Yes, you can, but only one slideshow per page.
 = How Can I auto insert a blog posts slideshow in my home or single post/page? =
 Enable it in the plugin settings. Make sure that a post thumbnail is set in each post.
 
-= What if I only want captions on some of my pages
+= What if I only want captions on some of my pages = 
 Set your default captions to off; for any slideshow you put on your page use `[slideshow caption="on"]`
 
 = What if my configuration isn't showing up? =
