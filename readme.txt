@@ -5,8 +5,8 @@ Tags: slideshow, slide show, combo, slideshow gallery, slides, image, gallery, c
 Requires at least: 2.8
 Tested up to: 3.2.1
 Stable tag: 1.2
-The features of the best slideshow javascript effects and WP plugins.
-Blog posts highlights, image gallery, custom slides!
+The features of the best slideshow javascript effects and WP plugins:
+blog posts highlights, image gallery, custom slides!
 
 
 == Description ==
@@ -29,9 +29,9 @@ It works natively in conjunction with the WordPress image upload and gallery sys
 Administration and Settings are heavily borrowed from the Slideshow Gallery Pro plugin (free version) by Cameron Preston and WP Nivo Slider by Rafael Cirolini.
 The selectable front-end effect scripts are the Nivo Slider plugin (on jQuery framework) or SlideShow by Ryan Florence (on MooTools).
 
-Plugin homepage: http://www.3dolab.net/en/combo-slideshow/
+Plugin homepage: http://www.3dolab.net/en/combo-slideshow/ 
 
-Running demo: http://www.3dolab.net/en/
+Running demo: http://www.3dolab.net/en/ 
 
 == Installation ==
 
@@ -51,7 +51,7 @@ Yes, you can, but only one slideshow per page.
 = How Can I auto insert a blog posts slideshow in my home or single post/page? =
 Enable it in the plugin settings. Make sure that a post thumbnail is set in each post.
 
-= What if I only want captions on some of my pages
+= What if I only want captions on some of my pages = 
 Set your default captions to off; for any slideshow you put on your page use `[slideshow caption="on"]`
 
 = What if my configuration isn't showing up? =
