@@ -1,0 +1,13 @@
+Combo Slideshow Changelog
+
+= 1.2 (2011.08.13) = 
+* Nivo Slider updated to 2.6 and YUI compressed
+* Bugfix: 'title is undefined' .attr() error with jQuery 1.6+
+* Bugfix: blank admin screens
+
+= 1.1 (2011.07.28) = 
+* Bugfix: invalid markup in post slideshows
+* Bugfix: JavaScript errors in MSIE6/7
+
+= 1.0 (2011.07.12) = 
+* First Release
