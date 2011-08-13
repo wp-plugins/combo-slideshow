@@ -5,7 +5,7 @@ Tags: slideshow, slide show, combo, slideshow gallery, slides, image, gallery, c
 Requires at least: 2.8
 Tested up to: 3.2.1
 Stable tag: 1.2
-The features of the best slideshow javascript effects and WP plugins.
+The features of the best slideshow javascript effects and WP plugins:
 Blog posts highlights, image gallery, custom slides!
 
 
