@@ -23,7 +23,7 @@ It works natively in conjunction with the WordPress image upload and gallery sys
 * Auto insertion of latest posts (category-based) slideshow in home or single page/post
 * Custom slides management
 * Page/Post gallery shortcode <code>[slideshow]</code> (with optional <code>post_id</code>, <code>exclude</code>, <code>exclude</code>, and <code>auto</code>  parameters)
-* Hardcode into any PHP file of a WordPress theme with <code><?php if (class_exists('Gallery')) { $Gallery = new Gallery(); $Gallery -> slideshow($output = true, $post_id = null); } ?></code> and the required <code>$post_id</code> parameter accordingly specified
+* Hardcode into any PHP file of a WordPress theme with <code><?php if (class_exists('CMBSLD_Gallery')) { $CMBSLD_Gallery = new CMBSLD_Gallery(); $CMBSLD_Gallery -> slideshow($output = true, $post_id = null); } ?></code> and the required <code>$post_id</code> parameter accordingly specified
 * Global post slideshow: auto mode in Homepage and/or Posts + manual function show_combo_slider($category, $postlimit, $exclude, $offset)
 
 Administration and Settings are heavily borrowed from the Slideshow Gallery Pro plugin (free version) by Cameron Preston and WP Nivo Slider by Rafael Cirolini.
