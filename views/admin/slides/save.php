@@ -32,7 +32,7 @@
 							<option value="1">Custom 1</option>
 						</select>						
 						<?php } ?>
-                        <span class="howto"><?php _e('FULL EDITION ONLY: which custom slideshow would you like this image to apply to?', CMBSLD_PLUGIN_NAME); ?></span>
+                        <span class="howto"><?php _e('DISABLED: which custom slideshow would you like this image to apply to?', CMBSLD_PLUGIN_NAME); ?></span>
 						<?php echo (!empty($this -> Slide -> errors['section'])) ? '<div style="color:red;">' . $this -> Slide -> errors['section'] . '</div>' : ''; ?>
 					</td>
 				</tr>				

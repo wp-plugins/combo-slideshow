@@ -5,10 +5,10 @@ Plugin URI: http://www.3dolab.net/en
 Author: 3dolab
 Author URI: http://www.3dolab.net
 Description: The features of the best slideshow javascript effects and WP plugins. Blog posts highlights, image gallery, custom slides!
-Version: 1.3
+Version: 1.4
 */
 define('DS', DIRECTORY_SEPARATOR);
-define( 'CMBSLD_VERSION', '1.3' );
+define( 'CMBSLD_VERSION', '1.4' );
 if ( ! defined( 'CMBSLD_PLUGIN_BASENAME' ) )
 	define( 'CMBSLD_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 if ( ! defined( 'CMBSLD_PLUGIN_NAME' ) )
@@ -55,9 +55,9 @@ class CMBSLD_Gallery extends CMBSLD_GalleryPlugin {
 		  $comboslidercode = $this -> show_combo_slider();
 		  //return $content.$nivoslidercode;
 	    } elseif ( ( ( is_home() || is_front_page() ) && $this -> get_option('wpns_home') == 'C' ) || $this -> get_option('wpns_auto') == 'C' ){
-		  $slides = $this -> Slide -> find_all(null, null, array('order', "ASC"), $this -> get_option('postlimit'));
-		  if ($this -> get_option('wpns_auto_position') == 'B')
-		  $comboslidercode = $this -> render('gallery', array('slides' => $slides, 'frompost' => false), false, 'default');
+		  //$slides = $this -> Slide -> find_all(null, null, array('order', "ASC"), $this -> get_option('postlimit'));
+		  //$comboslidercode = $this -> render('gallery', array('slides' => $slides, 'frompost' => false), false, 'default');
+		  $comboslidercode = $this -> embed(array('custom'=>'1'));
 	    } else {
 		  return $content;
 	    }
@@ -138,7 +138,7 @@ class CMBSLD_Gallery extends CMBSLD_GalleryPlugin {
 	function embed($atts = array(), $content = null) {
 		//global variables
 		global $wpdb;
-		$defaults = array('post_id' => null, 'exclude' => null, 'include' => null, 'custom' => null, 'caption' => null, 'auto' => null, 'w' => null, 'h' => null, 'nolink' => null, 'slug' => null, 'thumbs' => null);
+		$defaults = array('post_id' => null, 'exclude' => null, 'include' => null, 'custom' => null, 'caption' => null, 'auto' => null, 'w' => null, 'h' => null, 'nolink' => null, 'slug' => null, 'thumbs' => null, 'limit' => null);
 		extract(shortcode_atts($defaults, $atts));
 		// This section allows for using _temp variable only (esp in gallery.php)
 		if ($this -> get_option('information')=='Y') { $this -> update_option('information_temp', 'Y'); }
@@ -147,6 +147,8 @@ class CMBSLD_Gallery extends CMBSLD_GalleryPlugin {
 		elseif ($this -> get_option('thumbnails')=='N') { $this -> update_option('thumbnails_temp', 'N'); }
 		if ($this -> get_option('autoslide')=='Y') { $this -> update_option('autoslide_temp', 'Y'); }
 		elseif ($this -> get_option('autoslide')=='N') { $this -> update_option('autoslide_temp', 'N'); }
+		if ($this -> get_option('postlimit') != null && empty($limit))
+			$limit = $this -> get_option('postlimit');
 		
 		if (!empty($caption)) { 
 			if (($this -> get_option('information')=='Y') && ($caption == 'off')) {
@@ -187,6 +189,9 @@ class CMBSLD_Gallery extends CMBSLD_GalleryPlugin {
 			  $slides = $this -> Slide -> find_all(array('section'=>(int) stripslashes($custom)), null, array('order', "ASC"));
 			  $content = $this -> render('gallery', array('slides' => $slides, 'frompost' => false), false, 'default');
 			} else {*/
+			  if ($limit != null)
+			  $slides = $this -> Slide -> find_all(null, null, array('order', "ASC"), $limit);
+			  else
 			  $slides = $this -> Slide -> find_all(null, null, array('order', "ASC"));
 			  $content = $this -> render('gallery', array('slides' => $slides, 'frompost' => false), false, 'default');
 //			} 

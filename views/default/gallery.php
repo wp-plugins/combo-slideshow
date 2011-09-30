@@ -44,7 +44,7 @@ if ($this -> get_option('imagesbox') == "T")
 	      $slide_theme 	= $this -> get_option('slide_theme');
 
 
-
+//echo '<pre>';echo 'TT'.$thumbnails_temp;print_r($slides);echo '</pre>';
 ?>
 	<?php if($slide_theme != '0') : ?>
 		<div class="slider-wrapper theme-<?php echo $use_theme; ?>">
@@ -308,15 +308,20 @@ position:'absolute',
 		<?php else : // CUSTOM SLIDES - MANAGE SLIDES ONLY  ?>
 				<div id="ngslideshow-<?php echo get_the_ID(); ?>" class="ngslideshow">
 			<?php foreach ($slides as $slide) : ?>
-				<?php // echo $slide -> title;
+				<?php
+				// echo $slide -> title;
+				$slide_info = pathinfo($slide -> image);
+				$slide_ext = $slide_info['extension'];
+				$slide_filename = basename($slide -> image, '.'.$slide_ext);
 				if ( CMBSLD_PRO ) {
 					require CMBSLD_PLUGIN_DIR . '/pro/image_tall_custom.php';
 				} else {
 					// echo "<h4>&nbsp;</h4>";
 				} if ($thumbnails_temp == "Y") {
-					$thumbrel = 'rel="'. $this -> Html -> image_url($this -> Html -> thumbname($slide -> image)) .'"';
+					//$thumbrel = 'rel="'. $this -> Html -> image_url($this -> Html -> thumbname($slide -> image)) .'"';
+					$thumbrel = 'rel="'. CMBSLD_UPLOAD_URL.'/'.$slide_filename.'-thumb.'.$slide_ext .'"';
 				} if ($information_temp == "Y") {
-					$captitle = 'title="#slide_caption-'. $slide -> ID .'"';
+					$captitle = 'title="#slide_caption-'. $slide -> id .'"';
 				}
 				if ($jsframe == 'jquery'){
 				    $resize = '';
@@ -327,16 +332,21 @@ position:'absolute',
 					$resize .= ' height="'. $style['wpns_height'] .'"';
 				    }
 				}
+				if ($slide -> type == "url")
+					$slidelinktype = $slide -> image_url;
+				else
+					$slidelinktype = CMBSLD_UPLOAD_URL.'/'.$slide -> image;
+					//$slidelinktype = $this -> Html -> image_url($slide -> image);
 				if ($imgbox != "nolink") {
 					$slidelink = '<a class="'.$imgbox.'" ';
 					if ($slide -> uselink == "Y" && !empty($slide -> link))
 						$slidelink .= 'href="'.$slide -> link.'" title="'.$slide -> title.'">';
 					else
-						$slidelink .= 'href="'.$this -> Html -> image_url($slide -> image).'" title="'.$slide -> title.'">';
+						$slidelink .= 'href="'.$slidelinktype.'" title="'.$slide -> title.'">';
 				echo $slidelink;
 				}
 				?>
-						<img id="slide-<?php echo $slide -> ID; ?>" src="<?php echo CMBSLD_UPLOAD_URL ?>/<?php echo $slide -> image; ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" <?php echo $thumbrel.$captitle.$resize; ?> />
+						<img id="slide-<?php echo $slide -> id; ?>" src="<?php echo CMBSLD_UPLOAD_URL.'/'.$slide_filename.'-small.'.$slide_ext; ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" <?php echo $thumbrel.$captitle.$resize; ?> />
 				<?php if ($imgbox != "nolink") : ?>
 					</a>
 				<?php endif; ?>
@@ -350,10 +360,12 @@ position:'absolute',
 			<?php if ($jsframe == 'mootools' && ($controlnav == "Y" || $thumbnails_temp == "Y")) : ?>
 					<div class="nivo-controlNav">
 				<?php foreach ($slides as $index => $slide) : ?>
-						<a class="nivo-control" href="#slide-<?php echo $slide -> ID; ?>" title="<?php echo $slide -> post_title; ?>">
+						<a class="nivo-control" href="#slide-<?php echo $slide -> id; ?>" title="<?php echo $slide -> title; ?>">
 						<?php if ($thumbnails_temp == "Y") : ?>
-						      <?php $thumbnail_link = wp_get_attachment_image_src($slide -> ID, 'thumbnail', false); ?>
-						      <img src="<?php echo $thumbnail_link[0]; ?>" alt="slideshow-thumbnail-<?php echo $index+1; ?>" />
+						<?php $slide_info = pathinfo($slide -> image);
+						      $slide_ext = $slide_info['extension'];
+						      $slide_filename = basename($slide -> image, '.'.$slide_ext);?>
+						      <img src="<?php echo CMBSLD_UPLOAD_URL.'/'.$slide_filename.'-thumb.'.$slide_ext; ?>" alt="slideshow-thumbnail-<?php echo $index+1; ?>" />
 						<?php else : ?>
 						      <?php echo $index+1; ?>
 						<?php endif; ?></a>
@@ -363,7 +375,7 @@ position:'absolute',
 				</div>
 			<?php if ($information_temp == "Y") : ?>
 			    <?php foreach ($slides as $slide) : ?>
-				<div id="slide_caption-<?php echo ($slide -> ID); ?>" class="nivo-html-caption">
+				<div id="slide_caption-<?php echo ($slide -> id); ?>" class="nivo-html-caption">
 				    <?php if ($slide -> uselink == "Y" && !empty($slide -> link)) : ?>
 				      <a href="<?php echo $slide -> link; ?>" title="<?php echo $slide -> title; ?>">
 				    <?php endif; ?>

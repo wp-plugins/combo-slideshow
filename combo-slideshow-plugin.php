@@ -1,6 +1,6 @@
 <?php
 class CMBSLD_GalleryPlugin {
-	var $version = '1.3';
+	var $version = '1.4';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';

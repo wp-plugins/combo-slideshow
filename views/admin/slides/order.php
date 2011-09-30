@@ -19,7 +19,7 @@
 		<ul id="slidelist<?php echo $i;?>">
 			<?php foreach ($slide_array[$i] as $slide) : ?>
 				<li class="lineitem" id="item_<?php echo $slide -> id; ?>">
-					<span style="float:left; margin:5px 10px 0 5px;"><img src="<?php echo $this -> Html -> image_url($this -> Html -> thumbname($slide -> image, "small")); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" /></span>
+					<span style="float:left; margin:5px 10px 0 5px;"><img src="<?php echo $this -> Html -> image_url($this -> Html -> thumbname($slide -> image, "thumb")); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" /></span>
 					<h4><?php echo $slide -> title; ?></h4>
 					<hr class="clear" style="clear:both; visibility:hidden; height:1px; display:block;" />
 				</li>

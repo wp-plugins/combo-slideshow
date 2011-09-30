@@ -47,18 +47,16 @@ class GallerySlide extends GalleryDbHelper {
 	
 		if (!empty($data)) {
 			$data = (empty($data[$this -> model])) ? $data : $data[$this -> model];
-			
 			foreach ($data as $dkey => $dval) {
 				$this -> data -> {$dkey} = stripslashes($dval);
 			}
-			
+			$style = $this -> get_option('styles');
 			extract($data, EXTR_SKIP);
-			
 			if (empty($title)) { $this -> errors['title'] = __('Please fill in a title', $this -> plugin_name); }
 			if (empty($description)) { $this -> errors['description'] = __('Please fill in a description', $this -> plugin_name); }
 			if (empty($type)) { $this -> errors['type'] = __('Please select an image type', $this -> plugin_name); }
 			//if (empty($section)) { $section = '1'; }
-			
+
 			elseif ($type == "file") {
 				if (!empty($image_oldfile) && empty($_FILES['image_file']['name'])) {
 					$imagename = $image_oldfile;
@@ -70,6 +68,7 @@ class GallerySlide extends GalleryDbHelper {
 					if ($_FILES['image_file']['error'] <= 0) {
 						$imagename = $_FILES['image_file']['name'];
 						$imagepath = ABSPATH . 'wp-content' . DS . 'uploads' . DS . $this -> plugin_name . DS;
+						//$imagepath = CMBSLD_UPLOAD_URL.DS;
 						$imagefull = $imagepath . $imagename;
 						
 						if (!is_uploaded_file($_FILES['image_file']['tmp_name'])) { $this -> errors['image_file'] = __('The image did not upload, please try again', $this -> plugin_name); }
@@ -82,8 +81,8 @@ class GallerySlide extends GalleryDbHelper {
 							$thumbfull = $imagepath . $name . '-thumb.' . strtolower($ext);
 							$smallfull = $imagepath . $name . '-small.' . strtolower($ext);
 						
-							image_resize($imagefull, $width = null, $height = 75, $crop = false, $append = 'thumb', $dest = null, $quality = 100);
-							image_resize($imagefull, $width = 50, $height = 50, $crop = true, $append = 'small', $dest = null, $quality = 100);
+							image_resize($imagefull, get_option('thumbnail_size_w'), get_option('thumbnail_size_h'), get_option('thumbnail_crop'), 'thumb', null, 100);
+							image_resize($imagefull, $style['width'], $style['height'], true, 'small', null, 100);
 							
 							@chmod($imagefull, 0777);
 							@chmod($thumbfull, 0777);
@@ -116,22 +115,24 @@ class GallerySlide extends GalleryDbHelper {
 					if ($image = wp_remote_fopen($image_url)) {
 						$filename = basename($image_url);
 						$filepath = ABSPATH . 'wp-content' . DS . 'uploads' . DS . $this -> plugin_name . DS;
+						//$filepath = CMBSLD_UPLOAD_URL.DS;
 						$filefull = $filepath . $filename;
 						if (!file_exists($filefull)) {
-							$fh = @fopen($filefull, "w");
-							@fwrite($fh, $image);
-							@fclose($fh);
+							$fh = fopen($filefull, "w") or die('cannot open file');
+							fwrite($fh, $image) or die('cannot write');
+							fclose($fh);
 							$name = GalleryHtmlHelper::strip_ext($filename, 'filename');
 							$ext = GalleryHtmlHelper::strip_ext($filename, 'ext');
 							$thumbfull = $filepath . $name . '-thumb.' . strtolower($ext);
 							$smallfull = $filepath . $name . '-small.' . strtolower($ext);
-							image_resize($filefull, $width = null, $height = 75, $crop = false, $append = 'thumb', $dest = null, $quality = 100);
-							image_resize($filefull, $width = 50, $height = 50, $crop = true, $append = 'small', $dest = null, $quality = 100);
+							//image_resize($filefull, $width = get_option('embed_size_w'), $height = get_option('embed_size_h'), $crop = false, $append = false, $dest = false, $quality = 100);
+							image_resize($filefull, get_option('thumbnail_size_w'),get_option('thumbnail_size_h'), get_option('thumbnail_crop'), 'thumb', $thumbfull, 100);
+							image_resize($filefull, $style['width'], $style['height'], true, 'small', $smallfull, 100);
 							@chmod($filefull, 0777);
 							@chmod($thumbfull, 0777);
 							@chmod($smallfull, 0777);
 						}
-					}
+					}else die('cannot remote fopen');
 				}
 			}
 		} else {

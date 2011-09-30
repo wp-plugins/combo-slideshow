@@ -4,7 +4,7 @@ Donate link: http://www.3dolab.net/en/combo-slideshow
 Tags: slideshow, slide show, combo, slideshow gallery, slides, image, gallery, content, highlight, showcase, javascript, jquery, mootools, nivo, nivo slider
 Requires at least: 2.8
 Tested up to: 3.2.1
-Stable tag: 1.3
+Stable tag: 1.4
 The features of the best slideshow javascript effects and WP plugins:
 Blog posts highlights, image gallery, custom slides!
 
@@ -41,8 +41,7 @@ Running demo: http://www.3dolab.net/en/
 3. Activate the plugin through the 'Plugins' menu in WordPress
 4. Configure the settings according to your needs through the 'Slideshow' > 'Configuration' menu
 5. Add and manage your slides in the 'Slideshow' section (Or just use the built in wordpress gallery)
-6. Shortcodes: put `[slideshow post_id="X" exclude="" caption="on/off"]` to embed a slideshow with the images of a post into your posts/pages or use `[slideshow custom=1]` to embed a slideshow with your custom added slides
-7. Manual Use: insert `<?php if (class_exists('CMBSLD_Gallery')) { $CMBSLD_Gallery = new CMBSLD_Gallery(); $CMBSLD_Gallery -> slideshow($output, $post_id,$exclude, $include, $custom, $width, $height); }; ?>` into your WordPress theme
+6. Put `[slideshow post_id="X" exclude="" caption="on/off"]` to embed a slideshow with the images of a post into your posts/pages or use `[slideshow custom=1]` to embed a slideshow with your custom added slides or `<?php if (class_exists('CMBSLD_Gallery')) { $CMBSLD_Gallery = new CMBSLD_Gallery(); $CMBSLD_Gallery -> slideshow($output = true, $post_id = null); }; ?>` into your WordPress theme
 
 == Frequently Asked Questions ==
 
@@ -78,6 +77,9 @@ In /views/default/gallery.php find this line: slideshow.letterbox = "#000"; Chan
 4. Different styles/colors.
 
 == Changelog ==
+
+= 1.4 (2011.09.30) =
+* Bugfix: custom slideshow gallery output
 
 = 1.3 (2011.09.30) =
 * Enabled auto custom slides in homepage and single post/page
