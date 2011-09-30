@@ -1,5 +1,5 @@
 <?php
-class GalleryFormHelper extends NSGalleryPlugin {
+class GalleryFormHelper extends CMBSLD_GalleryPlugin {
 	function hidden($name = '', $args = array()) {
 		global $wpcoHtml;
 		$defaults = array(

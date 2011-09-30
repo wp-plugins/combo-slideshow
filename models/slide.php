@@ -3,7 +3,7 @@ class GallerySlide extends GalleryDbHelper {
 	var $table;
 	var $model = 'Slide';
 	var $controller = "slides";
-	var $plugin_name = NSG_PLUGIN_NAME;
+	var $plugin_name = CMBSLD_PLUGIN_NAME;
 	var $data = array();
 	var $errors = array();
 	var $fields = array(

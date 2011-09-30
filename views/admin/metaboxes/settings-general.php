@@ -56,15 +56,24 @@
         <tr valign="top">
         <th scope="row"><?php _e('Auto insert in Home page', $this -> plugin_name); ?></th>
         <td>
-	      <label><input <?php echo ($this -> get_option('wpns_home') == "Y") ? 'checked="checked"' : ''; ?> type="radio" name="wpns_home" value="Y" id="wpns_homeY" /> <?php _e('Yes', $this -> plugin_name); ?></label>
 	      <label><input <?php echo ($this -> get_option('wpns_home') == "N") ? 'checked="checked"' : ''; ?> type="radio" name="wpns_home" value="N" id="wpns_homeN" /> <?php _e('No', $this -> plugin_name); ?></label>
+	      <label><input <?php echo ($this -> get_option('wpns_home') == "Y") ? 'checked="checked"' : ''; ?> type="radio" name="wpns_home" value="Y" id="wpns_homeY" /> <?php _e('Blog', $this -> plugin_name); ?></label>
+	      <label><input <?php echo ($this -> get_option('wpns_home') == "C") ? 'checked="checked"' : ''; ?> type="radio" name="wpns_home" value="C" id="wpns_homeC" /> <?php _e('Custom Slides', $this -> plugin_name); ?></label>
 	</td>
 	</tr>
-
+	<tr valign="top">
         <th scope="row"><?php _e('Auto insert in post / page', $this -> plugin_name); ?></th>
         <td>
-	      <label><input <?php echo ($this -> get_option('wpns_auto') == "Y") ? 'checked="checked"' : ''; ?> type="radio" name="wpns_auto" value="Y" id="wpns_autoY" /> <?php _e('Yes', $this -> plugin_name); ?></label>
 	      <label><input <?php echo ($this -> get_option('wpns_auto') == "N") ? 'checked="checked"' : ''; ?> type="radio" name="wpns_auto" value="N" id="wpns_autoN" /> <?php _e('No', $this -> plugin_name); ?></label>
+	      <label><input <?php echo ($this -> get_option('wpns_auto') == "Y") ? 'checked="checked"' : ''; ?> type="radio" name="wpns_auto" value="Y" id="wpns_autoY" /> <?php _e('Gallery', $this -> plugin_name); ?></label>
+	      <label><input <?php echo ($this -> get_option('wpns_auto') == "C") ? 'checked="checked"' : ''; ?> type="radio" name="wpns_auto" value="C" id="wpns_autoC" /> <?php _e('Custom Slides', $this -> plugin_name); ?></label>
+	</td>
+	</tr>
+	<tr valign="top">
+        <th scope="row"><?php _e('Auto slideshow position', $this -> plugin_name); ?></th>
+        <td>
+	      <label><input <?php echo ($this -> get_option('wpns_auto_position') == "B") ? 'checked="checked"' : ''; ?> type="radio" name="wpns_auto_position" value="B" id="wpns_positionB" /> <?php _e('Before the content', $this -> plugin_name); ?></label>
+	      <label><input <?php echo ($this -> get_option('wpns_auto_position') == "A") ? 'checked="checked"' : ''; ?> type="radio" name="wpns_auto_position" value="A" id="wpns_positionA" /> <?php _e('After the content', $this -> plugin_name); ?></label>
 	</td>
 	</tr>
 	<tr valign="top">

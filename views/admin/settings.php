@@ -5,7 +5,7 @@ wp_nonce_field('closedpostboxes', 'closedpostboxesnonce', false);
 wp_nonce_field('meta-box-order', 'meta-box-order-nonce', false);
 ?>
 <div class="wrap">
-	<h2><?php _e('Configuration Settings', NSG_PLUGIN_NAME); ?></h2>
+	<h2><?php _e('Configuration Settings', CMBSLD_PLUGIN_NAME); ?></h2>
 	
 	<form action="<?php echo $this -> url; ?>" name="post" id="post" method="post">
 		<div id="poststuff" class="metabox-holder has-right-sidebar">			
