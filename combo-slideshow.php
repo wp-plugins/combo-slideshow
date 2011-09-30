@@ -45,7 +45,6 @@ class CMBSLD_Gallery extends CMBSLD_GalleryPlugin {
 		$this -> add_filter('mce_buttons');
 		$this -> add_filter('mce_external_plugins');
 		$this -> add_filter( 'the_content', 'auto_combo_slider' );
-		//$this -> add_filter('the_content');
 		// $this -> add_theme_support('post-thumbnails');
 
 		add_shortcode('slideshow', array($this, 'embed'));
@@ -53,7 +52,6 @@ class CMBSLD_Gallery extends CMBSLD_GalleryPlugin {
 	function auto_combo_slider( $content ) {
 	    if ( ( ( is_home() || is_front_page() ) && $this -> get_option('wpns_home') == 'Y' ) || $this -> get_option('wpns_auto') == 'Y' ){
 		  $comboslidercode = $this -> show_combo_slider();
-		  //return $content.$nivoslidercode;
 	    } elseif ( ( ( is_home() || is_front_page() ) && $this -> get_option('wpns_home') == 'C' ) || $this -> get_option('wpns_auto') == 'C' ){
 		  //$slides = $this -> Slide -> find_all(null, null, array('order', "ASC"), $this -> get_option('postlimit'));
 		  //$comboslidercode = $this -> render('gallery', array('slides' => $slides, 'frompost' => false), false, 'default');
