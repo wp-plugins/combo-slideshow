@@ -49,7 +49,7 @@ Running demo: http://www.3dolab.net/en/
 Yes, you can, but should use only one slideshow per page.
 
 = How Can I auto insert a blog posts (or custom) slideshow in my home or single post/page? =
-Enable it in the plugin settings and make sure that a post thumbnail is set in each post.
+Enable it in the plugin settings. Make sure that a post thumbnail is set in each post.
 
 = How Can I insert a custom slideshow in my content? =
 Make sure that a post thumbnail is set in each post. Use the shortcode or the manual function with the `custom` parameter set to any value

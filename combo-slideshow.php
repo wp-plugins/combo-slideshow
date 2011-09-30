@@ -45,7 +45,6 @@ class CMBSLD_Gallery extends CMBSLD_GalleryPlugin {
 		$this -> add_filter('mce_buttons');
 		$this -> add_filter('mce_external_plugins');
 		$this -> add_filter( 'the_content', 'auto_combo_slider' );
-		//$this -> add_filter('the_content');
 		// $this -> add_theme_support('post-thumbnails');
 
 		add_shortcode('slideshow', array($this, 'embed'));
