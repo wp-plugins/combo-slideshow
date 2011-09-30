@@ -1,0 +1,20 @@
+Combo Slideshow Changelog
+
+= 1.3 (2011.09.30) =
+* Enabled auto custom slides in homepage and single post/page
+* Added auto slideshow position (before/after the content)
+* Lightbox enabled for custom slides too
+* Using wrapper div even if no theme is set
+* Code clean up
+
+= 1.2 (2011.08.13) = 
+* Nivo Slider updated to 2.6 and YUI compressed
+* Bugfix: 'title is undefined' .attr() error with jQuery 1.6+
+* Bugfix: blank admin screens
+
+= 1.1 (2011.07.28) = 
+* Bugfix: invalid markup in post slideshows
+* Bugfix: JavaScript errors in MSIE6/7
+
+= 1.0 (2011.07.12) = 
+* First Release
