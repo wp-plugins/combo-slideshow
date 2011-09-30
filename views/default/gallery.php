@@ -327,14 +327,19 @@ position:'absolute',
 					$resize .= ' height="'. $style['wpns_height'] .'"';
 				    }
 				}
+				if ($imgbox != "nolink") {
+					$slidelink = '<a class="'.$imgbox.'" ';
+					if ($slide -> uselink == "Y" && !empty($slide -> link))
+						$slidelink .= 'href="'.$slide -> link.'" title="'.$slide -> title.'">';
+					else
+						$slidelink .= 'href="'.$this -> Html -> image_url($slide -> image).'" title="'.$slide -> title.'">';
+				echo $slidelink;
+				}
 				?>
-				<?php if ($slide -> uselink == "Y" && !empty($slide -> link)) : ?>
-					<a href="<?php echo $slide -> link; ?>" title="<?php echo $slide -> title; ?>">
-				<?php else : ?>
-					<a href="<?php echo $this -> Html -> image_url($slide -> image); ?>" title="<?php echo $slide -> title; ?>">
-				<?php endif; ?>
-					<img id="slide-<?php echo $slide -> ID; ?>" src="<?php echo CMBSLD_UPLOAD_URL ?>/<?php echo $slide -> image; ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" <?php echo $thumbrel.$captitle.$resize; ?> />
+						<img id="slide-<?php echo $slide -> ID; ?>" src="<?php echo CMBSLD_UPLOAD_URL ?>/<?php echo $slide -> image; ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" <?php echo $thumbrel.$captitle.$resize; ?> />
+				<?php if ($imgbox != "nolink") : ?>
 					</a>
+				<?php endif; ?>
 			<?php endforeach; ?>
 			<?php if ($jsframe == 'mootools' && $information_temp == "Y") : ?>
 				<div class="nivo-caption" style="opacity:<?php round(($captionopacity/100), 1) ?>;">
