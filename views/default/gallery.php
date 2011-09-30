@@ -46,6 +46,12 @@ if ($this -> get_option('imagesbox') == "T")
 
 
 ?>
+	<?php if($slide_theme != '0') : ?>
+		<div class="slider-wrapper theme-<?php echo $use_theme; ?>">
+			<div class="ribbon"></div>
+	<?php else : ?>
+		<div class="slider-wrapper">
+	<?php endif; ?>
 	<?php if ($jsframe == 'jquery') : ?>
 		<script type="text/javascript">
 			jQuery(window).load(function() {
@@ -239,11 +245,6 @@ position:'absolute',
 		    });
 		</script>
 	<?php endif; // END MOOTOOLS ?>
-		<?php $use_themes = $slide_theme; ?>
-		<?php if($use_themes != '0') : ?>
-			<div class="slider-wrapper theme-<?php echo $use_themes; ?>">
-				<div class="ribbon"></div>
-		<?php endif; ?>
 		<?php if ($frompost) : // WORDPRESS IMAGE GALLERY ONLY   ?>
 				<div id="ngslideshow-<?php echo get_the_ID(); ?>" class="ngslideshow">
 			<?php foreach ($slides as $slide) : ?>
@@ -369,7 +370,5 @@ position:'absolute',
 			    <?php endforeach; ?>
 			<?php endif; ?>
 		<?php endif; ?>
-		<?php if($use_themes != '0') : ?>
 			</div>
-		<?php endif; ?>
 <?php endif; // END SLIDES?>

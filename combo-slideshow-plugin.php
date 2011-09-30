@@ -1,6 +1,6 @@
 <?php
 class CMBSLD_GalleryPlugin {
-	var $version = '1.2';
+	var $version = '1.3';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
@@ -136,7 +136,10 @@ class CMBSLD_GalleryPlugin {
 		$this -> add_option('wpns_effect','random');
 		$this -> add_option('wpns_slices','10');	
 		$this -> add_option('wpns_home','N');
+		//$this -> add_option('wpns_autocustom_home','0');
 		$this -> add_option('wpns_auto','N');
+		//$this -> add_option('wpns_autocustom_post','0');
+		$this -> add_option('wpns_auto_position','B');
 		$this -> add_option('pausehover','Y');
 		$this -> add_option('keyboardnav','N');
 		$this -> add_option('slide_theme','0');
@@ -574,20 +577,10 @@ if ($use_themes != '0'){
 		return false;
 	}
 	
-	function show_combo_slider($category = null, $n_slices = null, $exclude = null, $offset = null) {
-global $post;
-$post_switch = $post;
-/*
-echo '<pre>';
-echo 'SHOW BEGINS';
-echo 'home'.$this -> get_option('wpns_home');
-echo 'auto'.$this -> get_option('wpns_auto');
-echo 'theme'.$this -> get_option('slide_theme');
-echo 'cat'.$this -> get_option('wpns_category');
-echo 'slice'.$this -> get_option('wpns_slices');
-echo '</pre>';
-*/
-if ($this -> get_option('imagesbox') == "T") 
+    function show_combo_slider($category = null, $n_slices = null, $exclude = null, $offset = null) {
+	global $post;
+	$post_switch = $post;
+	if ($this -> get_option('imagesbox') == "T") 
 		$imgbox = "thickbox";
 	elseif ($this -> get_option('imagesbox') == "S") 
 		$imgbox = "shadowbox";
@@ -616,14 +609,14 @@ if ($this -> get_option('imagesbox') == "T")
 
 	      $navhover 	= $this -> get_option('navhover');
 	      $controlnav 	= $this -> get_option('controlnav');
-	      $thumbnails_temp 	= $this -> get_option('thumbnails_temp');
+	      $thumbnails 	= $this -> get_option('thumbnails');
 
 	      $keyboardnav 	= $this -> get_option('keyboardnav');
 	      $pausehover 	= $this -> get_option('pausehover');
-	      $autoslide_temp 	= $this -> get_option('autoslide_temp');
+	      $autoslide 	= $this -> get_option('autoslide');
 	      $captionopacity 	= $this -> get_option('captionopacity');
 
-	      $information_temp = $this -> get_option('information_temp');
+	      $information 	= $this -> get_option('information');
 	      $csstransform 	= $this -> get_option('csstransform');
 	      $wprfss_effect 	= $this -> get_option('wprfss_effect');
 	      $wprfss_cssfx 	= $this -> get_option('wprfss_cssfx');
@@ -649,6 +642,12 @@ if ($this -> get_option('imagesbox') == "T")
 	$slided = new WP_Query($query_args);
 	if( $slided->have_posts() ){
 		$append = '';
+	if($use_themes != '0') {
+		$append .= '<div class="slider-wrapper theme-'.$use_themes.'">
+				<div class="ribbon"></div>';
+	} else {
+		$append .= '<div class="slider-wrapper">';
+	}
 	if ($jsframe == 'jquery'){
 		$append .= "<script type='text/javascript'>
 			      jQuery(window).load(function() {
@@ -670,7 +669,7 @@ if ($this -> get_option('imagesbox') == "T")
 			$append .= "controlNav:true, //1,2,3...";
 		else
 			$append .= "controlNav:false,";
-		if ($thumbnails_temp == "Y")
+		if ($thumbnails == "Y")
 			$append .= "controlNavThumbs:true,
 				    controlNavThumbsFromRel:true, //Use image rel for thumbs";
 		else
@@ -689,7 +688,7 @@ if ($this -> get_option('imagesbox') == "T")
 		else
 			$append .= "pauseOnHover:false,";
 
-		if ($autoslide_temp=="Y")
+		if ($autoslide=="Y")
 			$append .= "manualAdvance:false, //Force manual transitions";
 		else
 			$append .= "manualAdvance:true,";
@@ -708,7 +707,7 @@ if ($this -> get_option('imagesbox') == "T")
 			$append .= "<script type='text/javascript'>
 			      document.addEvent('domready', function(){
 			      ";
-		if ($controlnav=="Y" || $thumbnails_temp=="Y" ){
+		if ($controlnav=="Y" || $thumbnails=="Y" ){
 			$append .= "var navItems = $('ngslideshow-".$slideshow_id."').getElements('.nivo-controlNav a.nivo-control');
 				    var navMenu = $('ngslideshow-".$slideshow_id."').getElement('div.nivo-controlNav');
 				    navMenu.inject($('ngslideshow-".$slideshow_id."'),'after');
@@ -721,7 +720,7 @@ if ($this -> get_option('imagesbox') == "T")
 				    $$('.slider-wrapper .nivoSlider img').setStyle('display','block');
 				    $('ngslideshow-".$slideshow_id."').getParent().setStyle('position','relative');
 				    ";
-		if ($information_temp == "Y"){
+		if ($information == "Y"){
 			$append .= "var capWrap = $('ngslideshow-".$slideshow_id."').getElement('div.nivo-caption');
 				    capWrap.setStyles({ width: $('ngslideshow-".$slideshow_id."').getSize().x,
 					    height: '1.6em',
@@ -741,7 +740,7 @@ if ($this -> get_option('imagesbox') == "T")
 				    slideCaptions.inject(capWrap,'inside');
 				    slideCaptions[0].fade('in');
 				    ";
-		} elseif ($information_temp == "N"){
+		} elseif ($information == "N"){
 			$append .= "var slideCaptions = $$('div.nivo-html-caption').setStyle('display','none');
 				   ";
 		}
@@ -754,17 +753,16 @@ if ($this -> get_option('imagesbox') == "T")
 			$append .= "transition: '".$wprfss_cssfx."',";
 			$append .= "delay: '".$autospeed."',
 				    duration: '".$fadespeed."',";
-		if ($autoslide_temp=="Y")
+		if ($autoslide=="Y")
 			$append .= "autoplay: true,";
 		else
 			$append .= "autoplay: false,";
 			$append .= "initialSlideIndex: 0,";
-		if ($controlnav=="Y" || $information_temp == "Y"){
+		if ($controlnav=="Y" || $information == "Y"){
 			$append .= "onShow: function(data){
 				   ";
-		  if ($information_temp == "Y"){
+		  if ($information == "Y"){
 			$append .= "	slideCaptions[data.previous.index].removeClass('active');
-					//alert(slideCaptions.length+'-'+data.next.index);
 					slideCaptions[data.next.index].addClass('active');
 					slideCaptions[data.previous.index].fade('out');
 					slideCaptions[data.next.index].fade('in');
@@ -812,23 +810,17 @@ if ($this -> get_option('imagesbox') == "T")
 			$append .= "});
 				   </script>";
 	}
-	if($use_themes != '0'){
-		$append .= '<div class="slider-wrapper theme-'.$use_themes.'">
-				<div class="ribbon"></div>';
-	}
-		$append .= '<div id="ngslideshow-'.get_the_ID().'" class="ngslideshow">';
+	$append .= '<div id="ngslideshow-'.get_the_ID().'" class="ngslideshow">';
 			  while( $slided->have_posts() ) : $slided->the_post();
-$full_image_href = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'large', false);
-$thumbnail_link = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'thumbnail', false);
-if ( CMBSLD_PRO ) {
-	 require CMBSLD_PLUGIN_DIR . '/pro/image_tall_frompost.php';
-} else { // echo "<h4>&nbsp;</h4>";
-} if ($thumbnails_temp == "Y") {
-$thumbrel = 'rel="'. $thumbnail_link[0] .'" ';
-} if ($information_temp == "Y") {
-$captitle = 'title="#'. $post -> ID .'-'.$post -> post_title.'"';
-}
-		if ($jsframe == 'jquery'){
+				$full_image_href = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'large', false);
+				$thumbnail_link = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'thumbnail', false);
+				if ( CMBSLD_PRO )
+					require CMBSLD_PLUGIN_DIR . '/pro/image_tall_frompost.php';
+				if ($thumbnails == "Y")
+					$thumbrel = 'rel="'. $thumbnail_link[0] .'" ';
+				if ($information == "Y")
+					$captitle = 'title="#'. $post -> ID .'-'.$post -> post_title.'"';
+				if ($jsframe == 'jquery'){
 				    $resize = '';
 				    if( !empty($style['resizeimages']) && $style['resizeimages'] == "Y") {
 					$resize .= ' width="'. $styles['wpns_width'] .'"';
@@ -836,29 +828,29 @@ $captitle = 'title="#'. $post -> ID .'-'.$post -> post_title.'"';
 				    if( !empty($style['resizeimages2']) && $style['resizeimages2'] == "Y") {
 					$resize .= ' height="'. $style['wpns_height'] .'"';
 				    }
-		}
-		if(has_post_thumbnail()){
-			      //$append .= '<a href="'. post_permalink() .'" title="'. the_title('','',false).'">';
-			      //$append .= get_the_post_thumbnail();
-			      //$append .= '</a>';
-		      if ($imagesbox != "nolink")
-				$append .= '<a href="'.post_permalink().'">';
-				$append .= '<img src="'.$full_image_href[0].'" alt="'.$this -> Html -> sanitize($post -> post_title).'" '.$thumbrel.' '.$captitle.' />';
-			      //$append .= get_the_post_thumbnail($post->ID,$size,$attr);
-		      if ($imagesbox != "nolink")
-				$append .= '</a>';
-		}
+				}
+				if(has_post_thumbnail()){
+					//$append .= '<a href="'. post_permalink() .'" title="'. the_title('','',false).'">';
+					//$append .= get_the_post_thumbnail();
+					//$append .= '</a>';
+					if ($imagesbox != "nolink")
+						$append .= '<a href="'.post_permalink().'">';
+					$append .= '<img src="'.$full_image_href[0].'" alt="'.$this -> Html -> sanitize($post -> post_title).'" '.$thumbrel.' '.$captitle.' />';
+					//$append .= get_the_post_thumbnail($post->ID,$size,$attr);
+					if ($imagesbox != "nolink")
+						$append .= '</a>';
+				}
 			  endwhile;
-	if ($jsframe == 'mootools' && $information_temp == "Y") 
+	if ($jsframe == 'mootools' && $information == "Y") 
 				$append .= "<div class='nivo-caption' style='opacity:".round(($captionopacity/100), 1) .";'>
 					    </div>";
 	if ($jsframe == 'mootools' && $navigation == "Y"){
 	}
-	if ($jsframe == 'mootools' && ($controlnav == "Y" || $thumbnails_temp == "Y")){
+	if ($jsframe == 'mootools' && ($controlnav == "Y" || $thumbnails == "Y")){
 				$append .= "<div class='nivo-controlNav'>";
 			  while( $slided->have_posts() ) : $slided->the_post();
 				$append .= "<a class='nivo-control' href='#slide-". $slided -> ID ."' title='".$slided -> post_title."'>";
-		if ($thumbnails_temp == "Y"){
+		if ($thumbnails == "Y"){
 				$thumbnail_link = wp_get_attachment_image_src($slided -> ID, 'thumbnail', false);
 				$append .= "<img src='".$thumbnail_link[0]."' alt='slideshow-thumbnail-".$slided -> ID."' />";
 		} else{
@@ -878,13 +870,13 @@ $captitle = 'title="#'. $post -> ID .'-'.$post -> post_title.'"';
 			    }
 			  endwhile;
 
-		if($use_themes != '0'){
+		//if($use_themes != '0'){
 			$append .= '</div>';
-		}
+		//}
 			}
 		//wp_reset_query();
 		wp_reset_postdata();
-$post = $post_switch;
+		$post = $post_switch;
 		return $append;
 	}
 }
