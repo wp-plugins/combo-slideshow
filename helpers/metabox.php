@@ -1,5 +1,5 @@
 <?php
-class GalleryMetaboxHelper extends CMBSLD_GalleryPlugin {
+class GalleryMetaboxHelper extends NSGalleryPlugin {
 	var $name = 'Metabox';
 	
 	function GalleryMetaboxHelper() {

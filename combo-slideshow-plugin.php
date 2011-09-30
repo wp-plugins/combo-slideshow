@@ -1,6 +1,6 @@
 <?php
-class CMBSLD_GalleryPlugin {
-	var $version = '1.3';
+class NSGalleryPlugin {
+	var $version = '1.0';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
@@ -9,7 +9,7 @@ class CMBSLD_GalleryPlugin {
 	var $sections = array(
 		'gallery'		=>	'gallery-slides',
 		'settings'		=>	'gallery',
-	);
+	);	
 	var $helpers = array('Db', 'Html', 'Form', 'Metabox');
 	var $models = array('Slide');
 	
@@ -34,7 +34,7 @@ class CMBSLD_GalleryPlugin {
 			error_reporting(E_ALL);
 			@ini_set('display_errors', 1);
 		}
-		$this -> add_action( 'wp_print_styles', 'cmbsld_enqueue_styles' );
+		$this -> add_action( 'wp_print_styles', 'nsg_enqueue_styles' );
 		return true;
 	}
 	
@@ -136,10 +136,7 @@ class CMBSLD_GalleryPlugin {
 		$this -> add_option('wpns_effect','random');
 		$this -> add_option('wpns_slices','10');	
 		$this -> add_option('wpns_home','N');
-		//$this -> add_option('wpns_autocustom_home','0');
 		$this -> add_option('wpns_auto','N');
-		//$this -> add_option('wpns_autocustom_post','0');
-		$this -> add_option('wpns_auto_position','B');
 		$this -> add_option('pausehover','Y');
 		$this -> add_option('keyboardnav','N');
 		$this -> add_option('slide_theme','0');
@@ -250,14 +247,14 @@ class CMBSLD_GalleryPlugin {
 		return false;
 	}
 	
-//	IF ( CMBSLD_LOAD_CSS )
-	function cmbsld_enqueue_styles() {
+//	IF ( NSG_LOAD_CSS )
+	function nsg_enqueue_styles() {
 		global $version;
-		$galleryStyleUrl = CMBSLD_PLUGIN_URL . '/css/gallery-css.php?v='. $version .'&amp;pID=' . $GLOBALS['post']->ID;
+		$galleryStyleUrl = NSG_PLUGIN_URL . '/css/gallery-css.php?v='. $version .'&amp;pID=' . $GLOBALS['post']->ID;
 		if($_SERVER['HTTPS']) {
 			$galleryStyleUrl = str_replace("http:","https:",$galleryStyleUrl);
 		}		
-        $galleryStyleFile = CMBSLD_PLUGIN_DIR . '/css/gallery-css.php';
+        $galleryStyleFile = NSG_PLUGIN_DIR . '/css/gallery-css.php';
 //		$src = WP_PLUGIN_DIR.'/' . $this -> plugin_name . '/css/gallery-css.php?2=1&site='.WP_PLUGIN_DIR;
 //		define $infogal = $this;
 		$infogal = $this;
@@ -295,7 +292,7 @@ class CMBSLD_GalleryPlugin {
 					$galleryStyleUrl .= "&amp;thumbs=Y";
 			}
 			wp_register_style( 'combo-slideshow', $galleryStyleUrl);
-			wp_enqueue_style( 'combo-slideshow', $galleryStyleUrl,	array(), CMBSLDVERSION, 'all' );
+			wp_enqueue_style( 'combo-slideshow', $galleryStyleUrl,	array(), NSGVERSION, 'all' );
 		}
 
 $use_themes = $this -> get_option('slide_theme');
@@ -304,21 +301,21 @@ if ($use_themes != '0'){
 			$use_themes = $this -> get_option('customtheme');
 			$galleryThemeUrl = get_stylesheet_directory_uri().'/'.$use_themes.'/'.$use_themes.'.css';
 		}
-		$galleryThemeUrl = CMBSLD_PLUGIN_URL . '/css/'.$use_themes.'/'.$use_themes.'.css';
+		$galleryThemeUrl = NSG_PLUGIN_URL . '/css/'.$use_themes.'/'.$use_themes.'.css';
 			wp_register_style( 'combo-slideshow-'.$use_themes, $galleryThemeUrl);
-			wp_enqueue_style( 'combo-slideshow-'.$use_themes, $galleryThemeUrl, array(), CMBSLDVERSION, 'all' );
+			wp_enqueue_style( 'combo-slideshow-'.$use_themes, $galleryThemeUrl, array(), NSGVERSION, 'all' );
 }
 
-/*		function cmbsld_style_head($url) {
+/*		function nsg_style_head($url) {
 			print "<link rel='stylesheet' type='text/css' href='" . get_bloginfo('wpurl') . "/wp-content/plugins/combo-slideshow-2/?my-custom-content=css'/>";
 		}
-		function cmbsld_style_cheat( $wp ) {
+		function nsg_style_cheat( $wp ) {
 			print"<link id='combo-slideshow' rel='stylesheet' type='text/css' href='" . $wp . "'/>";
 		}
 		/* Known Issue - passing a function into the second string makes the link info go above <html> */
 		/* FIX for QTranslate - Uncomment for this plugin */
 	/*	if (!is_admin) {
-			add_filter('wp_print_styles', cmbsld_style_cheat($galleryStyleUrl) );
+			add_filter('wp_print_styles', nsg_style_cheat($galleryStyleUrl) );
 		}*/
 		
 		
@@ -354,7 +351,7 @@ if ($use_themes != '0'){
 
 		    if($js_framework == 'mootools') {
 
-			wp_register_script('moocore', '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/mootools-core-1.3.2-full-nocompat-yc.js', false, '1.3');
+			wp_register_script('moocore', '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/mootools-core-1.3.2-full-nocompat-yc', false, '1.3');
 			wp_register_script('moomore', '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/mootools-more-1.3.2.1-yc.js', false, '1.3');
 			wp_enqueue_script('moocore');
 			wp_enqueue_script('moomore');
@@ -370,7 +367,7 @@ if ($use_themes != '0'){
 
 			wp_enqueue_script('jquery');
 
-			wp_enqueue_script($this -> plugin_name, '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/jquery.nivo.slider.js', array('jquery'), '2.6' );
+			wp_enqueue_script($this -> plugin_name, '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/jquery.nivo.slider.js', array('jquery'), '2.3' );
 			
 			if ($this -> get_option('imagesbox') == "T") {
 				add_thickbox();
@@ -577,10 +574,20 @@ if ($use_themes != '0'){
 		return false;
 	}
 	
-    function show_combo_slider($category = null, $n_slices = null, $exclude = null, $offset = null) {
-	global $post;
-	$post_switch = $post;
-	if ($this -> get_option('imagesbox') == "T") 
+	function show_combo_slider($category = null, $n_slices = null, $exclude = null, $offset = null) {
+global $post;
+$post_switch = $post;
+/*
+echo '<pre>';
+echo 'SHOW BEGINS';
+echo 'home'.$this -> get_option('wpns_home');
+echo 'auto'.$this -> get_option('wpns_auto');
+echo 'theme'.$this -> get_option('slide_theme');
+echo 'cat'.$this -> get_option('wpns_category');
+echo 'slice'.$this -> get_option('wpns_slices');
+echo '</pre>';
+*/
+if ($this -> get_option('imagesbox') == "T") 
 		$imgbox = "thickbox";
 	elseif ($this -> get_option('imagesbox') == "S") 
 		$imgbox = "shadowbox";
@@ -609,14 +616,14 @@ if ($use_themes != '0'){
 
 	      $navhover 	= $this -> get_option('navhover');
 	      $controlnav 	= $this -> get_option('controlnav');
-	      $thumbnails 	= $this -> get_option('thumbnails');
+	      $thumbnails_temp 	= $this -> get_option('thumbnails_temp');
 
 	      $keyboardnav 	= $this -> get_option('keyboardnav');
 	      $pausehover 	= $this -> get_option('pausehover');
-	      $autoslide 	= $this -> get_option('autoslide');
+	      $autoslide_temp 	= $this -> get_option('autoslide_temp');
 	      $captionopacity 	= $this -> get_option('captionopacity');
 
-	      $information 	= $this -> get_option('information');
+	      $information_temp = $this -> get_option('information_temp');
 	      $csstransform 	= $this -> get_option('csstransform');
 	      $wprfss_effect 	= $this -> get_option('wprfss_effect');
 	      $wprfss_cssfx 	= $this -> get_option('wprfss_cssfx');
@@ -642,12 +649,6 @@ if ($use_themes != '0'){
 	$slided = new WP_Query($query_args);
 	if( $slided->have_posts() ){
 		$append = '';
-	if($use_themes != '0') {
-		$append .= '<div class="slider-wrapper theme-'.$use_themes.'">
-				<div class="ribbon"></div>';
-	} else {
-		$append .= '<div class="slider-wrapper">';
-	}
 	if ($jsframe == 'jquery'){
 		$append .= "<script type='text/javascript'>
 			      jQuery(window).load(function() {
@@ -669,7 +670,7 @@ if ($use_themes != '0'){
 			$append .= "controlNav:true, //1,2,3...";
 		else
 			$append .= "controlNav:false,";
-		if ($thumbnails == "Y")
+		if ($thumbnails_temp == "Y")
 			$append .= "controlNavThumbs:true,
 				    controlNavThumbsFromRel:true, //Use image rel for thumbs";
 		else
@@ -688,7 +689,7 @@ if ($use_themes != '0'){
 		else
 			$append .= "pauseOnHover:false,";
 
-		if ($autoslide=="Y")
+		if ($autoslide_temp=="Y")
 			$append .= "manualAdvance:false, //Force manual transitions";
 		else
 			$append .= "manualAdvance:true,";
@@ -705,27 +706,24 @@ if ($use_themes != '0'){
 	}elseif ($jsframe == 'mootools'){
 			$slideshow_id = get_the_ID();
 			$append .= "<script type='text/javascript'>
-			      document.addEvent('domready', function(){
-			      ";
-		if ($controlnav=="Y" || $thumbnails=="Y" ){
+			      document.addEvent('domready', function(){";
+		if ($controlnav=="Y" || $thumbnails_temp=="Y" ){
 			$append .= "var navItems = $('ngslideshow-".$slideshow_id."').getElements('.nivo-controlNav a.nivo-control');
 				    var navMenu = $('ngslideshow-".$slideshow_id."').getElement('div.nivo-controlNav');
 				    navMenu.inject($('ngslideshow-".$slideshow_id."'),'after');
 				    //navMenu.setStyle('bottom',0);
-				    navItems[0].addClass('active');
-				    ";
+				    navItems[0].addClass('active');";
 		}
 			$append .= "$('ngslideshow-".$slideshow_id."').addClass('nivoSlider');
 				    $('ngslideshow-".$slideshow_id."').setStyle('overflow','hidden');
 				    $$('.slider-wrapper .nivoSlider img').setStyle('display','block');
-				    $('ngslideshow-".$slideshow_id."').getParent().setStyle('position','relative');
-				    ";
-		if ($information == "Y"){
+				    $('ngslideshow-".$slideshow_id."').getParent().setStyle('position','relative');";
+		if ($information_temp == "Y"){
 			$append .= "var capWrap = $('ngslideshow-".$slideshow_id."').getElement('div.nivo-caption');
 				    capWrap.setStyles({ width: $('ngslideshow-".$slideshow_id."').getSize().x,
 					    height: '1.6em',
 					    margin: $('ngslideshow-".$slideshow_id."').getStyle('margin'),
-					    bottom: 0
+					    bottom: 0,
 				    });
 				    capWrap.inject($('ngslideshow-".$slideshow_id."'),'after');
 				    var slideCaptions = $$('div.nivo-html-caption').setStyles({display: 'block',
@@ -735,53 +733,44 @@ if ($use_themes != '0'){
 					    'z-index': 9,
 					    top:0,
 					    left:0,
-					    width: '". $style['width'] ."px'
+					    width: '". $style['width'] ."px',
 				    });
 				    slideCaptions.inject(capWrap,'inside');
-				    slideCaptions[0].fade('in');
-				    ";
-		} elseif ($information == "N"){
-			$append .= "var slideCaptions = $$('div.nivo-html-caption').setStyle('display','none');
-				   ";
+				    slideCaptions[0].fade('in');";
+		} elseif ($information_temp == "N"){
+			$append .= "var slideCaptions = $$('div.nivo-html-caption').setStyle('display','none');";
 		}
 			$append .= "var slideItems = $('ngslideshow-".$slideshow_id."').getElements('a').setStyle('position','absolute');
-				    var comboSlideShow = new SlideShow($('ngslideshow-".$slideshow_id."'),  {
-					";
+				    var comboSlideShow = new SlideShow($('ngslideshow-".$slideshow_id."'),  {";
 		if ($csstransform!="Y")
 			$append .= "transition: '".$wprfss_effect."',";
 		else
 			$append .= "transition: '".$wprfss_cssfx."',";
-			$append .= "delay: '".$autospeed."',
-				    duration: '".$fadespeed."',";
-		if ($autoslide=="Y")
+			$append .= "delay: '".$autospeed."',";
+			$append .= "duration: '".$fadespeed."',";
+		if ($autoslide_temp=="Y")
 			$append .= "autoplay: true,";
 		else
 			$append .= "autoplay: false,";
 			$append .= "initialSlideIndex: 0,";
-		if ($controlnav=="Y" || $information == "Y"){
-			$append .= "onShow: function(data){
-				   ";
-		  if ($information == "Y"){
+		if ($controlnav=="Y" || $information_temp == "Y"){
+			$append .= "onShow: function(data){";
+		  if ($information_temp == "Y"){
 			$append .= "	slideCaptions[data.previous.index].removeClass('active');
 					slideCaptions[data.next.index].addClass('active');
 					slideCaptions[data.previous.index].fade('out');
-					slideCaptions[data.next.index].fade('in');
-					";
+					slideCaptions[data.next.index].fade('in');";
 		  }
 		  if ($controlnav == "Y"){
-			$append .= "navItems[data.previous.index].removeClass('active');
-					navItems[data.next.index].addClass('active');
-					";
+			$append .= "	navItems[data.previous.index].removeClass('active');
+					navItems[data.next.index].addClass('active');";
 		  }
-			$append .= "},
-				   ";
+			$append .= "},";
 		}
-			$append .= "	selector: 'a'
-				    });
-				   ";
+			$append .= "selector: 'a'
+				    });";
 		if ($csstransform=="Y")
-			$append .= "comboSlideShow.useCSS();
-				   ";
+			$append .= "comboSlideShow.useCSS();";
 		if ($controlnav == "Y"){
 			$append .= "navItems.each(function(item, index){";
 		    if ($style['controlnumbers']=="Y"){
@@ -794,8 +783,7 @@ if ($use_themes != '0'){
 				    var transition = (comboSlideShow.index < index) ? 'pushLeft' : 'pushRight';
 				    comboSlideShow.show(index, {transition: transition});
 				});
-			});
-			";
+			});";
 		    if ($wprfss_tips=="Y"){
 			$append .= "new Tips(navItems, {
 				      fixed: true,
@@ -810,17 +798,23 @@ if ($use_themes != '0'){
 			$append .= "});
 				   </script>";
 	}
-	$append .= '<div id="ngslideshow-'.get_the_ID().'" class="ngslideshow">';
+	if($use_themes != '0'){
+		$append .= '<div class="slider-wrapper theme-'.$use_themes.'">
+				<div class="ribbon"></div>';
+	}
+		$append .= '<div id="ngslideshow-'.get_the_ID().'" class="ngslideshow">';
 			  while( $slided->have_posts() ) : $slided->the_post();
-				$full_image_href = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'large', false);
-				$thumbnail_link = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'thumbnail', false);
-				if ( CMBSLD_PRO )
-					require CMBSLD_PLUGIN_DIR . '/pro/image_tall_frompost.php';
-				if ($thumbnails == "Y")
-					$thumbrel = 'rel="'. $thumbnail_link[0] .'" ';
-				if ($information == "Y")
-					$captitle = 'title="#'. $post -> ID .'-'.$post -> post_title.'"';
-				if ($jsframe == 'jquery'){
+$full_image_href = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'full', false);
+$thumbnail_link = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'thumbnail', false);
+if ( NSG_PRO ) {
+	 require NSG_PLUGIN_DIR . '/pro/image_tall_frompost.php';
+} else { // echo "<h4>&nbsp;</h4>";
+} if ($thumbnails_temp == "Y") {
+$thumbrel = 'rel="'. $thumbnail_link[0] .'" ';
+} if ($information_temp == "Y") {
+$captitle = 'title="#'. $post -> ID .'-'.$post -> post_title.'"';
+}
+		if ($jsframe == 'jquery'){
 				    $resize = '';
 				    if( !empty($style['resizeimages']) && $style['resizeimages'] == "Y") {
 					$resize .= ' width="'. $styles['wpns_width'] .'"';
@@ -828,35 +822,34 @@ if ($use_themes != '0'){
 				    if( !empty($style['resizeimages2']) && $style['resizeimages2'] == "Y") {
 					$resize .= ' height="'. $style['wpns_height'] .'"';
 				    }
-				}
-				if(has_post_thumbnail()){
-					//$append .= '<a href="'. post_permalink() .'" title="'. the_title('','',false).'">';
-					//$append .= get_the_post_thumbnail();
-					//$append .= '</a>';
-					if ($imagesbox != "nolink")
-						$append .= '<a href="'.post_permalink().'">';
-					$append .= '<img src="'.$full_image_href[0].'" alt="'.$this -> Html -> sanitize($post -> post_title).'" '.$thumbrel.' '.$captitle.' />';
-					//$append .= get_the_post_thumbnail($post->ID,$size,$attr);
-					if ($imagesbox != "nolink")
-						$append .= '</a>';
-				}
+		}
+		if(has_post_thumbnail()){
+			      //$append .= '<a href="'. post_permalink() .'" title="'. the_title('','',false).'">';
+			      //$append .= get_the_post_thumbnail();
+			      //$append .= '</a>';
+		      if ($imagesbox != "nolink")
+				$append .= '<a href="'.post_permalink().'">';
+				$append .= '<img src="'.$full_image_href[0].'" alt="'.$this -> Html -> sanitize($post -> post_title).'" '.$thumbrel.' '.$captitle.' />';
+			      //$append .= get_the_post_thumbnail($post->ID,$size,$attr);
+		      if ($imagesbox != "nolink")
+				$append .= '</a>';
+		}
 			  endwhile;
-	if ($jsframe == 'mootools' && $information == "Y") 
+	if ($jsframe == 'mootools' && $information_temp == "Y") 
 				$append .= "<div class='nivo-caption' style='opacity:".round(($captionopacity/100), 1) .";'>
 					    </div>";
 	if ($jsframe == 'mootools' && $navigation == "Y"){
 	}
-	if ($jsframe == 'mootools' && ($controlnav == "Y" || $thumbnails == "Y")){
+	if ($jsframe == 'mootools' && ($controlnav == "Y" || $thumbnails_temp == "Y")){
 				$append .= "<div class='nivo-controlNav'>";
 			  while( $slided->have_posts() ) : $slided->the_post();
-				$append .= "<a class='nivo-control' href='#slide-". $slided -> ID ."' title='".$slided -> post_title."'>";
-		if ($thumbnails == "Y"){
-				$thumbnail_link = wp_get_attachment_image_src($slided -> ID, 'thumbnail', false);
-				$append .= "<img src='".$thumbnail_link[0]."' alt='slideshow-thumbnail-".$slided -> ID."' />";
+				$append .= "<a class='nivo-control' href='#slide-". $slide -> ID ."' title='".$slide -> post_title."'>";
+		if ($thumbnails_temp == "Y"){
+				$thumbnail_link = wp_get_attachment_image_src($slide -> ID, 'thumbnail', false);
+				$append .= "<img src='".$thumbnail_link[0]."' alt='slideshow-thumbnail-".$slide -> ID."' />";
 		} else{
 				$append .= $index+1;
 		}
-				$append .= "</a>";
 			  endwhile;
 				$append .= '</div>';
 	}
@@ -870,13 +863,13 @@ if ($use_themes != '0'){
 			    }
 			  endwhile;
 
-		//if($use_themes != '0'){
+		if($use_themes != '0'){
 			$append .= '</div>';
-		//}
+		}
 			}
 		//wp_reset_query();
 		wp_reset_postdata();
-		$post = $post_switch;
+$post = $post_switch;
 		return $append;
 	}
 }

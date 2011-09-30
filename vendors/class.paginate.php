@@ -1,5 +1,5 @@
 <?php
-class GalleryPaginate extends CMBSLD_GalleryPlugin {
+class GalleryPaginate extends NSGalleryPlugin {
 	
 	/**
 	 * DB table name to paginate on

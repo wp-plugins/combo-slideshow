@@ -34,7 +34,7 @@
 					jQuery("#slidemessage<?php echo $i;?>").slideUp();
 				},
 				stop: function(request) {
-					jQuery("#slidemessage<?php echo $i;?>").load(CMBSLD_Ajax + "?cmd=slides_order", jQuery("ul#slidelist<?php echo $i;?>").sortable('serialize')).slideDown("slow");
+					jQuery("#slidemessage<?php echo $i;?>").load(NSGAjax + "?cmd=slides_order", jQuery("ul#slidelist<?php echo $i;?>").sortable('serialize')).slideDown("slow");
 				},
 				axis: "y"
 			});

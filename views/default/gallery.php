@@ -46,12 +46,6 @@ if ($this -> get_option('imagesbox') == "T")
 
 
 ?>
-	<?php if($slide_theme != '0') : ?>
-		<div class="slider-wrapper theme-<?php echo $use_theme; ?>">
-			<div class="ribbon"></div>
-	<?php else : ?>
-		<div class="slider-wrapper">
-	<?php endif; ?>
 	<?php if ($jsframe == 'jquery') : ?>
 		<script type="text/javascript">
 			jQuery(window).load(function() {
@@ -133,7 +127,7 @@ $('ngslideshow-<?php echo get_the_ID(); ?>').getParent().setStyle('position','re
 			capWrap.setStyles({ width: $('ngslideshow-<?php echo get_the_ID(); ?>').getSize().x,
 					    height: '1.6em',
 					    margin: $('ngslideshow-<?php echo get_the_ID(); ?>').getStyle('margin'),
-					    bottom: 0
+					    bottom: 0,
 				});
 			capWrap.inject($('ngslideshow-<?php echo get_the_ID(); ?>'),'after');
 			var slideCaptions = $$('div.nivo-html-caption').setStyles({display: 'block',
@@ -143,7 +137,7 @@ position:'absolute',
 'z-index': 9,
 										   top:0,
 										   left:0,
-										   width: '<?php echo $style['width'];?>px'
+										   width: '<?php echo $style['width'];?>px',
 									});
 			slideCaptions.inject(capWrap,'inside');
 			slideCaptions[0].fade('in');
@@ -245,14 +239,19 @@ position:'absolute',
 		    });
 		</script>
 	<?php endif; // END MOOTOOLS ?>
+		<?php $use_themes = $slide_theme; ?>
+		<?php if($use_themes != '0') : ?>
+			<div class="slider-wrapper theme-<?php echo $use_themes; ?>">
+				<div class="ribbon"></div>
+		<?php endif; ?>
 		<?php if ($frompost) : // WORDPRESS IMAGE GALLERY ONLY   ?>
 				<div id="ngslideshow-<?php echo get_the_ID(); ?>" class="ngslideshow">
 			<?php foreach ($slides as $slide) : ?>
 				<?php // echo $slide -> post_title;
 				$full_image_href = wp_get_attachment_image_src($slide -> ID, 'full', false);
 				$thumbnail_link = wp_get_attachment_image_src($slide -> ID, 'thumbnail', false);
-				if ( CMBSLD_PRO ) {
-					require CMBSLD_PLUGIN_DIR . '/pro/image_tall_frompost.php';
+				if ( NSG_PRO ) {
+					require NSG_PLUGIN_DIR . '/pro/image_tall_frompost.php';
 				} else {
 					// echo "<h4>&nbsp;</h4>";
 				} if ($thumbnails_temp == "Y") {
@@ -309,8 +308,8 @@ position:'absolute',
 				<div id="ngslideshow-<?php echo get_the_ID(); ?>" class="ngslideshow">
 			<?php foreach ($slides as $slide) : ?>
 				<?php // echo $slide -> title;
-				if ( CMBSLD_PRO ) {
-					require CMBSLD_PLUGIN_DIR . '/pro/image_tall_custom.php';
+				if ( NSG_PRO ) {
+					require NSG_PLUGIN_DIR . '/pro/image_tall_custom.php';
 				} else {
 					// echo "<h4>&nbsp;</h4>";
 				} if ($thumbnails_temp == "Y") {
@@ -327,19 +326,14 @@ position:'absolute',
 					$resize .= ' height="'. $style['wpns_height'] .'"';
 				    }
 				}
-				if ($imgbox != "nolink") {
-					$slidelink = '<a class="'.$imgbox.'" ';
-					if ($slide -> uselink == "Y" && !empty($slide -> link))
-						$slidelink .= 'href="'.$slide -> link.'" title="'.$slide -> title.'">';
-					else
-						$slidelink .= 'href="'.$this -> Html -> image_url($slide -> image).'" title="'.$slide -> title.'">';
-				echo $slidelink;
-				}
 				?>
-						<img id="slide-<?php echo $slide -> ID; ?>" src="<?php echo CMBSLD_UPLOAD_URL ?>/<?php echo $slide -> image; ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" <?php echo $thumbrel.$captitle.$resize; ?> />
-				<?php if ($imgbox != "nolink") : ?>
-					</a>
+				<?php if ($slide -> uselink == "Y" && !empty($slide -> link)) : ?>
+					<a href="<?php echo $slide -> link; ?>" title="<?php echo $slide -> title; ?>">
+				<?php else : ?>
+					<a href="<?php echo $this -> Html -> image_url($slide -> image); ?>" title="<?php echo $slide -> title; ?>">
 				<?php endif; ?>
+					<img id="slide-<?php echo $slide -> ID; ?>" src="<?php echo NSG_UPLOAD_URL ?>/<?php echo $slide -> image; ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" <?php echo $thumbrel.$captitle.$resize; ?> />
+					</a>
 			<?php endforeach; ?>
 			<?php if ($jsframe == 'mootools' && $information_temp == "Y") : ?>
 				<div class="nivo-caption" style="opacity:<?php round(($captionopacity/100), 1) ?>;">
@@ -375,5 +369,7 @@ position:'absolute',
 			    <?php endforeach; ?>
 			<?php endif; ?>
 		<?php endif; ?>
+		<?php if($use_themes != '0') : ?>
 			</div>
+		<?php endif; ?>
 <?php endif; // END SLIDES?>
