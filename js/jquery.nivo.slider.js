@@ -19,6 +19,7 @@
         var vars = {
             currentSlide: 0,
             currentImage: '',
+	    currentWidth: '',
             totalSlides: 0,
             randAnim: '',
             running: false,
@@ -36,6 +37,8 @@
         var kids = slider.children();
         kids.each(function() {
             var child = $(this);
+	    //child.show();
+	    child.css('display','block');
             var link = '';
             if(!child.is('img')){
                 if(child.is('a')){
@@ -47,6 +50,8 @@
             //Get img width & height
             var childWidth = child.width();
             if(childWidth == 0) childWidth = child.attr('width');
+	    else child.attr('width', childWidth);
+	    child.css('left',((slider.width() - child.attr('width'))/2) + 'px');
             var childHeight = child.height();
             if(childHeight == 0) childHeight = child.attr('height');
             //Resize the slider
@@ -58,8 +63,13 @@
             }
             if(link != ''){
                 link.css('display','none');
+		link.css('visibility','visible');
+		link.css('left','0');
             }
+            //child.hide();
             child.css('display','none');
+            child.css('visibility','visible');
+	    child.css('left','0');
             vars.totalSlides++;
         });
         
@@ -75,6 +85,7 @@
         } else {
             vars.currentImage = $(kids[vars.currentSlide]).find('img:first');
         }
+        //var currentWidth = vars.currentImage.width();
         
         //Show initial link
         if($(kids[vars.currentSlide]).is('a')){
@@ -82,7 +93,11 @@
         }
         
         //Set first background
+	//alert(slider.css('background-color'));
+	var originalbgColor = slider.css('background-color');
         slider.css('background','url("'+ vars.currentImage.attr('src') +'") no-repeat');
+	slider.css('background-position',((slider.width() - vars.currentImage.attr('width'))/2) + 'px 0px');
+	slider.css('background-color', originalbgColor);
 
         //Create caption
         slider.append(
@@ -120,7 +135,7 @@
         }
 
         //Add Direction nav
-        if(settings.directionNav){
+        if(settings.directionNav && kids.length > 1){
             slider.append('<div class="nivo-directionNav"><a class="nivo-prevNav">'+ settings.prevText +'</a><a class="nivo-nextNav">'+ settings.nextText +'</a></div>');
             
             //Hide Direction nav
@@ -153,6 +168,11 @@
         if(settings.controlNav){
             var nivoControl = $('<div class="nivo-controlNav"></div>');
             slider.append(nivoControl);
+        	if(settings.controlNavThumbs && settings.controlNavThumbsScroll){
+        		tnivoControl = $('<div class="nivo-controlNavScroll"></div>');
+        		nivoControl.append(tnivoControl);
+        		nivoControl = tnivoControl;
+        	}
             for(var i = 0; i < kids.length; i++){
                 if(settings.controlNavThumbs){
                     var child = kids.eq(i);
@@ -178,6 +198,11 @@
                 clearInterval(timer);
                 timer = '';
                 slider.css('background','url("'+ vars.currentImage.attr('src') +'") no-repeat');
+		slider.css('background-position',((slider.width() - vars.currentImage.attr('width'))/2) + 'px 0px');
+		slider.css('background-color', originalbgColor);
+		//alert(slider.width());
+		//alert(vars.currentImage.attr('width'));
+		//alert((slider.width() - vars.currentImage.attr('width'))/2);
                 vars.currentSlide = $(this).attr('rel') - 1;
                 nivoRun(slider, kids, settings, 'control');
             });
@@ -244,13 +269,16 @@
         var createSlices = function(slider, settings, vars){
             for(var i = 0; i < settings.slices; i++){
 				var sliceWidth = Math.round(slider.width()/settings.slices);
+				//var sliceWidth = Math.round(vars.currentImage.attr('width')/settings.slices);
 				if(i == settings.slices-1){
 					slider.append(
 						$('<div class="nivo-slice"></div>').css({ 
 							left:(sliceWidth*i)+'px', width:(slider.width()-(sliceWidth*i))+'px',
 							height:'0px', 
 							opacity:'0', 
-							background: 'url("'+ vars.currentImage.attr('src') +'") no-repeat -'+ ((sliceWidth + (i * sliceWidth)) - sliceWidth) +'px 0%'
+							background: 'url("'+ vars.currentImage.attr('src') +'") no-repeat -'+ ((sliceWidth + (i * sliceWidth)) - sliceWidth) +'px 0%',
+							'background-color': slider.css('background-color'),
+							'background-position': ((slider.width() - vars.currentImage.attr('width'))/2) + 'px 0px'
 						})
 					);
 				} else {
@@ -259,7 +287,9 @@
 							left:(sliceWidth*i)+'px', width:sliceWidth+'px',
 							height:'0px', 
 							opacity:'0', 
-							background: 'url("'+ vars.currentImage.attr('src') +'") no-repeat -'+ ((sliceWidth + (i * sliceWidth)) - sliceWidth) +'px 0%'
+							background: 'url("'+ vars.currentImage.attr('src') +'") no-repeat -'+ ((sliceWidth + (i * sliceWidth)) - sliceWidth) +'px 0%',
+							'background-color': slider.css('background-color'),
+							'background-position': ((slider.width() - vars.currentImage.attr('width'))/2) + 'px 0px'
 						})
 					);
 				}
@@ -319,6 +349,8 @@
 			//Set current background before change
 			if(!nudge){
 				slider.css('background','url("'+ vars.currentImage.attr('src') +'") no-repeat');
+				slider.css('background-position',((slider.width() - vars.currentImage.attr('width'))/2) + 'px 0px');
+				slider.css('background-color', originalbgColor);
 			} else {
 				if(nudge == 'prev'){
 					slider.css('background','url("'+ vars.currentImage.attr('src') +'") no-repeat');
@@ -326,6 +358,8 @@
 				if(nudge == 'next'){
 					slider.css('background','url("'+ vars.currentImage.attr('src') +'") no-repeat');
 				}
+				slider.css('background-position',((slider.width() - vars.currentImage.attr('width'))/2) + 'px 0px');
+				slider.css('background-color', originalbgColor);
 			}
 			vars.currentSlide++;
             //Trigger the slideshowEnd callback
@@ -340,7 +374,7 @@
 			} else {
 				vars.currentImage = $(kids[vars.currentSlide]).find('img:first');
 			}
-			
+			//alert(vars.currentImage.width());
 			//Set active links
 			if(settings.controlNav){
 				$('.nivo-controlNav a', slider).removeClass('active');
@@ -478,12 +512,16 @@
 				createSlices(slider, settings, vars);
 				
 				var firstSlice = $('.nivo-slice:first', slider);
-                firstSlice.css({
-                    'height': '100%',
-                    'width': slider.width() + 'px'
-                });
+				firstSlice.css({
+					'height': '100%',
+					'width': slider.width() + 'px',
+					//'width': vars.currentImage.attr('width') + 'px',
+					//'margin': '0 ' + ((slider.width() - vars.currentImage.attr('width'))/2) + 'px'
+					'background-position': ((slider.width() - vars.currentImage.attr('width'))/2) + 'px 0px'
+					});
     
 				firstSlice.animate({ opacity:'1.0' }, (settings.animSpeed*2), '', function(){ slider.trigger('nivo:animFinished'); });
+				//slider.delay(settings.animSpeed*2).css('background-image','none');
 			}          
             else if(settings.effect == 'slideInRight' || vars.randAnim == 'slideInRight'){
 				createSlices(slider, settings, vars);

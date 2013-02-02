@@ -60,6 +60,7 @@ var SlideShow = this.SlideShow = new Class({
 		this.index = this.current.retrieve('slideshow-index');
 		this.setLoop(this.show.pass(this.reversed ? 'previous' : 'next', this), this.options.delay);
 		if (this.options.autoplay) this.play();
+		this.fireEvent('load');
 		return this;
 	},
 

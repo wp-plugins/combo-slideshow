@@ -1,5 +1,12 @@
 Combo Slideshow Changelog
 
+= 1.5 (2012.10.30) =
+* Improved output: new parameters available ($size, $width, $height, $custom) in manual functions and shortcodes for multiple independent custom slideshow sizes
+* Improved cropping / resizing of each slide
+* Several bugfixes in thumbnail generation, caption links and auto insert feature
+* Scrolling thumbnails
+* Changed required back-end capability from 'manage_options' to 'edit_others_posts'
+
 = 1.4 (2011.09.30) =
 * Bugfix: custom slideshow gallery output
 

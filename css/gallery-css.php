@@ -4,16 +4,16 @@
 foreach ($_GET as $skey => $sval) :
 	$styles[$skey] = urldecode($sval);
 endforeach;
-IF ($styles['width_temp']) {
+if (isset($styles['width_temp'])) {
 	$styles['width'] = $styles['width_temp'];
 }
-IF ($styles['height_temp']) {
+IF (isset($styles['height_temp'])) {
 	$styles['height'] = $styles['height_temp'];
 }
-IF ($styles['wpns_width_temp']) {
+IF (isset($styles['wpns_width_temp'])) {
 	$styles['wpns_width'] = $styles['wpns_width_temp'];
 }
-IF ($styles['wpns_height_temp']) {
+IF (isset($styles['wpns_height_temp'])) {
 	$styles['wpns_height'] = $styles['wpns_height_temp'];
 }
 $navimg = "../images/arrows.png";
@@ -28,6 +28,28 @@ ELSEIF ($styles['navbullets'] == 'default') { $controlimg = "default/bullets.png
 ELSEIF ($styles['navbullets'] == 'orman') { $controlimg = "orman/bullets.png"; }
 ELSEIF ($styles['navbullets'] == 'pascal') { $controlimg = "pascal/bullets.png"; }
 ELSEIF ($styles['navbullets'] == 'custom') { $controlimg = get_stylesheet_directory_uri().'/'.$styles['custombul'].'/bullets.png'; }
+/*
+	      if($params['frompost'] == true || is_single()){
+		    $combo_id = get_the_ID();
+		    $args = array(
+			'post_type' => 'attachment',
+			'numberposts' => $featured_num,
+			'post_status' => null,
+			'post_parent' => $combo_id,
+			'post_mime_type' => 'image'
+		);
+		$attachments = get_posts($args);
+		if ($attachments) {
+		    foreach ($attachments as $attachment) {
+			$att_info = wp_get_attachment_image_src( $attachment->ID, 'comboslide' );
+			$img_width[] = $att_info[1];
+			$img_height[] = $att_info[2];
+		    }
+		    $styles['width'] = $styles['wpns_width'] = min($img_width);
+		    $styles['height'] = $styles['wpns_height'] = min($img_height);
+		}
+	      }
+*/
 ?>
 .ngslideshow {
 	/* -moz-box-shadow:0 0 10px #333333; */
@@ -40,13 +62,15 @@ text-align:center;
 	position:absolute;
 	top:0px;
 	left:0px;
-	/* display:none; */
 <?php if (!empty($styles['resizeimages']) && $styles['resizeimages'] == "Y") : ?>
 width:<?php echo ((int) $styles['wpns_width']);?>px;
 <?php endif; ?>
 <?php if (!empty($styles['resizeimages2']) && $styles['resizeimages2'] == "Y") : ?>
 height:<?php echo ((int) $styles['wpns_height']);?>px;
 <?php endif; ?> 
+	left:-<?php echo ((int) $styles['width']);?>px;
+	/*visibility:hidden;*/
+	display:none;
 }
 .ngslideshow a {
 	//position:absolute;
@@ -64,23 +88,36 @@ height:<?php echo ((int) $styles['wpns_height']);?>px;
 	top:0px;
 	left:0px;
 }
+.nivoSlider div img {
+	position:relative;
+	top:0px;
+	left:0px;
+	display:block;
+	visibility:visible;
+}
 /* If an image is wrapped in a link */
 .nivoSlider a.nivo-imageLink {
 	position:absolute;
 	top:0px;
-	left:0px;
+	left:-<?php echo ((int) $styles['width']);?>px;
 	width:100%;
 	height:100%;
 	border:0;
 	padding:0;
 	margin:0;
 	z-index:6;
+	visibility:hidden;
+	overflow:hidden;
 	display:none;
+}
+.nivoSlider a.nivo-imageLink img {
+
 }
 /* The slices and boxes in the Slider */
 .nivo-slice {
 	display:block;
-	position:absolute;
+	position:relative;
+	margin:0 auto;
 	z-index:5;
 	height:100%;
 }
@@ -91,10 +128,10 @@ height:<?php echo ((int) $styles['wpns_height']);?>px;
 }
 /* Caption styles */
 .nivo-caption {
-	position:absolute;
+	position:relative;
 	left:0px;
 	bottom:0px;
-	bottom: <?php echo ((int)$styles['offsetcap']);?>px;
+	margin-top: <?php echo ((int)$styles['offsetcap']);?>px;
 	background:<?php echo $styles['infobackground']; ?>;
 	color:<?php echo $styles['infocolor']; ?>;
 	opacity:0.8; /* Overridden by captionOpacity setting */
@@ -115,7 +152,7 @@ height:<?php echo ((int) $styles['wpns_height']);?>px;
 /* Direction nav styles (e.g. Next & Prev) */
 .nivo-directionNav a {
 	position:absolute;
-	top:45%;
+	top:<?php echo (((int)($styles['height'])-60)/2);?>px;;
 	z-index:9;
 	cursor:pointer;
 }
@@ -126,26 +163,25 @@ height:<?php echo ((int) $styles['wpns_height']);?>px;
 	right:0px;
 }
 
-<?php if ($styles['thumbs'] == "Y") : ?>
+<?php if (isset($styles['thumbs']) && $styles['thumbs'] == "Y") : ?>
 .ngslideshow .nivo-controlNav, .nivo-controlNav {
 	position:relative;
 	//margin: 0 auto;
-	bottom: <?php echo ((int)$styles['offsetnav']);?>px;
+	bottom: 0;
+	margin-top: <?php echo ((int)$styles['offsetnav']);?>px;
 	//top:<?php echo ((int) (10 + $styles['height']) );?>px; /* Put the nav below the slider */
 	text-align:center;
-<?php if (empty($styles['resizeimages']) || $styles['resizeimages'] == "Y") : ?>
-width:<?php echo ((int) $styles['width']);?>px;
-<?php endif; ?>
+	background-color: <?php echo $styles['background']; ?>;
 }
 .ngslideshow .nivo-controlNav img, .nivo-controlNav img  {
 	display:inline; /* Unhide the thumbnails */
 	position:relative;
-	margin-right:10px;
+	margin-right:6px;
 	height: auto;
 	width: auto;
 }
 .nivo-controlNav a.active img {
-	border: 1px solid #000;
+	border: 2px solid #000;
 }
 .ngslideshow .nivo-controlNav a, .nivo-controlNav a {
 <?php if (empty($styles['controlnumbers']) || $styles['controlnumbers'] == "N") : ?>
@@ -155,15 +191,13 @@ width:<?php echo ((int) $styles['width']);?>px;
 <?php endif; ?>
 	display:inline;
 }
-<?php elseif ($styles['thumbs'] != "Y") : ?>
+<?php else : ?>
 .ngslideshow .nivo-controlNav, .nivo-controlNav {
-	bottom: <?php echo ((int)$styles['offsetnav']);?>px;
-	//top:<?php echo ((int) (10 + $styles['height']) );?>px; /* Put the nav below the slider */
+	bottom: 0;
+	margin-top: <?php echo ((int)$styles['offsetnav']);?>px;
+	/* top:<?php echo ((int) (10 + $styles['height']) );?>px; */
 	position:relative;
 	text-align:center;
-<?php if (empty($styles['resizeimages']) || $styles['resizeimages'] == "Y") : ?>
-width:<?php echo ((int) $styles['width']);?>px;
-<?php endif; ?>
 }
 .ngslideshow .nivo-controlNav a, .nivo-controlNav a {
 <?php if (empty($styles['controlnumbers']) || $styles['controlnumbers'] == "N") : ?>
@@ -198,7 +232,7 @@ display:inline-block;
 	background:url("<?php echo($navimg); ?>") no-repeat scroll 0 0 transparent;
 	border:0 none;
 	display:block;
-	height:34px;
+	height:60px;
 	text-indent:-9999px;
 	width:32px;
 }

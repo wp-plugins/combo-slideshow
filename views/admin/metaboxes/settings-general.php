@@ -257,7 +257,7 @@
     </table>
 </div>
 </div>
-<div id=nivopause_div"  class="jquery-powered" style="display:<?php echo ($this -> get_option('jsframe') == "jquery") ? 'block' : 'none'; ?>;">
+<div id=nivopause_div">
    <table class="form-table">
 	<tbody>      
 		<tr>
@@ -362,8 +362,8 @@
 			<td>
 				<input style="width:45px;" id="styles.offsetnav" type="text" name="styles[offsetnav]" value="<?php echo $styles['offsetnav']; ?>" />  
 				<?php _e('px', $this -> plugin_name); ?>
-				<span class="howto"><?php _e('fine tune the navigation control Y position from the bottom', $this -> plugin_name); ?><br />
-				<?php _e('(positive values mean going up)', $this -> plugin_name); ?></span>
+				<span class="howto"><?php _e('fine tune the navigation control margin-bottom / Y position', $this -> plugin_name); ?><br />
+				<?php _e('(negative values mean going up)', $this -> plugin_name); ?></span>
 			</td>
 		</tr>
 	</tbody>
@@ -428,7 +428,7 @@
 </table>
 </div>
 </div>
-<div id="navigation_div"  class="jquery-powered" style="display:<?php echo ($this -> get_option('jsframe') == "jquery") ? 'block' : 'none'; ?>;">
+<div id="keynav_div"  class="jquery-powered" style="display:<?php echo ($this -> get_option('jsframe') == "jquery") ? 'block' : 'none'; ?>;">
    <table class="form-table">
 	<tbody>
 		<tr>
@@ -439,6 +439,12 @@
 				<span class="howto"><?php _e('use left & right arrows', $this -> plugin_name); ?></span>
 			</td>
 		</tr>
+	</tbody>
+</table>
+</div>
+<div id="navigation_div">
+   <table class="form-table">
+	<tbody>
 		<tr>
 			<th><label for="navigationY"><?php _e('Navigation Direction Buttons', $this -> plugin_name); ?></label></th>
 			<td>
@@ -450,7 +456,6 @@
 	</tbody>
 </table>
 </div>
-<div id="navswapper_div" class="jquery-powered" style="display:<?php echo ($this -> get_option('jsframe') == "jquery") ? 'block' : 'none'; ?>;">
 <div id="navarrows_div"  style="display:<?php echo ($this -> get_option('navigation') == "Y") ? 'block' : 'none'; ?>;">
    <table class="form-table">
 	<tbody>
@@ -488,7 +493,7 @@
 	</tbody>
 </table>
 </div>
-<div id="navhover_div" class="jquery-powered" style="display:<?php echo ($this -> get_option('information') == "Y") ? 'block' : 'none'; ?>;">
+<div id="navhover_div" style="display:<?php echo ($this -> get_option('navigation') == "Y") ? 'block' : 'none'; ?>;">
 	<table class="form-table">
 		<tbody>
 			<tr>
@@ -501,5 +506,4 @@
 			</tr>			
 		</tbody>
 	</table>
-</div>
 </div>

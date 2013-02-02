@@ -5,10 +5,10 @@ Plugin URI: http://www.3dolab.net/en
 Author: 3dolab
 Author URI: http://www.3dolab.net
 Description: The features of the best slideshow javascript effects and WP plugins. Blog posts highlights, image gallery, custom slides!
-Version: 1.4
+Version: 1.5
 */
 define('DS', DIRECTORY_SEPARATOR);
-define( 'CMBSLD_VERSION', '1.4' );
+define( 'CMBSLD_VERSION', '1.5' );
 if ( ! defined( 'CMBSLD_PLUGIN_BASENAME' ) )
 	define( 'CMBSLD_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 if ( ! defined( 'CMBSLD_PLUGIN_NAME' ) )
@@ -46,13 +46,17 @@ class CMBSLD_Gallery extends CMBSLD_GalleryPlugin {
 		$this -> add_filter('mce_external_plugins');
 		$this -> add_filter( 'the_content', 'auto_combo_slider' );
 		// $this -> add_theme_support('post-thumbnails');
-
+$styles = $this -> get_option('styles');
+$combowidth = $styles['width'];
+$comboheight = $styles['height'];
+		add_image_size( 'comboslide', $combowidth, $comboheight, true );
 		add_shortcode('slideshow', array($this, 'embed'));
 	}
 	function auto_combo_slider( $content ) {
-	    if ( ( ( is_home() || is_front_page() ) && $this -> get_option('wpns_home') == 'Y' ) || $this -> get_option('wpns_auto') == 'Y' ){
+	    if ( ( ( is_home() || is_front_page() ) && $this -> get_option('wpns_home') == 'Y' ) ){
 		  $comboslidercode = $this -> show_combo_slider();
-		  //return $content.$nivoslidercode;
+	    } elseif (  $this -> get_option('wpns_auto') == 'Y' ){
+		  $comboslidercode = $this -> embed();
 	    } elseif ( ( ( is_home() || is_front_page() ) && $this -> get_option('wpns_home') == 'C' ) || $this -> get_option('wpns_auto') == 'C' ){
 		  //$slides = $this -> Slide -> find_all(null, null, array('order', "ASC"), $this -> get_option('postlimit'));
 		  //$comboslidercode = $this -> render('gallery', array('slides' => $slides, 'frompost' => false), false, 'default');
@@ -67,9 +71,9 @@ class CMBSLD_Gallery extends CMBSLD_GalleryPlugin {
 	    return $content;
 	}
 	function admin_menu() {
-		add_menu_page(__('Combo Slideshow', $this -> plugin_name), __('Combo Slideshow', $this -> plugin_name), 'manage_options', "gallery", array($this, 'admin_settings'), CMBSLD_PLUGIN_URL . '/images/icon.png');
+		add_menu_page(__('Combo Slideshow', $this -> plugin_name), __('Combo Slideshow', $this -> plugin_name), 'edit_others_posts', "gallery", array($this, 'admin_settings'), CMBSLD_PLUGIN_URL . '/images/icon.png');
 		$this -> menus['gallery'] = add_submenu_page("gallery", __('Configuration', $this -> plugin_name), __('Configuration', $this -> plugin_name), 'manage_options', "gallery", array($this, 'admin_settings'));
-		$this -> menus['gallery-slides'] = add_submenu_page("gallery", __('Manage Slides', $this -> plugin_name), __('Manage Slides', $this -> plugin_name), 'manage_options', "gallery-slides", array($this, 'admin_slides'));		
+		$this -> menus['gallery-slides'] = add_submenu_page("gallery", __('Manage Slides', $this -> plugin_name), __('Manage Slides', $this -> plugin_name), 'edit_others_posts', "gallery-slides", array($this, 'admin_slides'));		
 		
 		add_action('admin_head-' . $this -> menus['gallery'], array($this, 'admin_head_gallery_settings'));
 	}
@@ -108,36 +112,96 @@ class CMBSLD_Gallery extends CMBSLD_GalleryPlugin {
 		return $plugins;
 	}
 
-	function slideshow($output = true, $post_id = null, $exclude = null, $include = null, $custom = null, $width = null, $height = null) {
-//	function slideshow() {		
+	function slideshow($output = true, $post_id = null, $exclude = null, $include = null, $custom = null, $width = null, $height = null, $thumbs = null, $caption = null, $auto = null, $nolink = null, $slug = null, $limit = null, $size = null) {
+//	function slideshow() {
 	
 		$args = func_get_args();
-		global $wpdb;
+		global $wpdb, $post;
 		$post_id_orig = $post -> ID;
-		if ( ((! empty($width)) || (! empty($height))) && CMBSLD_PRO ) {
+
+		if ($this -> get_option('information')=='Y') { $this -> update_option('information_temp', 'Y'); }
+		elseif ($this -> get_option('information')=='N') { $this -> update_option('information_temp', 'N'); }
+		if ($this -> get_option('thumbnails')=='Y') { $this -> update_option('thumbnails_temp', 'Y'); }
+		elseif ($this -> get_option('thumbnails')=='N') { $this -> update_option('thumbnails_temp', 'N'); }
+		if ($this -> get_option('autoslide')=='Y') { $this -> update_option('autoslide_temp', 'Y'); }
+		elseif ($this -> get_option('autoslide')=='N') { $this -> update_option('autoslide_temp', 'N'); }
+
+		if (!empty($caption)) { 
+			if (($this -> get_option('information')=='Y') && ($caption == 'off')) {
+				$this -> update_option('information_temp', 'N');	
+			} elseif (($this -> get_option('information')=='N') && ($caption == 'on')) {
+				$this -> update_option('information_temp', 'Y');
+			}
+		}
+		if (!empty($thumbs)) { 
+			if (($this -> get_option('thumbnails')=='Y') && ($thumbs == 'off')) {
+				$this -> update_option('thumbnails_temp', 'N');
+			} elseif (($this -> get_option('thumbnails')=='N') && ($thumbs == 'on')) {
+				$this -> update_option('thumbnails_temp', 'Y');
+			}
+		}
+		if (!empty($auto)) { 
+			if (($this -> get_option('autoslide')=='Y') && ($auto == 'off')) {
+				$this -> update_option('autoslide_temp', 'N');	
+			} elseif (($this -> get_option('autoslide')=='N') && ($auto == 'on')) {
+				$this -> update_option('autoslide_temp', 'Y');
+			}
+		} elseif ($this -> get_option('autoslide') == 'Y') { 
+			$this -> update_option('autoslide_temp', 'Y'); 
+		} else {
+			$this -> update_option('autoslide_temp', 'N'); 
+		}
+		if (!empty($nocaption)) { $this -> update_option('information', 'N'); }
+		if (!empty($nolink)) { $this -> update_option('linker', 'N'); }
+			else { $this -> update_option('linker', 'Y'); }
+
+		if ( ((! empty($width)) || (! empty($height))) ) {
+		      if (CMBSLD_PRO)
 			require CMBSLD_PLUGIN_DIR . '/pro/custom_sizing.php';
 		}
 //		$this -> add_action( 'wp_print_styles', 'gs_enqueue_styles' );
-		if ( ! empty($post_id) && $post = get_post($post_id)) {
-			if ($attachments = get_children("post_parent=" . $post -> ID . "&post_type=attachment&post_mime_type=image&orderby=menu_order ASC, ID ASC")) {
-				$content = $this -> exclude_ids($attachments, $exclude, $include);
+		if (!empty($custom) && empty($post_id) && empty($slug)) {
+		//elseif ( ! empty( $custom ) ){
+			if ($limit != null)
+			  $slides = $this -> Slide -> find_all(null, null, array('order', "ASC"), $limit);
+			else
+			  $slides = $this -> Slide -> find_all(null, null, array('order', "ASC"));
+			$content = $this -> render('gallery', array('slides' => $slides, 'frompost' => false, 'width' => $width, 'height' => $height, 'size' => $size), false, 'default');
+		} else {
+			if (empty($slug)) {
+				$pid = (empty($post_id)) ? $post -> ID : $post_id;
+			} else {
+				$page = get_page_by_path('$slug');
+				if ($page) {
+					$pid = $page->ID;
+				} else {
+					$page = get_page_by_path($slug, '', 'post');
+					if ($page) {
+						$pid = $page->ID;
+					} else {
+						$pid = (empty($post_id)) ? $post -> ID : $post_id;
+					}
+				}
+			}
+		//if ( ! empty($post_id) && $post = get_post($post_id)) {
+			if ($attachments = get_children("post_parent=" . $pid . "&post_type=attachment&post_mime_type=image&orderby=menu_order ASC, ID ASC")) {
+				if ($limit != null)
+					$attachments = array_slice($attachments,0,$limit);
+				$content = $this -> exclude_ids($attachments, $exclude, $include, $width, $height, $custom, $size);
 			}
 		}
 /*		elseif ( ! empty( $custom ) && is_numeric($custom) ) {
 			$slides = $this -> Slide -> find_all(array('section'=>(int) stripslashes($custom)), null, array('order', "ASC"));
 			$content = $this -> render('gallery', array('slides' => $slides, 'frompost' => false), false, 'default');
 		}*/
-		elseif ( ! empty( $custom ) ){
-			$slides = $this -> Slide -> find_all(null, null, array('order', "ASC"));
-			$content = $this -> render('gallery', array('slides' => $slides, 'frompost' => false), false, 'default');
-		}
+		
 		$post -> ID = $post_id_orig;
 		if ($output) { echo $content; } else { return $content; }
 	}
 	function embed($atts = array(), $content = null) {
 		//global variables
 		global $wpdb;
-		$defaults = array('post_id' => null, 'exclude' => null, 'include' => null, 'custom' => null, 'caption' => null, 'auto' => null, 'w' => null, 'h' => null, 'nolink' => null, 'slug' => null, 'thumbs' => null, 'limit' => null);
+		$defaults = array('post_id' => null, 'exclude' => null, 'include' => null, 'custom' => null, 'caption' => null, 'auto' => null, 'w' => null, 'h' => null, 'nolink' => null, 'slug' => null, 'thumbs' => null, 'limit' => null, 'size' => null, 'width' => null, 'height' => null);
 		extract(shortcode_atts($defaults, $atts));
 		// This section allows for using _temp variable only (esp in gallery.php)
 		if ($this -> get_option('information')=='Y') { $this -> update_option('information_temp', 'Y'); }
@@ -148,7 +212,10 @@ class CMBSLD_Gallery extends CMBSLD_GalleryPlugin {
 		elseif ($this -> get_option('autoslide')=='N') { $this -> update_option('autoslide_temp', 'N'); }
 		if ($this -> get_option('postlimit') != null && empty($limit))
 			$limit = $this -> get_option('postlimit');
-		
+		if (empty($w) && !empty($width))
+			$w = $width;
+		if (empty($h) && !empty($height))
+			$h = $height;
 		if (!empty($caption)) { 
 			if (($this -> get_option('information')=='Y') && ($caption == 'off')) {
 				$this -> update_option('information_temp', 'N');	
@@ -183,7 +250,7 @@ class CMBSLD_Gallery extends CMBSLD_GalleryPlugin {
 		if (!empty($nocaption)) { $this -> update_option('information', 'N'); }
 		if (!empty($nolink)) { $this -> update_option('linker', 'N'); }
 			else { $this -> update_option('linker', 'Y'); }
-		if (!empty($custom)) {
+		if (!empty($custom) && empty($post_id) && empty($slug)) {
 /*			if (is_numeric($custom)){
 			  $slides = $this -> Slide -> find_all(array('section'=>(int) stripslashes($custom)), null, array('order', "ASC"));
 			  $content = $this -> render('gallery', array('slides' => $slides, 'frompost' => false), false, 'default');
@@ -192,7 +259,7 @@ class CMBSLD_Gallery extends CMBSLD_GalleryPlugin {
 			  $slides = $this -> Slide -> find_all(null, null, array('order', "ASC"), $limit);
 			  else
 			  $slides = $this -> Slide -> find_all(null, null, array('order', "ASC"));
-			  $content = $this -> render('gallery', array('slides' => $slides, 'frompost' => false), false, 'default');
+			  $content = $this -> render('gallery', array('slides' => $slides, 'frompost' => false, 'width' => $w, 'height' => $h, 'size' => $size), false, 'default');
 //			} 
 		} else {
 			global $post;
@@ -212,35 +279,54 @@ class CMBSLD_Gallery extends CMBSLD_GalleryPlugin {
 					}
 				}
 			}
-			if (!empty($pid) && $post = get_post($pid)) {
-				if ($attachments = get_children("post_parent=" . $post -> ID . "&post_type=attachment&post_mime_type=image&orderby=menu_order ASC, ID ASC")) {
-					$content = $this->exclude_ids($attachments, $exclude, $include);
+			//if (!empty($pid) && $post = get_post($pid)) {
+				if ($attachments = get_children("post_parent=" . $pid . "&post_type=attachment&post_mime_type=image&orderby=menu_order ASC, ID ASC")) {
+						if ($limit != null)
+							$attachments = array_slice($attachments,0,$limit);
+						$content = $this->exclude_ids($attachments, $exclude, $include, $w, $h, $custom, $size);
 				}
-			}
+			//}
 			$post -> ID = $post_id_orig;
 		}
 		return $content;
 	}
 	
-	function exclude_ids( $attachments, $exclude, $include ) {
-		if ( ! empty( $exclude )) {
+	function exclude_ids( $attachments, $exclude, $include, $width, $height, $custom, $size ) {
+		if ( !empty( $exclude )) {
 			$exclude = array_map('trim', explode(',', $exclude));
 /*			echo("<script type='text/javascript'>alert('exclude! ".$exclude[0]."');</script>");*/
-			foreach ( $attachments as $id => $attachment ) {
-				if (in_array( $id, $exclude )) {
-					unset( $attachments[$id] );
+			foreach ( $attachments as $index => $attachment ) {
+				if (in_array( $attachment->ID, $exclude )) {
+					unset( $attachments[$index] );
 				}
 			}
 		}
 		elseif (!empty($include)) {
 			$include = array_map('trim', explode(',', $include));
 /*			echo("<script type='text/javascript'>alert('include!".$include[0]."');</script>");*/
-			foreach ($attachments as $id => $attachment) {
-				if (in_array($id, $include)) {}
-				else { unset($attachments[$id]); }
+			foreach ($attachments as $index => $attachment) {
+				if (in_array($attachment->ID, $include)) {}
+				else { unset($attachments[$index]); }
 			}
 		}
-		$content = $this -> render('gallery', array('slides' => $attachments, 'frompost' => true), false, 'default');
+/*
+		foreach ($attachments as $indexatt => $attachment) {
+			//$styles = $this -> get_option('styles');
+			//$combowidth = $styles['width'];
+			//$comboheight = $styles['height'];
+			$att_info = wp_get_attachment_image_src( $attachment->ID, 'comboslide' );
+			if(!empty($att_info[1]) && $att_info[1]>=560)
+			    $img_width[] = $att_info[1];
+			else unset($attachments[$indexatt]);
+			if(!empty($att_info[2]) && $att_info[2]>=120)
+			    $img_height[] = $att_info[2];
+			else unset($attachments[$indexatt]);
+		}
+*/
+		if(empty($custom))
+			$custom = true;
+		if(!empty($attachments))
+			$content = $this -> render('gallery', array('slides' => $attachments, 'frompost' => $custom, 'width' => $width, 'height' => $height, 'size' => $size), false, 'default');
 		return $content;
 	}	
 	
