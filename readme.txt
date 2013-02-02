@@ -99,7 +99,7 @@ Simply apply a "width:100%" CSS rule using both the ".ngslideshow.nivoSlider" cl
 1. Slideshow gallery pro with thumbnails at the bottom.
 2. Slideshow gallery pro with thumbnails turned OFF.
 3. Slideshow gallery pro with thumbnails at the top.
-4. Different styles/colors.
+4. Different styles and colors.
 
 == Changelog ==
 
