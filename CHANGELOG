@@ -1,11 +1,14 @@
 Combo Slideshow Changelog
 
-= 1.5 (2012.10.30) =
+= 1.5 (2013.02.02) =
 * Improved output: new parameters available ($size, $width, $height, $custom) in manual functions and shortcodes for multiple independent custom slideshow sizes
 * Improved cropping / resizing of each slide
-* Several bugfixes in thumbnail generation, caption links and auto insert feature
+* Fixes over caption links generation, auto insert feature, include/exclude parameters
+* Several bugfixes over thumbnail generation
 * Scrolling thumbnails
 * Changed required back-end capability from 'manage_options' to 'edit_others_posts'
+* Direction/Arrow navigation controls also available within the MooTools framework
+* Fixes and improvements over IE6/7 compatibility
 
 = 1.4 (2011.09.30) =
 * Bugfix: custom slideshow gallery output
