@@ -4,9 +4,9 @@ Donate link: http://www.3dolab.net/en/combo-slideshow
 Tags: slideshow, slide show, combo, slideshow gallery, slides, image, gallery, content, highlight, showcase, javascript, jquery, mootools, nivo, nivo slider
 Requires at least: 2.8
 Tested up to: 3.4.2
-Stable tag: 1.5
+Stable tag: 1.6
 The features of the best slideshow javascript effects and WP plugins:
-blog posts highlights, image galleries, custom slides!
+blog posts highlights, image galleries, custom slides and more!
 
 
 == Description ==
@@ -94,14 +94,11 @@ In /views/default/gallery.php find this line: slideshow.letterbox = "#000"; Chan
 = How can I achieve a liquid layout? =
 Simply apply a "width:100%" CSS rule using both the ".ngslideshow.nivoSlider" classes, it will override the default fixed width
 
-== Screenshots ==
-
-1. Slideshow gallery pro with thumbnails at the bottom.
-2. Slideshow gallery pro with thumbnails turned OFF.
-3. Slideshow gallery pro with thumbnails at the top.
-4. Different styles and colors.
 
 == Changelog ==
+
+= 1.6 (2013.02.15) =
+* Bugfix: link with custom slides
 
 = 1.5 (2013.02.02) =
 * Improved output: new parameters available ($size, $width, $height, $custom) in manual functions and shortcodes for multiple independent custom slideshow sizes

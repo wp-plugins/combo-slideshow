@@ -5,10 +5,10 @@ Plugin URI: http://www.3dolab.net/en
 Author: 3dolab
 Author URI: http://www.3dolab.net
 Description: The features of the best slideshow javascript effects and WP plugins. Blog posts highlights, image gallery, custom slides!
-Version: 1.5
+Version: 1.6
 */
 define('DS', DIRECTORY_SEPARATOR);
-define( 'CMBSLD_VERSION', '1.5' );
+define( 'CMBSLD_VERSION', '1.6' );
 if ( ! defined( 'CMBSLD_PLUGIN_BASENAME' ) )
 	define( 'CMBSLD_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 if ( ! defined( 'CMBSLD_PLUGIN_NAME' ) )

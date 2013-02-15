@@ -607,9 +607,7 @@
 
 				?>
 						<img id="slide-<?php echo $slide -> id; ?>" src="<?php echo $slideimgsrc; ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" <?php echo $thumbrel.$captitle.$resize; ?> />
-				<?php if ($imgbox != "nolink") : ?>
 					</a>
-				<?php endif; ?>
 			<?php endforeach; ?>
 			<?php if ($jsframe == 'mootools' && $information_temp == "Y") : ?>
 				<div class="nivo-caption" style="display:block; opacity:<?php round(($captionopacity/100), 1) ?>;">

@@ -1,5 +1,8 @@
 Combo Slideshow Changelog
 
+= 1.6 (2013.02.15) =
+* Bugfix: link in custom slides
+
 = 1.5 (2013.02.02) =
 * Improved output: new parameters available ($size, $width, $height, $custom) in manual functions and shortcodes for multiple independent custom slideshow sizes
 * Improved cropping / resizing of each slide
