@@ -64,7 +64,7 @@ Running demo: http://www.3dolab.net/en/
 * $limit (default = null): limits the amount of slides loaded in the slideshow, or uses the global post limit setting
 * $size (default = null): sets dimensions as in the Media Settings screen (e.g. 'thumbnail', 'medium', etc), or 'comboslide' if nothing specified even in pixels
 
-= $CMBSLD_Gallery -> show_combo_slidershow_combo_slider() =
+= $CMBSLD_Gallery -> show_combo_slider() =
 * $category (default = null): loads only posts from the specified category
 * $n_slices (default = null): limits the amount of slides loaded in the slideshow, or uses the global post limit setting
 * $exclude (default = null): removes the specified attachment IDs (set in a comma-separated list) from the slideshow 
