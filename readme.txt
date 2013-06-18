@@ -45,6 +45,8 @@ Running demo: http://www.3dolab.net/en/
 5. Add and manage your slides in the 'Slideshow' section (or just use the built in wordpress gallery)
 6. Put the shortcode `[slideshow post_id="X" exclude="" caption="on/off"]` to embed a slideshow with the images of a post into your posts/pages or use `[slideshow custom=1]` to embed a slideshow with your custom added slides or `<?php if (class_exists('CMBSLD_Gallery')) { $CMBSLD_Gallery = new CMBSLD_Gallery(); $CMBSLD_Gallery -> slideshow($output = true, $post_id = null); }; ?>` into your WordPress theme
 
+* Please take care when updating, due to the new slide administration system any custom slideshow created with previous versions of the plugin will not work and won't even be shown
+
 == Additional Parameter Info ==
 
 = [slideshow] shortcode & $CMBSLD_Gallery -> slideshow() = 
