@@ -3,8 +3,8 @@ Contributors: 3dolab
 Donate link: http://www.3dolab.net/en/combo-slideshow
 Tags: slideshow, slide show, combo, slideshow gallery, slides, image, gallery, content, highlight, showcase, javascript, jquery, mootools, nivo, nivo slider
 Requires at least: 2.8
-Tested up to: 3.4.2
-Stable tag: 1.6
+Tested up to: 3.5.1
+Stable tag: 1.7
 The features of the best slideshow javascript effects and WP plugins:
 blog posts highlights, image galleries, custom slides and more!
 
@@ -26,8 +26,10 @@ It works natively in conjunction with the WordPress image upload and gallery sys
 * Hardcode into any PHP file of a WordPress theme with <code><?php if (class_exists('CMBSLD_Gallery')) { $CMBSLD_Gallery = new CMBSLD_Gallery(); $CMBSLD_Gallery -> slideshow($output = true, $post_id, $exclude, $include, $custom, $width, $height, $thumbs, $caption, $auto, $nolink, $slug, $limit, $size); } ?></code> and the required <code>$post_id</code> or <code>$custom</code> parameters accordingly specified
 * Global post slideshow: auto mode in Homepage and/or Posts + manual function show_combo_slider($category, $postlimit, $exclude, $offset, $n_slices, $size, $width, $height)
 
-Administration and Settings are heavily borrowed from the Slideshow Gallery Pro plugin (free version) by Cameron Preston and WP Nivo Slider by Rafael Cirolini.
+Administration and Settings have been completely renewed! 
+(whereas in previous versions they were heavily borrowed from the Slideshow Gallery Pro plugin (free version) by Cameron Preston and WP Nivo Slider by Rafael Cirolini)
 The selectable front-end effect scripts are the Nivo Slider plugin (on jQuery framework) or SlideShow by Ryan Florence (on MooTools).
+It works great in conjunction with the Gallery Metabox plugin.
 
 Plugin homepage: http://www.3dolab.net/en/combo-slideshow/
 
@@ -39,7 +41,7 @@ Running demo: http://www.3dolab.net/en/
 1. Extract the package to obtain the `combo-slideshow` folder
 2. Upload the `combo-slideshow` folder to the `/wp-content/plugins/` directory
 3. Activate the plugin through the 'Plugins' menu in WordPress
-4. Configure the settings according to your needs through the 'Slideshow' > 'Configuration' menu
+4. Configure the settings according to your needs through the 'Slideshow' > 'Settings' menu
 5. Add and manage your slides in the 'Slideshow' section (or just use the built in wordpress gallery)
 6. Put the shortcode `[slideshow post_id="X" exclude="" caption="on/off"]` to embed a slideshow with the images of a post into your posts/pages or use `[slideshow custom=1]` to embed a slideshow with your custom added slides or `<?php if (class_exists('CMBSLD_Gallery')) { $CMBSLD_Gallery = new CMBSLD_Gallery(); $CMBSLD_Gallery -> slideshow($output = true, $post_id = null); }; ?>` into your WordPress theme
 
@@ -47,23 +49,26 @@ Running demo: http://www.3dolab.net/en/
 
 = [slideshow] shortcode & $CMBSLD_Gallery -> slideshow() = 
 * $output (default = true): echoes the content, or just returns it if set to false
-* $post_id, $slug (default = null): retrieves attached images from a particular post, or from the global $post object if left unspecified
-* $custom (default = null): retrieves the custom images uploaded as slides, just set to whatever value but note that it does work only when $post_id and $slug are empty
+* $post_id (default = null): retrieves attached images from a particular post by id, or from the global $post object if left unspecified
 * $exclude (default = null): removes the specified attachment IDs (set in a comma-separated list) from the slideshow 
 * $include (default = null): removes anything but the attachment IDs (set in a comma-separated list)
-* $limit (default = null): limits the amount of slides loaded in the slideshow, or uses the global post limit setting
+* $custom (default = null): retrieves the custom images uploaded as slides, just set to whatever value but note that it does work only when $post_id and $slug are empty
 * $width, $height (default = null): sets dimensions in pixels, or default values if left unspecified
+* $thumbs (default = null): sets with 'on'/'off' the values for displaying thumbnails, disregarding the main setting
+* $caption (default = null): overwrites with 'on'/'off' values the main setting for displaying captions
+* $auto (default = null): sets with 'on'/'off' the values for the auto-slide feature, disregarding the main setting
+* $nolink (default = null): overwrites with 'on'/'off' values the main setting for removing links from captions
+* $slug (default = null): retrieves attached images from a particular post by slug
+* $limit (default = null): limits the amount of slides loaded in the slideshow, or uses the global post limit setting
 * $size (default = null): sets dimensions as in the Media Settings screen (e.g. 'thumbnail', 'medium', etc), or 'comboslide' if nothing specified even in pixels
-* $thumbs, $auto (default = null): sets with 'on'/'off' the values for displaying thumbnails and the auto-slide feature, disregarding the main setting
-* $nolink, $caption (default = null): overwrites with 'on'/'off' values the main setting for displaying captions and removing their link
 
-= show_combo_slider() =
+= $CMBSLD_Gallery -> show_combo_slidershow_combo_slider() =
 * $category (default = null): loads only posts from the specified category
 * $n_slices (default = null): limits the amount of slides loaded in the slideshow, or uses the global post limit setting
 * $exclude (default = null): removes the specified attachment IDs (set in a comma-separated list) from the slideshow 
 * $offset (default = null): starts the slideshow from the nth post
 * $width, $height, $size (default = null): sets dimensions in pixels or as in the Media Settings screen
-* please note that, at the moment, unlike in shortcodes, only the main settings are in use for the caption, links, thumbs and auto options 
+* please note that, unlike in shortcodes, only the main settings are in use for the caption, links, thumbs and auto options 
 
 == Frequently Asked Questions ==
 
@@ -74,7 +79,7 @@ Yes, you can: summon each instance anywhere with the appropriate shortcode or ma
 Enable it in the plugin settings and make sure that a post thumbnail is set in each post.
 
 = How Can I insert a custom slideshow in my content? =
-Make sure that a post thumbnail is set in each post. Use the shortcode or the manual function with the `custom` parameter set to wathever value
+First create a new Slideshow and add images to the media gallery. Use the shortcode or the manual function with the `custom` parameter set accordingly.
 
 = What if I only want captions on some of my pages =
 Set your default captions to off; for any slideshow you put on your page use `[slideshow caption="on"]`
@@ -97,8 +102,14 @@ Simply apply a "width:100%" CSS rule using both the ".ngslideshow.nivoSlider" cl
 
 == Changelog ==
 
+= 1.7 (2013.06.18) =
+* Updated to Nivo Slider jQuery plugin (v.3.2)
+* Full renewal of the slideshow management in admin UI, database and folders
+* Added new "Slideshow" post type
+* Added crop thumbnails option
+
 = 1.6 (2013.02.15) =
-* Bugfix: link with custom slides
+* Bugfix: link in custom slides
 
 = 1.5 (2013.02.02) =
 * Improved output: new parameters available ($size, $width, $height, $custom) in manual functions and shortcodes for multiple independent custom slideshow sizes

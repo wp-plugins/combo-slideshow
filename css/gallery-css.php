@@ -99,14 +99,15 @@ height:<?php echo ((int) $styles['wpns_height']);?>px;
 .nivoSlider a.nivo-imageLink {
 	position:absolute;
 	top:0px;
-	left:-<?php echo ((int) $styles['width']);?>px;
+	/* left:-<?php echo ((int) $styles['width']);?>px; */
+	left: 0px;
 	width:100%;
 	height:100%;
 	border:0;
 	padding:0;
 	margin:0;
 	z-index:6;
-	visibility:hidden;
+	/* visibility:hidden; */
 	overflow:hidden;
 	display:none;
 }
@@ -116,7 +117,7 @@ height:<?php echo ((int) $styles['wpns_height']);?>px;
 /* The slices and boxes in the Slider */
 .nivo-slice {
 	display:block;
-	position:relative;
+	position:absolute;
 	margin:0 auto;
 	z-index:5;
 	height:100%;
@@ -128,9 +129,9 @@ height:<?php echo ((int) $styles['wpns_height']);?>px;
 }
 /* Caption styles */
 .nivo-caption {
-	position:relative;
+	position:absolute;
 	left:0px;
-	bottom:0px;
+	/* bottom:0px; */
 	margin-top: <?php echo ((int)$styles['offsetcap']);?>px;
 	background:<?php echo $styles['infobackground']; ?>;
 	color:<?php echo $styles['infocolor']; ?>;

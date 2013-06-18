@@ -1,4 +1,5 @@
-<?php $styles = $this -> get_option('styles'); ?>
+<?php $styles = $this -> get_option('styles');
+	  $crop =  $this -> get_option('crop_thumbs'); ?>
 <span class="howto"><strong><?php _e('* Tip: make the best use of the slideshow by loading always content of the same dimensions', $this -> plugin_name); ?>
 <br />
 <?php _e('and setting the size of the frame (as well as the CSS rules) accordingly.', $this -> plugin_name); ?></strong>
@@ -28,6 +29,14 @@
 				<label><input onclick="jQuery('#ryanfimgsize_div').show();" <?php echo ($styles['resizeimages2'] == "Y") ? 'checked="checked"' : ''; ?> <?php echo ($resize2); ?> name="styles[resizeimages2]" value="Y" id="styles.resizeimages_Y" /> <?php _e('Yes', $this -> plugin_name); ?></label>
 				<label><input onclick="jQuery('#ryanfimgsize_div').hide();" <?php echo (empty($styles['resizeimages2']) || $styles['resizeimages2'] == "N") ? 'checked="checked"' : ''; ?>  <?php echo ($resize2); ?> name="styles[resizeimages2]" value="N" id="styles.resizeimages2_N" /> <?php _e('No', $this -> plugin_name); ?></label>
 				<span class="howto"><?php _e('Should images be resized proportionally to fit the height of the slideshow area. ', $this -> plugin_name); ?></span>
+			</td>
+		</tr>
+		<tr>
+			<th><label for="crop_thumbs"><?php _e('Crop Images', $this -> plugin_name); ?></label></th>
+			<td>
+				<label><input <?php echo ($crop == "Y") ? 'checked="checked"' : ''; ?> type="radio" name="crop_thumbs" value="Y" id="crop_thumbs_Y" /> <?php _e('Yes', $this -> plugin_name); ?></label>
+				<label><input <?php echo (empty($crop) || $crop == "N") ? 'checked="checked"' : ''; ?>  type="radio" name="crop_thumbs" value="N" id="crop_thumbs_N" /> <?php _e('No', $this -> plugin_name); ?></label>
+				<span class="howto"><?php _e('Should images be cropped to fit the height of the slideshow area. ', $this -> plugin_name); ?></span>
 			</td>
 		</tr>
     </tbody>

@@ -97,6 +97,28 @@
 	</select>
 	</td>
 	</tr>
+	<tr valign="top">
+        <th scope="row"><?php _e('Custom Slideshow selection', $this -> plugin_name); ?></th>
+        <td>
+        <select name="slide_gallery" id="slide_gallery"> 
+			<option value=""><?php _e('select a gallery', $this -> plugin_name); ?></option> 
+ 			<?php 
+ 				$gallery = $this -> get_option('slide_gallery');
+  				$galleries =  get_posts(array('post_type'=>'slideshow'));
+  				foreach ($galleries as $gall) {
+					$gallery_count = count(get_children("post_parent=" . $gall->ID . "&post_type=attachment&post_mime_type=image&orderby=menu_order ASC, ID ASC"));
+  					$option = '<option value="'.$gall->ID.'"';
+  					if ($gallery == $gall->ID) $option .= ' selected="selected">';
+  					else { $option .= '>'; }
+					$option .= $gall->post_title;
+					$option .= ' ('.$gallery_count.')';
+					$option .= '</option>';
+					echo $option;
+  				}
+ 			?>
+	</select>
+	</td>
+	</tr>
     	<tr valign="top">
         <th scope="row"><?php _e('Post limit', $this -> plugin_name); ?></th>
 	    <td>

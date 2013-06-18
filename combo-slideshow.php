@@ -5,7 +5,7 @@ Plugin URI: http://www.3dolab.net/en
 Author: 3dolab
 Author URI: http://www.3dolab.net
 Description: The features of the best slideshow javascript effects and WP plugins. Blog posts highlights, image gallery, custom slides!
-Version: 1.6
+Version: 1.7
 */
 define('DS', DIRECTORY_SEPARATOR);
 define( 'CMBSLD_VERSION', '1.6' );
@@ -46,10 +46,13 @@ class CMBSLD_Gallery extends CMBSLD_GalleryPlugin {
 		$this -> add_filter('mce_external_plugins');
 		$this -> add_filter( 'the_content', 'auto_combo_slider' );
 		// $this -> add_theme_support('post-thumbnails');
+		$this -> add_filter('attachment_fields_to_edit', 'my_image_attachment_fields_to_edit', null, 2);
+		$this -> add_filter('attachment_fields_to_save', 'my_image_attachment_fields_to_save', null, 2);
 $styles = $this -> get_option('styles');
+$crop = $this -> get_option('thumb_crop') ? true : false;
 $combowidth = $styles['width'];
 $comboheight = $styles['height'];
-		add_image_size( 'comboslide', $combowidth, $comboheight, true );
+		add_image_size( 'comboslide', $combowidth, $comboheight, $crop );
 		add_shortcode('slideshow', array($this, 'embed'));
 	}
 	function auto_combo_slider( $content ) {
@@ -60,7 +63,8 @@ $comboheight = $styles['height'];
 	    } elseif ( ( ( is_home() || is_front_page() ) && $this -> get_option('wpns_home') == 'C' ) || $this -> get_option('wpns_auto') == 'C' ){
 		  //$slides = $this -> Slide -> find_all(null, null, array('order', "ASC"), $this -> get_option('postlimit'));
 		  //$comboslidercode = $this -> render('gallery', array('slides' => $slides, 'frompost' => false), false, 'default');
-		  $comboslidercode = $this -> embed(array('custom'=>'1'));
+		  $slideshow_id = $this -> get_option('slide_gallery');
+		  $comboslidercode = $this -> embed(array('custom'=>$slideshow_id));
 	    } else {
 		  return $content;
 	    }
@@ -70,27 +74,62 @@ $comboheight = $styles['height'];
 		  $content = $content.$comboslidercode;
 	    return $content;
 	}
+	function my_image_attachment_fields_to_edit($form_fields, $post) {  
+		// $form_fields is a special array of fields to include in the attachment form  
+		// $post is the attachment record in the database  
+		//     $post->post_type == 'attachment'  
+		// (attachments are treated as posts in WordPress)  
+		  
+		// add our custom field to the $form_fields array  
+		// input type="text" name/id="attachments[$attachment->ID][custom1]"  
+		$form_fields["comboslide_link"] = array(  
+			"label" => __('Slideshow Link', $this -> plugin_name),
+			"input" => get_bloginfo('url'), // this is default if "input" is omitted  
+			"value" => get_post_meta($post->ID, "_comboslide_link", true)  
+		);  
+		// if you will be adding error messages for your field,   
+		// then in order to not overwrite them, as they are pre-attached   
+		// to this array, you would need to set the field up like this:  
+		$form_fields["comboslide_link"]["label"] = __('Slideshow Link', $this -> plugin_name);
+		$form_fields["comboslide_link"]["input"] = get_bloginfo('url');  
+		$form_fields["comboslide_link"]["value"] = get_post_meta($post->ID, '_comboslide_link', true);  
+		  
+		return $form_fields;  
+	}  
+	function my_image_attachment_fields_to_save($post, $attachment) {  
+		// $attachment part of the form $_POST ($_POST[attachments][postID])  
+		// $post attachments wp post array - will be saved after returned  
+		//     $post['post_type'] == 'attachment'  
+		if( isset($attachment['comboslide_link']) ){  
+			// update_post_meta(postID, meta_key, meta_value);  
+			update_post_meta($post['ID'], '_comboslide_link', $attachment['comboslide_link']);  
+		}  
+		return $post;  
+	}  
 	function admin_menu() {
-		add_menu_page(__('Combo Slideshow', $this -> plugin_name), __('Combo Slideshow', $this -> plugin_name), 'edit_others_posts', "gallery", array($this, 'admin_settings'), CMBSLD_PLUGIN_URL . '/images/icon.png');
-		$this -> menus['gallery'] = add_submenu_page("gallery", __('Configuration', $this -> plugin_name), __('Configuration', $this -> plugin_name), 'manage_options', "gallery", array($this, 'admin_settings'));
-		$this -> menus['gallery-slides'] = add_submenu_page("gallery", __('Manage Slides', $this -> plugin_name), __('Manage Slides', $this -> plugin_name), 'edit_others_posts', "gallery-slides", array($this, 'admin_slides'));		
-		
-		add_action('admin_head-' . $this -> menus['gallery'], array($this, 'admin_head_gallery_settings'));
+	/*
+		add_menu_page(__('Combo Slideshow', $this -> plugin_name), __('Combo Slideshow', $this -> plugin_name), 'edit_others_posts', "slideshow", array($this, 'admin_settings'), CMBSLD_PLUGIN_URL . '/images/icon.png');
+		$this -> menus['slideshow'] = add_submenu_page("slideshow", __('Configuration', $this -> plugin_name), __('Configuration', $this -> plugin_name), 'manage_options', "slideshow", array($this, 'admin_settings'));
+		$this -> menus['slideshow-slides'] = add_submenu_page("slideshow", __('Manage Slides', $this -> plugin_name), __('Manage Slides', $this -> plugin_name), 'edit_others_posts', "slideshow-slides", array($this, 'admin_slides'));		
+	*/
+		//$this -> menus['slideshow'] = add_submenu_page('options-general.php', __('Combo Slideshow', $this -> plugin_name), __('Combo Slideshow', $this -> plugin_name), 'edit_others_posts', 'slideshow', array($this, 'admin_settings'));
+		$this -> menus['slideshow'] = add_submenu_page('edit.php?post_type=slideshow', __('Combo Slideshow Settings', $this -> plugin_name), __('Settings', $this -> plugin_name), 'edit_others_posts', 'settings', array($this, 'admin_settings'));
+		//$this -> menus['slideshow'] = add_menu_page(__('Combo Slideshow', $this -> plugin_name), __('Combo Slideshow', $this -> plugin_name), 'edit_others_posts', "slideshow", array($this, 'admin_settings'), CMBSLD_PLUGIN_URL . '/images/icon.png');
+		add_action('admin_head-' . $this -> menus['slideshow'], array($this, 'admin_head_slideshow_settings'));
 	}
 	
 	function admin_head() {
 		$this -> render('head', false, true, 'admin');
 	}
 	
-	function admin_head_gallery_settings() {		
-		add_meta_box('submitdiv', __('Save Settings', $this -> plugin_name), array($this -> Metabox, "settings_submit"), $this -> menus['gallery'], 'side', 'core');
-		add_meta_box('generaldiv', __('General Settings', $this -> plugin_name), array($this -> Metabox, "settings_general"), $this -> menus['gallery'], 'normal', 'core');
-		add_meta_box('stylesdiv', __('Appearance &amp; Styles', $this -> plugin_name), array($this -> Metabox, "settings_styles"), $this -> menus['gallery'], 'normal', 'core');
-		add_meta_box('linksimagesdiv', __('Links &amp; Images Overlay', $this -> plugin_name), array($this -> Metabox, "settings_linksimages"), $this -> menus['gallery'], 'normal', 'core');
+	function admin_head_slideshow_settings() {		
+		add_meta_box('submitdiv', __('Save Settings', $this -> plugin_name), array($this -> Metabox, "settings_submit"), $this -> menus['slideshow'], 'side', 'core');
+		add_meta_box('generaldiv', __('General Settings', $this -> plugin_name), array($this -> Metabox, "settings_general"), $this -> menus['slideshow'], 'normal', 'core');
+		add_meta_box('stylesdiv', __('Appearance &amp; Styles', $this -> plugin_name), array($this -> Metabox, "settings_styles"), $this -> menus['slideshow'], 'normal', 'core');
+		add_meta_box('linksimagesdiv', __('Links &amp; Images Overlay', $this -> plugin_name), array($this -> Metabox, "settings_linksimages"), $this -> menus['slideshow'], 'normal', 'core');
 		
-		do_action('do_meta_boxes', $this -> menus['gallery'], 'normal');
-		do_action('do_meta_boxes', $this -> menus['gallery'], 'side');
-		
+		do_action('do_meta_boxes', $this -> menus['slideshow'], 'normal');
+		do_action('do_meta_boxes', $this -> menus['slideshow'], 'side');	
 	}
 	
 	function admin_notices() {
@@ -103,12 +142,12 @@ $comboheight = $styles['height'];
 	}
 	
 	function mce_buttons($buttons) {
-		array_push($buttons, "separator", "gallery");
+		array_push($buttons, "separator", "slideshow");
 		return $buttons;
 	}
 	
 	function mce_external_plugins($plugins) {
-		$plugins['gallery'] = CMBSLD_PLUGIN_URL . '/js/tinymce/editor_plugin.js';
+		$plugins['slideshow'] = CMBSLD_PLUGIN_URL . '/js/tinymce/editor_plugin.js';
 		return $plugins;
 	}
 
@@ -160,6 +199,8 @@ $comboheight = $styles['height'];
 			require CMBSLD_PLUGIN_DIR . '/pro/custom_sizing.php';
 		}
 //		$this -> add_action( 'wp_print_styles', 'gs_enqueue_styles' );
+
+/*
 		if (!empty($custom) && empty($post_id) && empty($slug)) {
 		//elseif ( ! empty( $custom ) ){
 			if ($limit != null)
@@ -168,7 +209,18 @@ $comboheight = $styles['height'];
 			  $slides = $this -> Slide -> find_all(null, null, array('order', "ASC"));
 			$content = $this -> render('gallery', array('slides' => $slides, 'frompost' => false, 'width' => $width, 'height' => $height, 'size' => $size), false, 'default');
 		} else {
-			if (empty($slug)) {
+*/
+			if (!empty($custom)) {
+				if(is_bool($custom) === true) {
+					$pid = $this -> get_option('slide_gallery');
+					$custom = $pid;
+				} elseif(is_numeric($custom))
+					$pid = int($custom);
+				elseif(is_string($custom)) {
+					$slideshow = get_page_by_path($custom, '', 'slideshow');
+					$pid = $slideshow->ID;
+				}
+			} elseif (empty($slug)) {
 				$pid = (empty($post_id)) ? $post -> ID : $post_id;
 			} else {
 				$page = get_page_by_path('$slug');
@@ -183,13 +235,14 @@ $comboheight = $styles['height'];
 					}
 				}
 			}
+
 		//if ( ! empty($post_id) && $post = get_post($post_id)) {
 			if ($attachments = get_children("post_parent=" . $pid . "&post_type=attachment&post_mime_type=image&orderby=menu_order ASC, ID ASC")) {
 				if ($limit != null)
 					$attachments = array_slice($attachments,0,$limit);
 				$content = $this -> exclude_ids($attachments, $exclude, $include, $width, $height, $custom, $size);
 			}
-		}
+		//}
 /*		elseif ( ! empty( $custom ) && is_numeric($custom) ) {
 			$slides = $this -> Slide -> find_all(array('section'=>(int) stripslashes($custom)), null, array('order', "ASC"));
 			$content = $this -> render('gallery', array('slides' => $slides, 'frompost' => false), false, 'default');
@@ -250,21 +303,29 @@ $comboheight = $styles['height'];
 		if (!empty($nocaption)) { $this -> update_option('information', 'N'); }
 		if (!empty($nolink)) { $this -> update_option('linker', 'N'); }
 			else { $this -> update_option('linker', 'Y'); }
+/*
 		if (!empty($custom) && empty($post_id) && empty($slug)) {
-/*			if (is_numeric($custom)){
-			  $slides = $this -> Slide -> find_all(array('section'=>(int) stripslashes($custom)), null, array('order', "ASC"));
-			  $content = $this -> render('gallery', array('slides' => $slides, 'frompost' => false), false, 'default');
-			} else {*/
 			  if ($limit != null)
 			  $slides = $this -> Slide -> find_all(null, null, array('order', "ASC"), $limit);
 			  else
 			  $slides = $this -> Slide -> find_all(null, null, array('order', "ASC"));
 			  $content = $this -> render('gallery', array('slides' => $slides, 'frompost' => false, 'width' => $w, 'height' => $h, 'size' => $size), false, 'default');
 //			} 
-		} else {
+		} else }
+*/
 			global $post;
 			$post_id_orig = $post -> ID;
-			if (empty($slug)) {
+			if (!empty($custom)) {
+				if(is_bool($custom) === true) { 
+					$pid = $this -> get_option('slide_gallery');
+					$custom = $pid;
+				} elseif(is_numeric($custom))
+					$pid = int($custom);
+				elseif(is_string($custom)) {
+					$slideshow = get_page_by_path($custom, '', 'slideshow');
+					$pid = $slideshow->ID;
+				}
+			} elseif (empty($slug)) {
 				$pid = (empty($post_id)) ? $post -> ID : $post_id;
 			} else {
 				$page = get_page_by_path('$slug');
@@ -287,7 +348,7 @@ $comboheight = $styles['height'];
 				}
 			//}
 			$post -> ID = $post_id_orig;
-		}
+		//}
 		return $content;
 	}
 	
@@ -323,10 +384,11 @@ $comboheight = $styles['height'];
 			else unset($attachments[$indexatt]);
 		}
 */
+
 		if(empty($custom))
-			$custom = true;
+			$custom = false;
 		if(!empty($attachments))
-			$content = $this -> render('gallery', array('slides' => $attachments, 'frompost' => $custom, 'width' => $width, 'height' => $height, 'size' => $size), false, 'default');
+			$content = $this -> render('gallery', array('slides' => $attachments, 'custom' => $custom, 'width' => $width, 'height' => $height, 'size' => $size), false, 'default');
 		return $content;
 	}	
 	

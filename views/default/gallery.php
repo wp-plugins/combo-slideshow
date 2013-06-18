@@ -1,10 +1,12 @@
 <?php if (!empty($slides)) : ?>
-<?php 	if($params['frompost'] == false || $frompost == false)
+<?php 	if($params['custom'] == false && $custom == false){
+		$combo_id = get_the_ID();		
+	} else {
 		$combo_id = 'custom';
-	else {
-		$combo_id = get_the_ID();
-		if(is_numeric($params['frompost']))
-			$combo_id .= $params['frompost'];
+		if(is_numeric($params['custom']))
+			$combo_id .= $params['custom'];
+		elseif(is_numeric($custom))
+			$combo_id .= $custom;
 	}
 	if ($this -> get_option('imagesbox') == "T") 
 		$imgbox = "thickbox";
@@ -107,13 +109,13 @@
 		    }
 		    if (!empty($styles['resizeimages']) && $styles['resizeimages'] == "Y")
 			  $additional_style .= '
-			  #ngslideshow-'.$combo_id.' img { width:'.$styles['wpns_width'].'px;} ';
+			  #ngslideshow-'.$combo_id.' img { width:'.$width.'px;} ';
 		    if (!empty($styles['resizeimages2']) && $styles['resizeimages2'] == "Y")
 			  $additional_style .= '
-			  #ngslideshow-'.$combo_id.' img { height:'.$styles['wpns_height'].'px;} ';
+			  #ngslideshow-'.$combo_id.' img { height:'.$height.'px;} ';
 		    if (empty($styles['resizeimages']) || $styles['resizeimages'] == "Y")
 			  $additional_style .= '
-			  #ngslideshow-'.$combo_id.' .nivo-controlNav { width:'.$styles['wpns_width'].'px;} ';
+			  #ngslideshow-'.$combo_id.' .nivo-controlNav { width:'.$width.'px;} ';
 		    if ($thumbnails_temp == "Y"){
 			  $additional_style .= '
 			  #ngslideshow-'.$combo_id.' .nivo-controlNav, .nivo-controlNav {
@@ -182,9 +184,15 @@
 					directionNav:false,
 				<?php endif; ?>
 				<?php if ($navhover=="Y") : ?>
-					directionNavHide:true, //Only show on hover
+					//ex directionNavHide:true, Only show on hover
+					afterLoad: function(){
+									// return the useful on-hover display of nav arrows
+									jQuery(".nivo-directionNav", jQuery("#ngslideshow-<?php echo $combo_id; ?>")).hide();
+									jQuery("#ngslideshow-<?php echo $combo_id; ?>").hover(function(){ jQuery(".nivo-directionNav", jQuery(this)).fadeIn(200); }, function(){ jQuery(".nivo-directionNav", jQuery(this)).fadeOut(200); });
+									},
 				<?php else : ?>
-					directionNavHide:false,
+					//ex directionNavHide:false,
+					afterLoad: function(){}, //Triggers when slider has loaded
 				<?php endif; ?>
 				<?php if ($controlnav=="Y" || $thumbnails_temp == "Y") : ?>
 					controlNav:true, //1,2,3...
@@ -221,7 +229,6 @@
 					afterChange: function(){},
 					slideshowEnd: function(){}, //Triggers after all slides have been shown
 					lastSlide: function(){}, //Triggers when last slide is shown
-					afterLoad: function(){} //Triggers when slider has loaded
 				});
 				<?php if ($params['frompost'] == true && $attachments) : ?>
 					jQuery('#ngslideshow-<?php echo $combo_id; ?>').width(<?php echo $width; ?>);
@@ -488,7 +495,6 @@
 		    });
 		</script>
 	<?php endif; // END MOOTOOLS ?>
-		<?php if ($frompost) : // WORDPRESS IMAGE GALLERY ONLY   ?>
 				<div id="ngslideshow-<?php echo $combo_id; ?>" class="ngslideshow">
 			<?php foreach ($slides as $slide) : ?>
 				<?php // echo $slide -> post_title;
@@ -515,7 +521,11 @@
 				}
 				?>
 				<?php if ($imgbox != "nolink") : ?>
-					<a href="<?php echo $full_slide_href[0]; ?>" class="<?php echo $imgbox; ?>">
+					<?php if ($params['custom'] == false && $custom == false) : ?>
+						<a href="<?php echo $full_slide_href[0]; ?>" class="<?php echo $imgbox; ?>">fkldsjfksd
+					<?php else: ?>
+						<a href="<?php echo get_post_meta($slide -> ID, '_comboslide_link', true); //echo get_attachment_link($slide -> ID); ?>">
+					<?php endif; ?>
 				<?php endif; ?>
 						<img id="slide-<?php echo $slide -> ID; ?>" src="<?php echo $full_image_href[0]; ?>" alt="<?php echo $this -> Html -> sanitize($slide -> post_title); ?>" <?php echo $thumbrel.$captitle; ?> />
 				<?php if ($imgbox != "nolink") : ?>
@@ -553,101 +563,5 @@
 				</div>
 			    <?php endforeach; ?>
 			<?php endif; ?>
-		<?php else : // CUSTOM SLIDES - MANAGE SLIDES ONLY  ?>
-				<div id="ngslideshow-<?php echo $combo_id; ?>" class="ngslideshow">
-			<?php foreach ($slides as $slide) : ?>
-				<?php
-				// echo $slide -> title;
-				$slide_info = pathinfo($slide -> image);
-				$slide_ext = $slide_info['extension'];
-				$slide_filename = basename($slide -> image, '.'.$slide_ext);
-
-				$imagepath = ABSPATH . 'wp-content' . DS . 'uploads' . DS . $this -> plugin_name . DS;
-				$slide_tocheck = $imagepath.$slide_filename.'-small.'.$slide_ext;
-				if(file_exists($slide_tocheck))
-					$slideimgsrc = CMBSLD_UPLOAD_URL.'/'.$slide_filename.'-small.'.$slide_ext;
-				else
-					$slideimgsrc = CMBSLD_UPLOAD_URL.'/'.$slide_filename.'.'.$slide_ext;
-
-				if ( CMBSLD_PRO ) {
-					require CMBSLD_PLUGIN_DIR . '/pro/image_tall_custom.php';
-				} else {
-					// echo "<h4>&nbsp;</h4>";
-				} if ($thumbnails_temp == "Y") {
-					//$thumbrel = 'rel="'. $this -> Html -> image_url($this -> Html -> thumbname($slide -> image)) .'"';
-					$thumbrel = 'rel="'. CMBSLD_UPLOAD_URL.'/'.$slide_filename.'-thumb.'.$slide_ext .'"';
-				} if ($information_temp == "Y") {
-					$captitle = 'title="#slide_caption-'. $slide -> id .'"';
-				}
-				if ($jsframe == 'jquery'){
-				    $resize = '';
-				    if( !empty($styles['resizeimages']) && $styles['resizeimages'] == "Y") {
-					$resize .= ' width="'. $styles['wpns_width'] .'"';
-				    }
-				    if( !empty($styles['resizeimages2']) && $styles['resizeimages2'] == "Y") {
-					$resize .= ' height="'. $styles['wpns_height'] .'"';
-				    }
-				}
-				if ($slide -> type == "url")
-					$slidelinktype = $slide -> image_url;
-				else
-					$slidelinktype = CMBSLD_UPLOAD_URL.'/'.$slide -> image;
-					//$slidelinktype = $this -> Html -> image_url($slide -> image);
-
-					if ($slide -> uselink == "Y" && !empty($slide -> link))
-						$slidelink = '<a href="'.$slide -> link.'" title="'.$slide -> title.'">';
-					else {
-						$slidelink = '<a href="'.$slidelinktype.'" title="'.$slide -> title.'"';
-						if ($imgbox != "nolink")
-						      $slidelink .= ' class="'.$imgbox.'">';
-						else
-						      $slidelink .= '>';
-					}
-				echo $slidelink;
-
-				?>
-						<img id="slide-<?php echo $slide -> id; ?>" src="<?php echo $slideimgsrc; ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" <?php echo $thumbrel.$captitle.$resize; ?> />
-					</a>
-			<?php endforeach; ?>
-			<?php if ($jsframe == 'mootools' && $information_temp == "Y") : ?>
-				<div class="nivo-caption" style="display:block; opacity:<?php round(($captionopacity/100), 1) ?>;">
-				</div>
-			<?php endif; ?>
-			<?php if ($jsframe == 'mootools' && $navigation == "Y") : ?>
-				<div class='nivo-directionNav' style='display:none'>
-					    <a class='nivo-prevNav'>Prev</a>
-					    <a class='nivo-nextNav'>Next</a>
-				</div>
-			<?php endif; ?>
-			<?php if ($jsframe == 'mootools' && ($controlnav == "Y" || $thumbnails_temp == "Y")) : ?>
-					<div class="nivo-controlNav">
-				<?php foreach ($slides as $index => $slide) : ?>
-						<a class="nivo-control" href="#slide-<?php echo $slide -> id; ?>" title="<?php echo $slide -> title; ?>">
-						<?php if ($thumbnails_temp == "Y") : ?>
-						<?php $slide_info = pathinfo($slide -> image);
-						      $slide_ext = $slide_info['extension'];
-						      $slide_filename = basename($slide -> image, '.'.$slide_ext);?>
-						      <img src="<?php echo CMBSLD_UPLOAD_URL.'/'.$slide_filename.'-thumb.'.$slide_ext; ?>" alt="slideshow-thumbnail-<?php echo $index+1; ?>" />
-						<?php else : ?>
-						      <?php echo $index+1; ?>
-						<?php endif; ?></a>
-				<?php endforeach; ?>
-					</div>
-			<?php endif; ?>
-				</div>
-			<?php if ($information_temp == "Y") : ?>
-			    <?php foreach ($slides as $slide) : ?>
-				<div id="slide_caption-<?php echo ($slide -> id); ?>" class="nivo-html-caption">
-				    <?php if ($slide -> uselink == "Y" && !empty($slide -> link)) : ?>
-				      <a href="<?php echo $slide -> link; ?>" title="<?php echo $slide -> title; ?>">
-				    <?php endif; ?>
-				    <?php echo $slide -> description; ?>
-				    <?php if ($slide -> uselink == "Y" && !empty($slide -> link)) : ?>
-				      </a>
-				    <?php endif; ?>
-				</div>
-			    <?php endforeach; ?>
-			<?php endif; ?>
-		<?php endif; ?>
 			</div>
 <?php endif; // END SLIDES?>

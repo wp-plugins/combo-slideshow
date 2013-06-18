@@ -7,22 +7,13 @@ wp_nonce_field('meta-box-order', 'meta-box-order-nonce', false);
 <div class="wrap">
 	<h2><?php _e('Configuration Settings', CMBSLD_PLUGIN_NAME); ?></h2>
 	
-	<form action="<?php echo $this -> url; ?>" name="post" id="post" method="post">
-		<div id="poststuff" class="metabox-holder has-right-sidebar">			
-			<div id="side-info-column" class="inner-sidebar">		
-				<?php do_action('submitpage_box'); ?>	
-				<?php do_meta_boxes($this -> menus['gallery'], 'side', $post); ?>
-			<?php do_action('submitpage_box'); ?>
-				
-           
-			</div>
+	<form action="<?php echo $_SERVER['REQUEST_URI']; //echo $this -> url; ?>" name="post" id="post" method="post">
+		<div id="poststuff" class="metabox-holder">			
 			<div id="post-body">
-				<div id="post-body-content">
-					<?php do_meta_boxes($this -> menus['gallery'], 'normal', $post); ?>
-				</div>
+					<?php do_meta_boxes($this -> menus['slideshow'], 'normal', $post); ?>
 			</div>
-			<div id="side-info-column" class="inner-sidebar" style="margin-top:450px">		
-				<?php do_meta_boxes($this -> menus['gallery'], 'side', $post); ?>
+			<div id="save-box">		
+				<?php do_meta_boxes($this -> menus['slideshow'], 'side', $post); ?>
                 <?php do_action('submitpage_box'); ?>
 			</div>
 			<br class="clear" />

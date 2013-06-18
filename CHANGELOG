@@ -1,5 +1,11 @@
 Combo Slideshow Changelog
 
+= 1.7 (2013.06.18) =
+* Updated to Nivo Slider jQuery plugin (v.3.2)
+* Full renewal of the slideshow management in admin UI, database and folders
+* Added new "Slideshow" post type
+* Added crop thumbnails option
+
 = 1.6 (2013.02.15) =
 * Bugfix: link in custom slides
 

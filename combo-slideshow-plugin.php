@@ -1,14 +1,14 @@
 <?php
 class CMBSLD_GalleryPlugin {
-	var $version = '1.6';
+	var $version = '1.7';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
 	var $debugging = false;
 	var $menus = array();
 	var $sections = array(
-		'gallery'		=>	'gallery-slides',
-		'settings'		=>	'gallery',
+		//'slideshow'		=>	'slideshow-slides',
+		'settings'		=>	'settings',
 	);
 	var $helpers = array('Db', 'Html', 'Form', 'Metabox');
 	var $models = array('Slide');
@@ -35,6 +35,10 @@ class CMBSLD_GalleryPlugin {
 			@ini_set('display_errors', 1);
 		}
 		$this -> add_action( 'wp_print_styles', 'cmbsld_enqueue_styles' );
+		$this -> add_action( 'init', 'register_slideshow_post_type', 0);
+		$this -> add_filter('manage_edit-slideshow_columns', 'slideshow_edit_columns');
+        $this -> add_action('manage_slideshow_posts_custom_column', 'slideshow_custom_columns', 10, 2);
+		//$this -> add_filter('post_updated_messages', array(&$this, 'updated_messages'));
 		return true;
 	}
 	
@@ -153,6 +157,8 @@ class CMBSLD_GalleryPlugin {
 		$this -> add_option('postlimit','');
 		$this -> add_option('exclude','');
 		$this -> add_option('offset','');
+		$this -> add_option('crop_thumbs', 'Y');
+		$this -> add_option('slide_gallery','');
 	}
 	
 	function render_msg($message = '') {
@@ -330,7 +336,7 @@ if ($use_themes != '0'){
 			if (!empty($_GET['page']) && in_array($_GET['page'], (array) $this -> sections)) {
 				wp_enqueue_script('autosave');
 			
-				if ($_GET['page'] == 'gallery') {
+				if ($_GET['page'] == 'slideshow') {
 					wp_enqueue_script('common');
 					wp_enqueue_script('wp-lists');
 					wp_enqueue_script('postbox');
@@ -338,7 +344,7 @@ if ($use_themes != '0'){
 					wp_enqueue_script('settings-editor', '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/settings-editor.js', array('jquery'), '1.0');
 				}
 				
-				if ($_GET['page'] == "gallery-slides" && $_GET['method'] == "order") {
+				if ($_GET['page'] == "slideshow-slides" && $_GET['method'] == "order") {
 					wp_enqueue_script('jquery-ui-sortable');
 				}
 				wp_enqueue_script('jquery-ui-sortable');
@@ -577,6 +583,96 @@ if ($use_themes != '0'){
 		return false;
 	}
 	
+	function slideshow_edit_columns( $columns ) {
+        $columns = array(
+            'cb' => '<input type="checkbox" />',
+            'title' => __( 'Name', $this -> plugin_name ),
+            'shortcode' => __( 'Shortcode', $this -> plugin_name ),
+            'author' => __( 'Author', $this -> plugin_name ),
+            'images' => __( 'Images', $this -> plugin_name ),
+            'date' => __( 'Date', $this -> plugin_name )
+        );
+        return $columns;
+    }
+
+    function slideshow_custom_columns( $column, $post_id ) {
+        global $post;
+        switch ( $column )
+        {
+            case 'images':     
+                $limit = 5;
+                if(isset($_GET['mode']) && $_GET['mode'] == 'excerpt') $limit = 20;
+                //$images = get_the_post_thumbnail($post->ID, array(32, 32));
+				$images = get_posts(array(
+							'post_parent' => $post->ID,
+							'post_type' => 'attachment',
+							'numberposts' => -1,
+							'post_mime_type' => 'image',));
+				
+                if ( $images ) {
+                    echo '<ul class="slideshow-thumbs">';
+                    foreach( $images as $image ){
+                        //echo '<li><img src="'. $image['image_src'] .'" alt="" style="width:32px;height:32px;" /></li>';
+						$imagesrc = wp_get_attachment_image_src( $image->ID, array(32, 32) );
+						echo '<li><img src="'.$imagesrc[0].'" alt="" style="width:32px;height:32px;" /></li>';
+                    }
+                    echo '</ul>'; 
+                }
+                break;
+            case 'shortcode':  
+                echo '<code>[slideshow id="'. $post->ID .'"]</code>';
+                if($post->post_name != '') echo '<br /><code>[slideshow slug="'. $post->post_name .'"]</code>';
+                break;
+        }
+    }
+	
+function register_slideshow_post_type() {
+	$labels = array(
+		'name' 					=> _x( 'Slideshows', 'post type general name', $this -> plugin_name ),
+		'singular_name' 		=> _x( 'Slideshow', 'post type singular name', $this -> plugin_name ),
+		'add_new' 				=> _x( 'Add New', 'slideshow item', $this -> plugin_name ),
+		'add_new_item'			=> __( 'Add New Slideshow', $this -> plugin_name ),
+		'edit_item' 			=> __( 'Edit Slideshow', $this -> plugin_name ),
+		'new_item' 				=> __( 'New Slideshow', $this -> plugin_name ),
+		'all_items' 			=> __( 'All Slideshows', $this -> plugin_name ),
+		'view_item' 			=> __( 'View Slideshow', $this -> plugin_name ),
+		'search_items' 			=> __( 'Search Slideshows', $this -> plugin_name ),
+		'not_found' 			=> __( 'Nothing found', $this -> plugin_name ),
+		'not_found_in_trash' 	=> __( 'Nothing found in Trash', $this -> plugin_name ),
+		'parent_item_colon' 	=> ''
+	);
+
+	$args = array(
+		'labels' 				=> $labels,
+		'public' 				=> true,
+		'publicly_queryable' 	=> true,
+		'show_ui' 				=> true,
+		'can_export'			=> true,
+		'show_in_nav_menus'		=> true,
+		//'show_in_menu'			=> true,
+		'query_var' 			=> true,
+		'has_archive' 			=> true,
+		'rewrite' 				=> apply_filters( 'slideshow_posttype_rewrite_args', array( 'slug' => 'slideshow', 'with_front' => false ) ),
+		'capability_type' 		=> 'post',
+		'hierarchical' 			=> false,
+		'menu_position' 		=> null,
+		'menu_icon'				=> CMBSLD_PLUGIN_URL . '/images/icon.png',
+		'supports' 				=> array( 'title', 'editor', 'thumbnail', 'excerpt', 'comments', 'revisions', 'custom-fields' )
+	);
+
+	register_post_type( 'slideshow' , apply_filters( 'slideshow_posttype_args', $args ) );
+
+	$labels['name'] = __( 'Slideshow Categories', $this -> plugin_name );
+
+	register_taxonomy( 'slideshow_category', array( 'slideshow' ), array(
+		'hierarchical' 	=> true,
+		'labels' 		=> $labels,
+		'show_ui' 		=> true,
+		'query_var' 	=> true,
+		'rewrite' 		=> apply_filters( 'slideshow_category_rewrite_args', array( 'slug' => 'slideshow_category', 'with_front' => false ) )
+	) );
+	
+}
     function show_combo_slider($category = null, $n_slices = null, $exclude = null, $offset = null, $size = null, $width = null, $height = null) {
 	global $post;
 	$post_switch = $post;
@@ -640,7 +736,7 @@ if ($use_themes != '0'){
 	$use_themes = $slide_theme;
 	if(empty($size))
 		$size = 'comboslide';
-	
+	$exclude = explode(',',$exclude);
 	$slided = get_posts( 'category='.$category.'&numberposts='.$n_slices );
 	//query_posts( 'cat='.$category.'&posts_per_page='.$n_slices );
 	$query_args = array( 'cat' => $category, 'posts_per_page' => $n_slices, 'post__not_in' => $exclude, 'offset' => $offset );
@@ -739,64 +835,76 @@ if ($use_themes != '0'){
 					startSlide:0, //Set starting Slide (0 index)";
 		if ($navigation=="Y")
 			$append .= "directionNav:true, //Next & Prev
-				   ";
+			";
 		else
 			$append .= "directionNav:false,
-				   ";
+			";
+/*
 		if ($navhover=="Y")
 			$append .= "directionNavHide:true, //Only show on hover
 				   ";
 		else
 			$append .= "directionNavHide:false,
 				   ";
+*/
+		if ($navhover=="Y")
+			$append .= "afterLoad: function(){
+									// return the useful on-hover display of nav arrows
+									jQuery('.nivo-directionNav', jQuery('#ngslideshow-".$combo_id."')).hide();
+									jQuery('#ngslideshow-".$combo_id."').hover(function(){ jQuery('.nivo-directionNav', jQuery(this)).show(); }, function(){ jQuery('.nivo-directionNav', jQuery(this)).hide(); });
+									},";
+		else
+			$append .= 	"
+			afterLoad: function(){}, //Triggers when slider has loaded
+			";
+			
 		if ($controlnav=="Y" || $thumbnails == "Y")
 			$append .= "controlNav:true, //1,2,3...
-				   ";
+			";
 		else
 			$append .= "controlNav:false,
-				   ";
+			";
 		if ($thumbnails == "Y")
 			$append .= "controlNavThumbs:true,
-				    controlNavThumbsFromRel:true, //Use image rel for thumbs
-				   ";
+			controlNavThumbsFromRel:true, //Use image rel for thumbs
+			";
 		else
 			$append .= "controlNavThumbs:false, //Use thumbnails for Control Nav
-				    controlNavThumbsFromRel:false, //Use image rel for thumbs
-				   ";
+			controlNavThumbsFromRel:false, //Use image rel for thumbs
+			";
 
 			$append .= "controlNavThumbsSearch: '.jpg', //Replace this with...
-				    controlNavThumbsReplace: '_thumb.jpg', //...this in thumb Image src
-				   ";
+			controlNavThumbsReplace: '_thumb.jpg', //...this in thumb Image src
+			";
 		if ($keyboardnav=="Y")
 			$append .= "keyboardNav:true, //Use left & right arrows
-				   ";
+			";
 		else
 			$append .= "keyboardNav:false,
-				   ";
+			";
 
 		if ($pausehover=="Y")
 			$append .= "pauseOnHover:true, //Stop animation while hovering
-				   ";
+			";
 		else
 			$append .= "pauseOnHover:false,
-				   ";
+			";
 
 		if ($autoslide=="Y")
 			$append .= "manualAdvance:false, //Force manual transitions
-				   ";
+			";
 		else
 			$append .= "manualAdvance:true,
-				   ";
+			";
 
 			$append .= "captionOpacity:".round(($captionopacity/100), 1).", // Universal caption opacity
-				    beforeChange: function(){},
-				    afterChange: function(){},
-				    slideshowEnd: function(){}, //Triggers after all slides have been shown
-				    lastSlide: function(){}, //Triggers when last slide is shown
-				    afterLoad: function(){} //Triggers when slider has loaded
-				 });
+					beforeChange: function(){},
+					afterChange: function(){},
+					slideshowEnd: function(){}, //Triggers after all slides have been shown
+					lastSlide: function(){}, //Triggers when last slide is shown
 				});
-				";
+			});
+			";
 		if ($thumbnails=="Y")
 			$append .= "jQuery('#ngslideshow-".$combo_id."').addClass('controlnav-thumbs');
 					jQuery('#ngslideshow-".$combo_id." .nivo-controlNav').css('overflow-x','hidden');
@@ -1076,8 +1184,8 @@ if ($use_themes != '0'){
 			    if(has_post_thumbnail()){
 			    //$append .= '<a href="'. get_permalink(get_the_ID()) .'" title="'. $slide -> post_title .'">'. $slide -> post_title .'</a>';
 			    $append .= '<a href="'. post_permalink() .'" title="'. $post -> post_title .'">'. $post -> post_title .'</a>';
-			    $append .= '</div>';
 			    }
+				$append .= '</div>';
 			  endwhile;
 
 		//if($use_themes != '0'){
