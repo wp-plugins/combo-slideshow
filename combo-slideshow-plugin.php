@@ -1,6 +1,6 @@
 <?php
 class CMBSLD_GalleryPlugin {
-	var $version = '1.7';
+	var $version = '1.8';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
@@ -16,10 +16,12 @@ class CMBSLD_GalleryPlugin {
 	function register_plugin($name, $base) {
 		$this -> plugin_name = $name;
 		$this -> plugin_base = rtrim(dirname($base), DS);
-		$this -> enqueue_scripts();
+		//$this -> enqueue_scripts();
 		$this -> initialize_classes();
 		$this -> initialize_options();
 		if (function_exists('load_plugin_textdomain')) {
+			load_plugin_textdomain( $this -> plugin_name, false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+			/*
 			$currentlocale = get_locale();
 			if(!empty($currentlocale)) {
 				$moFile = dirname(__FILE__) . DS . "languages" . DS . $this -> plugin_name . "-" . $currentlocale . ".mo";				
@@ -27,6 +29,7 @@ class CMBSLD_GalleryPlugin {
 					load_textdomain($this -> plugin_name, $moFile);
 				}
 			}
+			*/
 		}
 		if ($this -> debugging == true) {
 			global $wpdb;
@@ -35,9 +38,13 @@ class CMBSLD_GalleryPlugin {
 			@ini_set('display_errors', 1);
 		}
 		$this -> add_action( 'wp_print_styles', 'cmbsld_enqueue_styles' );
+		//$this -> add_action( 'wp_enqueue_styles', 'cmbsld_enqueue_styles' );
 		$this -> add_action( 'init', 'register_slideshow_post_type', 0);
 		$this -> add_filter('manage_edit-slideshow_columns', 'slideshow_edit_columns');
-        $this -> add_action('manage_slideshow_posts_custom_column', 'slideshow_custom_columns', 10, 2);
+		$this -> add_action('manage_slideshow_posts_custom_colum', 'slideshow_custom_columns', 10, 2);
+		//$this -> add_action( "admin_print_scripts-settings_page_YOURPAGENAME", 'enqueue_scripts' );
+		$this -> add_action( "admin_enqueue_scripts", 'enqueue_scripts' );
+		$this -> add_action( "wp_enqueue_scripts", 'enqueue_scripts' );
 		//$this -> add_filter('post_updated_messages', array(&$this, 'updated_messages'));
 		return true;
 	}
@@ -94,7 +101,7 @@ class CMBSLD_GalleryPlugin {
 			'wpns_width'		=>	"450",
 			'wpns_height'		=>	"300",
 			'border'		=>	"1px solid #CCCCCC",
-			'background'		=>	"#202834",
+			'background'		=>	"#FFFFFF",
 			'infobackground'	=>	"#000000",
 			'infocolor'		=>	"#FFFFFF",
 			'resizeimages'		=>	"Y",
@@ -259,11 +266,11 @@ class CMBSLD_GalleryPlugin {
 //	IF ( CMBSLD_LOAD_CSS )
 	function cmbsld_enqueue_styles() {
 		global $version;
-		$galleryStyleUrl = CMBSLD_PLUGIN_URL . '/css/gallery-css.php?v='. $version .'&amp;pID=' . $GLOBALS['post']->ID;
+		$galleryStyleUrl = CMBSLD_PLUGIN_URL . 'css/gallery-css.php?v='. $version .'&amp;pID=' . $GLOBALS['post']->ID;
 		if($_SERVER['HTTPS']) {
 			$galleryStyleUrl = str_replace("http:","https:",$galleryStyleUrl);
 		}		
-        $galleryStyleFile = CMBSLD_PLUGIN_DIR . '/css/gallery-css.php';
+        $galleryStyleFile = CMBSLD_PLUGIN_DIR . 'css/gallery-css.php';
 //		$src = WP_PLUGIN_DIR.'/' . $this -> plugin_name . '/css/gallery-css.php?2=1&site='.WP_PLUGIN_DIR;
 //		define $infogal = $this;
 		$infogal = $this;
@@ -310,7 +317,7 @@ if ($use_themes != '0'){
 			$use_themes = $this -> get_option('customtheme');
 			$galleryThemeUrl = get_stylesheet_directory_uri().'/'.$use_themes.'/'.$use_themes.'.css';
 		}
-		$galleryThemeUrl = CMBSLD_PLUGIN_URL . '/css/'.$use_themes.'/'.$use_themes.'.css';
+		$galleryThemeUrl = CMBSLD_PLUGIN_URL . 'css/'.$use_themes.'/'.$use_themes.'.css';
 			wp_register_style( 'combo-slideshow-'.$use_themes, $galleryThemeUrl);
 			wp_enqueue_style( 'combo-slideshow-'.$use_themes, $galleryThemeUrl, array(), CMBSLDVERSION, 'all' );
 }
@@ -329,9 +336,11 @@ if ($use_themes != '0'){
 		
 		
 	}
-	function enqueue_scripts() {
+	function enqueue_scripts($hook=false) {
 		
 		if (is_admin()) {
+			if( 'slideshow_page_settings' != $hook )
+				return;
 			wp_enqueue_script('jquery');
 			if (!empty($_GET['page']) && in_array($_GET['page'], (array) $this -> sections)) {
 				wp_enqueue_script('autosave');
@@ -341,7 +350,7 @@ if ($use_themes != '0'){
 					wp_enqueue_script('wp-lists');
 					wp_enqueue_script('postbox');
 					
-					wp_enqueue_script('settings-editor', '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/settings-editor.js', array('jquery'), '1.0');
+					wp_enqueue_script('settings-editor', '/' . CMBSLD_PLUGIN_URL . 'js/settings-editor.js', array('jquery'), '1.0');
 				}
 				
 				if ($_GET['page'] == "slideshow-slides" && $_GET['method'] == "order") {
@@ -352,7 +361,7 @@ if ($use_themes != '0'){
 				add_thickbox();
 			}
 			
-			wp_enqueue_script($this -> plugin_name . 'admin', '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/admin.js', null, '1.0');
+			wp_enqueue_script($this -> plugin_name . 'admin', CMBSLD_PLUGIN_URL . 'js/admin.js', 'jquery', '1.0');
 
 		} else {
 
@@ -360,23 +369,23 @@ if ($use_themes != '0'){
 
 		    if($js_framework == 'mootools') {
 
-			wp_register_script('moocore', '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/mootools-core-1.3.2-full-nocompat-yc.js', false, '1.3');
-			wp_register_script('moomore', '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/mootools-more-1.3.2.1-yc.js', false, '1.3');
+			wp_register_script('moocore', '/' . CMBSLD_PLUGIN_URL . 'js/mootools-core-1.3.2-full-nocompat-yc.js', false, '1.3');
+			wp_register_script('moomore', '/' . CMBSLD_PLUGIN_URL . 'js/mootools-more-1.3.2.1-yc.js', false, '1.3');
 			wp_enqueue_script('moocore');
 			wp_enqueue_script('moomore');
-			wp_enqueue_script('moo_loop', '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/Loop.js', array('moocore','moomore'), '1.3');
-			wp_enqueue_script('moo_slideshow', '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/SlideShow.js', array('moocore','moomore','moo_loop'), '1.3');
+			wp_enqueue_script('moo_loop', '/' . CMBSLD_PLUGIN_URL . 'js/Loop.js', array('moocore','moomore'), '1.3');
+			wp_enqueue_script('moo_slideshow', '/' . CMBSLD_PLUGIN_URL . 'js/SlideShow.js', array('moocore','moomore','moo_loop'), '1.3');
 			if($this -> get_option('css_transform') == 'Y') {
-			      wp_enqueue_script('cssanimation', $this -> plugin_name, '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/CSSAnimation.js', false, '1.3');
-			      wp_enqueue_script('moo_cssanimation', $this -> plugin_name, '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/CSSAnimation.MooTools.js', array('moocore','moomore','cssanimation'), '1.3');
-			      wp_enqueue_script('slideshow_css', $this -> plugin_name, '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/SlideShow.CSS.js', array('moocore','moomore','moo_slideshow','moo_cssanimation'), '1.3');
+			      wp_enqueue_script('cssanimation', $this -> plugin_name, '/' . CMBSLD_PLUGIN_URL . 'js/CSSAnimation.js', false, '1.3');
+			      wp_enqueue_script('moo_cssanimation', $this -> plugin_name, '/' . CMBSLD_PLUGIN_URL . 'js/CSSAnimation.MooTools.js', array('moocore','moomore','cssanimation'), '1.3');
+			      wp_enqueue_script('slideshow_css', $this -> plugin_name, '/' . CMBSLD_PLUGIN_URL . 'js/SlideShow.CSS.js', array('moocore','moomore','moo_slideshow','moo_cssanimation'), '1.3');
 			}
 
 		    } elseif ($js_framework == 'jquery'){
 
 			wp_enqueue_script('jquery');
 
-			wp_enqueue_script($this -> plugin_name, '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/jquery.nivo.slider.js', array('jquery'), '2.6' );
+			wp_enqueue_script($this -> plugin_name, CMBSLD_PLUGIN_URL . 'js/jquery.nivo.slider.js', array('jquery'), '2.6' );
 			
 			if ($this -> get_option('imagesbox') == "T") {
 				add_thickbox();
@@ -625,7 +634,6 @@ if ($use_themes != '0'){
                 break;
         }
     }
-	
 function register_slideshow_post_type() {
 	$labels = array(
 		'name' 					=> _x( 'Slideshows', 'post type general name', $this -> plugin_name ),
@@ -656,7 +664,7 @@ function register_slideshow_post_type() {
 		'capability_type' 		=> 'post',
 		'hierarchical' 			=> false,
 		'menu_position' 		=> null,
-		'menu_icon'				=> CMBSLD_PLUGIN_URL . '/images/icon.png',
+		'menu_icon'				=> CMBSLD_PLUGIN_URL . 'images/icon.png',
 		'supports' 				=> array( 'title', 'editor', 'thumbnail', 'excerpt', 'comments', 'revisions', 'custom-fields' )
 	);
 
@@ -671,7 +679,7 @@ function register_slideshow_post_type() {
 		'query_var' 	=> true,
 		'rewrite' 		=> apply_filters( 'slideshow_category_rewrite_args', array( 'slug' => 'slideshow_category', 'with_front' => false ) )
 	) );
-	
+	//remove_post_type_support( 'slideshow', 'editor' );
 }
     function show_combo_slider($category = null, $n_slices = null, $exclude = null, $offset = null, $size = null, $width = null, $height = null) {
 	global $post;
@@ -1129,7 +1137,7 @@ function register_slideshow_post_type() {
 				//$full_slide_href = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'full', false);
 				$thumbnail_link = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'thumbnail', false);
 				if ( CMBSLD_PRO )
-					require CMBSLD_PLUGIN_DIR . '/pro/image_tall_frompost.php';
+					require CMBSLD_PLUGIN_DIR . 'pro/image_tall_frompost.php';
 				if ($thumbnails == "Y")
 					$thumbrel = 'rel="'. $thumbnail_link[0] .'" ';
 				if ($information == "Y")

@@ -59,17 +59,19 @@ ELSEIF ($styles['navbullets'] == 'custom') { $controlimg = get_stylesheet_direct
 text-align:center;
 }
 .ngslideshow img {
-	position:absolute;
+	/* position:absolute; */
 	top:0px;
 	left:0px;
 <?php if (!empty($styles['resizeimages']) && $styles['resizeimages'] == "Y") : ?>
 width:<?php echo ((int) $styles['wpns_width']);?>px;
+<?php else: ?>
+width:100%;
 <?php endif; ?>
 <?php if (!empty($styles['resizeimages2']) && $styles['resizeimages2'] == "Y") : ?>
 height:<?php echo ((int) $styles['wpns_height']);?>px;
 <?php endif; ?> 
 	left:-<?php echo ((int) $styles['width']);?>px;
-	/*visibility:hidden;*/
+	/* visibility:hidden; */
 	display:none;
 }
 .ngslideshow a {
@@ -84,9 +86,10 @@ height:<?php echo ((int) $styles['wpns_height']);?>px;
 	position:relative;
 }
 .nivoSlider img {
-	position:absolute;
+	/* position:absolute; */
 	top:0px;
 	left:0px;
+	width:100%;
 }
 .nivoSlider div img {
 	position:relative;

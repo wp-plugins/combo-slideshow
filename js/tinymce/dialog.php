@@ -21,7 +21,7 @@ do_action('admin_init');
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title><?php _e('Insert a slideshow', "slideshow-gallery"); ?></title>
+	<title><?php _e('Insert a slideshow', 'combo-slideshow'); ?></title>
 	<script language="javascript" type="text/javascript" src="<?php bloginfo('wpurl'); ?>/wp-includes/js/tinymce/tiny_mce_popup.js"></script>
 	<script language="javascript" type="text/javascript" src="<?php bloginfo('wpurl'); ?>/wp-includes/js/tinymce/utils/mctabs.js"></script>
 	<script language="javascript" type="text/javascript" src="<?php bloginfo('wpurl'); ?>/wp-includes/js/tinymce/utils/form_utils.js"></script>
@@ -77,16 +77,16 @@ do_action('admin_init');
 
 <form onsubmit="insertTag(); return false;" action="#">
 	<div class="panel_wrapper">
-		<label style="font-weight:bold; cursor:pointer;"><input onclick="jQuery('#post_div').show();" type="radio" name="slideshow_type" value="post" id="type_post" /> <?php _e('Images From a Post', "slideshow-gallery"); ?></label><br/>
-		<label style="font-weight:bold; cursor:pointer;"><input onclick="jQuery('#post_div').hide();" type="radio" name="slideshow_type" value="custom" id="type_custom" /> <?php _e('Custom Added Slides', "slideshow-gallery"); ?></label>
+		<label style="font-weight:bold; cursor:pointer;"><input onclick="jQuery('#post_div').show();" type="radio" name="slideshow_type" value="post" id="type_post" /> <?php _e('Images From a Post', 'combo-slideshow'); ?></label><br/>
+		<label style="font-weight:bold; cursor:pointer;"><input onclick="jQuery('#post_div').hide();" type="radio" name="slideshow_type" value="custom" id="type_custom" /> <?php _e('Custom Added Slides', 'combo-slideshow'); ?></label>
 		
 		<div id="post_div" style="display:none;">
 			<p>
-				<label for="post_id" style="font-weight:bold;"><?php _e('Post', "slideshow-gallery"); ?>:</label><br/>
+				<label for="post_id" style="font-weight:bold;"><?php _e('Post', 'combo-slideshow'); ?>:</label><br/>
 				<?php if ($posts = get_posts(array('orderby' => "post_title", 'order' => "ASC", 'post_type' => "post", 'post_status' => ""))) : ?>
 					<select name="post_id" id="post_id">
-						<option value="">- <?php _e('Select a Post', "slideshow-gallery"); ?></option>
-                        <option value="th"><?php _e('THIS POST', "slideshow-gallery"); ?></option>
+						<option value="">- <?php _e('Select a Post', 'combo-slideshow'); ?></option>
+                        <option value="th"><?php _e('THIS POST', 'combo-slideshow'); ?></option>
 						<?php foreach ($posts as $post) : ?>
 							<option value="<?php echo $post -> ID; ?>"><?php echo $post -> post_title; ?></option>
 						<?php endforeach; ?>
@@ -95,9 +95,9 @@ do_action('admin_init');
 			</p>
 			
 			<p>
-				<label style="font-weight:bold;"><?php _e('Exclude', "slideshow-gallery"); ?>:</label><br/>
+				<label style="font-weight:bold;"><?php _e('Exclude', 'combo-slideshow'); ?>:</label><br/>
 				<input type="text" name="exclude" value="" id="exclude" /><br/>
-				<small><?php _e('comma separated IDs of attachments to exclude', "slideshow-gallery"); ?></small>
+				<small><?php _e('comma separated IDs of attachments to exclude', 'combo-slideshow'); ?></small>
 			</p>
 		</div>
 	
@@ -137,10 +137,6 @@ do_action('admin_init');
 	</div>
 </form>
 </div>
-
-<script type="text/javascript">
-
-</script>
 
 </body>
 </html>

@@ -5,26 +5,31 @@ Plugin URI: http://www.3dolab.net/en
 Author: 3dolab
 Author URI: http://www.3dolab.net
 Description: The features of the best slideshow javascript effects and WP plugins. Blog posts highlights, image gallery, custom slides!
-Version: 1.7
+Version: 1.8
 */
 define('DS', DIRECTORY_SEPARATOR);
-define( 'CMBSLD_VERSION', '1.6' );
+define( 'CMBSLD_VERSION', '1.8' );
 if ( ! defined( 'CMBSLD_PLUGIN_BASENAME' ) )
 	define( 'CMBSLD_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 if ( ! defined( 'CMBSLD_PLUGIN_NAME' ) )
 	define( 'CMBSLD_PLUGIN_NAME', trim( dirname( CMBSLD_PLUGIN_BASENAME ), '/' ) );
 if ( ! defined( 'CMBSLD_PLUGIN_DIR' ) )
-	define( 'CMBSLD_PLUGIN_DIR', WP_PLUGIN_DIR . '/' . CMBSLD_PLUGIN_NAME );
+	define( 'CMBSLD_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+	//define( 'CMBSLD_PLUGIN_DIR', WP_PLUGIN_DIR . '/' . CMBSLD_PLUGIN_NAME );
 if ( ! defined( 'CMBSLD_PLUGIN_URL' ) )
-	define( 'CMBSLD_PLUGIN_URL', WP_PLUGIN_URL . '/' . CMBSLD_PLUGIN_NAME );
-if ( ! defined( 'CMBSLD_UPLOAD_URL' ) )
-	define( 'CMBSLD_UPLOAD_URL', get_bloginfo('wpurl')."/wp-content/uploads/". CMBSLD_PLUGIN_NAME );
-if ( ! file_exists( CMBSLD_PLUGIN_DIR . '/pro/' ) )
+	define( 'CMBSLD_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+	//define( 'CMBSLD_PLUGIN_URL', WP_PLUGIN_URL . '/' . CMBSLD_PLUGIN_NAME );
+if ( ! defined( 'CMBSLD_UPLOAD_URL' ) ) :
+	$upload_dir = wp_upload_dir();
+	define( 'CMBSLD_UPLOAD_URL', $upload_dir['baseurl'] . CMBSLD_PLUGIN_NAME );
+	//define( 'CMBSLD_UPLOAD_URL', get_bloginfo('wpurl')."/wp-content/uploads/". CMBSLD_PLUGIN_NAME );
+endif;
+if ( ! file_exists( CMBSLD_PLUGIN_DIR . 'pro/' ) )
 	define( 'CMBSLD_PRO', false );
 else
 	define( 'CMBSLD_PRO', true );
 	
-require_once CMBSLD_PLUGIN_DIR . '/combo-slideshow-plugin.php';
+require_once CMBSLD_PLUGIN_DIR . 'combo-slideshow-plugin.php';
  add_theme_support('post-thumbnails');
 // add_filter( 'the_content', 'auto_combo_slider' );
 	
@@ -40,39 +45,49 @@ class CMBSLD_Gallery extends CMBSLD_GalleryPlugin {
 		$this -> add_action('admin_head');
 		$this -> add_action('admin_notices');
 		// $this -> add_action('cmbsld_enqueue_styles');
+		$this -> add_action('init');
 		
 		//WordPress filter hooks
-		$this -> add_filter('mce_buttons');
-		$this -> add_filter('mce_external_plugins');
+		//$this -> add_filter('mce_external_plugins');
+		//$this -> add_filter('mce_buttons');
 		$this -> add_filter( 'the_content', 'auto_combo_slider' );
+		if($this -> get_option('wpns_auto_position') == 'B')
+			$this -> add_action( 'loop_start', 'auto_combo_slider' );
+		elseif($this -> get_option('wpns_auto_position') == 'A')
+			$this -> add_action( 'loop_end', 'auto_combo_slider' );
 		// $this -> add_theme_support('post-thumbnails');
 		$this -> add_filter('attachment_fields_to_edit', 'my_image_attachment_fields_to_edit', null, 2);
 		$this -> add_filter('attachment_fields_to_save', 'my_image_attachment_fields_to_save', null, 2);
-$styles = $this -> get_option('styles');
-$crop = $this -> get_option('thumb_crop') ? true : false;
-$combowidth = $styles['width'];
-$comboheight = $styles['height'];
+		$styles = $this -> get_option('styles');
+		$crop = $this -> get_option('crop_thumbs') ? true : false;
+		$combowidth = $styles['width'];
+		$comboheight = $styles['height'];
 		add_image_size( 'comboslide', $combowidth, $comboheight, $crop );
 		add_shortcode('slideshow', array($this, 'embed'));
 	}
 	function auto_combo_slider( $content ) {
-	    if ( ( ( is_home() || is_front_page() ) && $this -> get_option('wpns_home') == 'Y' ) ){
-		  $comboslidercode = $this -> show_combo_slider();
-	    } elseif (  $this -> get_option('wpns_auto') == 'Y' ){
-		  $comboslidercode = $this -> embed();
-	    } elseif ( ( ( is_home() || is_front_page() ) && $this -> get_option('wpns_home') == 'C' ) || $this -> get_option('wpns_auto') == 'C' ){
+	    //if ( ( ( is_home() || is_front_page() || is_post_type_archive() ) && $this -> get_option('wpns_home') == 'Y' ) ){
+		if ( ( ( is_home() || is_front_page() ) && $this -> get_option('wpns_home') == 'Y' ) ){
+			if(is_main_query())
+				$comboslidercode = $this -> show_combo_slider();
+	    } elseif (  ( !is_home() && !is_front_page() && is_singular() ) && $this -> get_option('wpns_auto') == 'Y' ){
+			$comboslidercode = $this -> embed();
+	    } elseif ( ( ( is_home() || is_front_page() ) && $this -> get_option('wpns_home') == 'C' ) || ( is_singular() && $this -> get_option('wpns_auto') == 'C' ) ) {
 		  //$slides = $this -> Slide -> find_all(null, null, array('order', "ASC"), $this -> get_option('postlimit'));
 		  //$comboslidercode = $this -> render('gallery', array('slides' => $slides, 'frompost' => false), false, 'default');
 		  $slideshow_id = $this -> get_option('slide_gallery');
 		  $comboslidercode = $this -> embed(array('custom'=>$slideshow_id));
-	    } else {
-		  return $content;
+	    } elseif($content) {
+			return $content;
 	    }
-	    if ($this -> get_option('wpns_auto_position') == 'B')
-		  $content = $comboslidercode.$content;
-	    elseif ($this -> get_option('wpns_auto_position') == 'A')
-		  $content = $content.$comboslidercode;
-	    return $content;
+		if( is_string($content) && ( !is_home() && !is_front_page() && !is_post_type_archive() ) ){
+			if ($this -> get_option('wpns_auto_position') == 'B')
+			  $content = $comboslidercode.$content;
+			elseif ($this -> get_option('wpns_auto_position') == 'A')
+			  $content = $content.$comboslidercode;
+			return $content;
+		} elseif (is_object($content)||is_array($content))
+			echo $comboslidercode;
 	}
 	function my_image_attachment_fields_to_edit($form_fields, $post) {  
 		// $form_fields is a special array of fields to include in the attachment form  
@@ -147,8 +162,14 @@ $comboheight = $styles['height'];
 	}
 	
 	function mce_external_plugins($plugins) {
-		$plugins['slideshow'] = CMBSLD_PLUGIN_URL . '/js/tinymce/editor_plugin.js';
+		//$plugins['slideshow'] = CMBSLD_PLUGIN_URL . '/js/tinymce/editor_plugin.js';
+		$plugins['slideshow'] = plugins_url( '/js/tinymce/editor_plugin.js', __FILE__ );
 		return $plugins;
+	}
+	
+	function init() {
+		$this -> add_filter('mce_external_plugins');
+		$this -> add_filter('mce_buttons');
 	}
 
 	function slideshow($output = true, $post_id = null, $exclude = null, $include = null, $custom = null, $width = null, $height = null, $thumbs = null, $caption = null, $auto = null, $nolink = null, $slug = null, $limit = null, $size = null) {
@@ -196,7 +217,7 @@ $comboheight = $styles['height'];
 
 		if ( ((! empty($width)) || (! empty($height))) ) {
 		      if (CMBSLD_PRO)
-			require CMBSLD_PLUGIN_DIR . '/pro/custom_sizing.php';
+			require CMBSLD_PLUGIN_DIR . 'pro/custom_sizing.php';
 		}
 //		$this -> add_action( 'wp_print_styles', 'gs_enqueue_styles' );
 
@@ -215,7 +236,7 @@ $comboheight = $styles['height'];
 					$pid = $this -> get_option('slide_gallery');
 					$custom = $pid;
 				} elseif(is_numeric($custom))
-					$pid = int($custom);
+					$pid = intval($custom);
 				elseif(is_string($custom)) {
 					$slideshow = get_page_by_path($custom, '', 'slideshow');
 					$pid = $slideshow->ID;
@@ -296,7 +317,7 @@ $comboheight = $styles['height'];
 		}
 		/******** PRO ONLY **************/
 		if ( CMBSLD_PRO ) {
-			require CMBSLD_PLUGIN_DIR . '/pro/custom_sizing.php';
+			require CMBSLD_PLUGIN_DIR . 'pro/custom_sizing.php';
 		}
 		//$this -> add_action(array($this, 'pro_custom_wh'));
 		/******** END PRO ONLY **************/
@@ -320,7 +341,7 @@ $comboheight = $styles['height'];
 					$pid = $this -> get_option('slide_gallery');
 					$custom = $pid;
 				} elseif(is_numeric($custom))
-					$pid = int($custom);
+					$pid = intval($custom);
 				elseif(is_string($custom)) {
 					$slideshow = get_page_by_path($custom, '', 'slideshow');
 					$pid = $slideshow->ID;

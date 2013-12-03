@@ -5,9 +5,9 @@
 
 (function() {
 	// Load plugin specific language pack
-	tinymce.PluginManager.requireLangPack("gallery");
+	tinymce.PluginManager.requireLangPack("slideshow");
 
-	tinymce.create('tinymce.plugins.gallery', {
+	tinymce.create('tinymce.plugins.slideshow', {
 		init: function(ed, url) {
 			ed.addCommand('mcegallery', function() {			
 				ed.windowManager.open({
@@ -21,8 +21,8 @@
 			});
 
 			// Register example button
-			ed.addButton('gallery', {
-				title : 'gallery.desc',
+			ed.addButton('slideshow', {
+				title : 'slideshow.desc',
 				cmd : 'mcegallery',
 				image : url + '/gallery.png'
 			});
@@ -56,5 +56,5 @@
 	});
 
 	// Register plugin
-	tinymce.PluginManager.add('gallery', tinymce.plugins.gallery);
+	tinymce.PluginManager.add('slideshow', tinymce.plugins.slideshow);
 })();

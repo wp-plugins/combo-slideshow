@@ -1,5 +1,10 @@
 Combo Slideshow Changelog
 
+= 1.8 (2013.12.03) =
+* Bugfix: TinyMCE button for gallery shortcodes
+* Bugfix: constants and translations
+* Added Italian Translation
+
 = 1.7 (2013.06.18) =
 * Updated to Nivo Slider jQuery plugin (v.3.2)
 * Full renewal of the slideshow management in admin UI, database and folders

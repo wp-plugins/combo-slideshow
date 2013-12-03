@@ -4,7 +4,7 @@ Donate link: http://www.3dolab.net/en/combo-slideshow
 Tags: slideshow, slide show, combo, slideshow gallery, slides, image, gallery, content, highlight, showcase, javascript, jquery, mootools, nivo, nivo slider
 Requires at least: 2.8
 Tested up to: 3.5.1
-Stable tag: 1.7
+Stable tag: 1.8
 The features of the best slideshow javascript effects and WP plugins:
 blog posts highlights, image galleries, custom slides and more!
 
@@ -29,11 +29,11 @@ It works natively in conjunction with the WordPress image upload and gallery sys
 Administration and Settings have been completely renewed! 
 (whereas in previous versions they were heavily borrowed from the Slideshow Gallery Pro plugin (free version) by Cameron Preston and WP Nivo Slider by Rafael Cirolini)
 The selectable front-end effect scripts are the Nivo Slider plugin (on jQuery framework) or SlideShow by Ryan Florence (on MooTools).
-It works great in conjunction with the Gallery Metabox plugin.
+It works great in conjunction with the [Gallery Metabox plugin](http://wordpress.org/plugins/gallery-metabox/ "Gallery Metabox plugin").
 
-Plugin homepage: http://www.3dolab.net/en/combo-slideshow/
+[Plugin Homepage: http://www.3dolab.net/en/combo-slideshow/](http://www.3dolab.net/en/combo-slideshow/ "Combo Slideshow @ 3dolab")
 
-Running demo: http://www.3dolab.net/en/
+[Running Demo](http://www.3dolab.net/en/ "Combo Slideshow Running Demo")
 
 == Installation ==
 
@@ -45,7 +45,7 @@ Running demo: http://www.3dolab.net/en/
 5. Add and manage your slides in the 'Slideshow' section (or just use the built in wordpress gallery)
 6. Put the shortcode `[slideshow post_id="X" exclude="" caption="on/off"]` to embed a slideshow with the images of a post into your posts/pages or use `[slideshow custom=1]` to embed a slideshow with your custom added slides or `<?php if (class_exists('CMBSLD_Gallery')) { $CMBSLD_Gallery = new CMBSLD_Gallery(); $CMBSLD_Gallery -> slideshow($output = true, $post_id = null); }; ?>` into your WordPress theme
 
-* Please take care when auto-updating, due to new slide administration system any custom slideshow created with previous versions of the plugin will not work and won't even be shown
+* Please take care when updating, due to the new slide administration system any custom slideshow created with previous versions of the plugin will not work and won't even be shown
 
 == Additional Parameter Info ==
 
@@ -79,9 +79,12 @@ Yes, you can: summon each instance anywhere with the appropriate shortcode or ma
 
 = How Can I auto insert a blog posts (or custom) slideshow in my home or single post/page? =
 Enable it in the plugin settings and make sure that a post thumbnail is set in each post.
+Auto-insertion features may not work if standard functions are not supported by the theme in use or plugins such as e-commerce, etc...
 
 = How Can I insert a custom slideshow in my content? =
 First create a new Slideshow and add images to the media gallery. Use the shortcode or the manual function with the `custom` parameter set accordingly.
+Please note that images have to be uploaded from this screen, in order to be associated as "attachments" of the slideshow object / custom post type.
+The Content Editor is actually useless except for the Add Media button, or if you ever like to somehow extract it (e.g. slideshow of slideshows post type). 
 
 = What if I only want captions on some of my pages =
 Set your default captions to off; for any slideshow you put on your page use `[slideshow caption="on"]`
@@ -103,6 +106,11 @@ Simply apply a "width:100%" CSS rule using both the ".ngslideshow.nivoSlider" cl
 
 
 == Changelog ==
+
+= 1.8 (2013.12.03) =
+* Bugfix: TinyMCE button for gallery shortcodes
+* Bugfix: constants and translations
+* Added Italian Translation
 
 = 1.7 (2013.06.18) =
 * Updated to Nivo Slider jQuery plugin (v.3.2)
