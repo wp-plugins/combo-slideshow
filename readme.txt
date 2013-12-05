@@ -3,7 +3,7 @@ Contributors: 3dolab
 Donate link: http://www.3dolab.net/en/combo-slideshow
 Tags: slideshow, slide show, combo, slideshow gallery, slides, image, gallery, content, highlight, showcase, javascript, jquery, mootools, nivo, nivo slider
 Requires at least: 2.8
-Tested up to: 3.5.1
+Tested up to: 3.7.1
 Stable tag: 1.8
 The features of the best slideshow javascript effects and WP plugins:
 blog posts highlights, image galleries, custom slides and more!
@@ -102,7 +102,7 @@ Make sure you have at least 6 thumbnails for that to work properly. Otherwise th
 In /views/default/gallery.php find this line: slideshow.letterbox = "#000"; Change #000 to #FFF for white, or any other hex color code.
 
 = How can I achieve a liquid layout? =
-Simply apply a "width:100%" CSS rule using both the ".ngslideshow.nivoSlider" classes, it will override the default fixed width
+First of all disable the built-in width & height crop adjustment in the settings, and then simply apply the "width:100%" rule in your stylesheet using both the ".ngslideshow.nivoSlider" classes: it will override the default fixed width
 
 
 == Changelog ==
