@@ -1,0 +1,921 @@
+# Copyright (C) 2014 Combo Slideshow
+# This file is distributed under the same license as the Combo Slideshow package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Combo Slideshow 1.8\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/combo-slideshow\n"
+"POT-Creation-Date: 2014-11-23 08:09:59+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2014-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: combo-slideshow-ajax.php:25
+msgid "Slides have been ordered"
+msgstr ""
+
+#: combo-slideshow-plugin.php:598
+msgid "Name"
+msgstr ""
+
+#: combo-slideshow-plugin.php:599
+msgid "Shortcode"
+msgstr ""
+
+#: combo-slideshow-plugin.php:600
+msgid "Author"
+msgstr ""
+
+#: combo-slideshow-plugin.php:601
+msgid "Images"
+msgstr ""
+
+#: combo-slideshow-plugin.php:602 views/admin/slides/index.php:33
+#: views/admin/slides/index.php:44
+msgid "Date"
+msgstr ""
+
+#: combo-slideshow-plugin.php:639
+msgctxt "post type general name"
+msgid "Slideshows"
+msgstr ""
+
+#: combo-slideshow-plugin.php:640
+msgctxt "post type singular name"
+msgid "Slideshow"
+msgstr ""
+
+#: combo-slideshow-plugin.php:641
+msgctxt "slideshow item"
+msgid "Add New"
+msgstr ""
+
+#: combo-slideshow-plugin.php:642
+msgid "Add New Slideshow"
+msgstr ""
+
+#: combo-slideshow-plugin.php:643
+msgid "Edit Slideshow"
+msgstr ""
+
+#: combo-slideshow-plugin.php:644
+msgid "New Slideshow"
+msgstr ""
+
+#: combo-slideshow-plugin.php:645
+msgid "All Slideshows"
+msgstr ""
+
+#: combo-slideshow-plugin.php:646
+msgid "View Slideshow"
+msgstr ""
+
+#: combo-slideshow-plugin.php:647
+msgid "Search Slideshows"
+msgstr ""
+
+#: combo-slideshow-plugin.php:648
+msgid "Nothing found"
+msgstr ""
+
+#: combo-slideshow-plugin.php:649
+msgid "Nothing found in Trash"
+msgstr ""
+
+#: combo-slideshow-plugin.php:673
+msgid "Slideshow Categories"
+msgstr ""
+
+#: combo-slideshow.php:101 combo-slideshow.php:108
+msgid "Slideshow Link"
+msgstr ""
+
+#: combo-slideshow.php:131
+msgid "Combo Slideshow Settings"
+msgstr ""
+
+#: combo-slideshow.php:131
+msgid "Settings"
+msgstr ""
+
+#: combo-slideshow.php:141
+msgid "Save Settings"
+msgstr ""
+
+#: combo-slideshow.php:142
+msgid "General Settings"
+msgstr ""
+
+#: combo-slideshow.php:143
+msgid "Appearance &amp; Styles"
+msgstr ""
+
+#: combo-slideshow.php:144
+msgid "Links &amp; Images Overlay"
+msgstr ""
+
+#: combo-slideshow.php:422
+msgid "Slide has been removed"
+msgstr ""
+
+#: combo-slideshow.php:425
+msgid "Slide cannot be removed"
+msgstr ""
+
+#: combo-slideshow.php:429
+msgid "No slide was specified"
+msgstr ""
+
+#: combo-slideshow.php:437
+msgid "Slide has been saved"
+msgstr ""
+
+#: combo-slideshow.php:457
+msgid "Selected slides have been removed"
+msgstr ""
+
+#: combo-slideshow.php:462
+msgid "No slides were selected"
+msgstr ""
+
+#: combo-slideshow.php:466
+msgid "No action was specified"
+msgstr ""
+
+#: combo-slideshow.php:488
+msgid "All configuration settings have been reset to their defaults"
+msgstr ""
+
+#: combo-slideshow.php:492
+msgid "Configuration settings could not be reset"
+msgstr ""
+
+#: combo-slideshow.php:505
+msgid "Configuration has been saved"
+msgstr ""
+
+#: js/tinymce/dialog.php:24
+msgid "Insert a slideshow"
+msgstr ""
+
+#: js/tinymce/dialog.php:80
+msgid "Images From a Post"
+msgstr ""
+
+#: js/tinymce/dialog.php:81
+msgid "Custom Added Slides"
+msgstr ""
+
+#: js/tinymce/dialog.php:85
+msgid "Post"
+msgstr ""
+
+#: js/tinymce/dialog.php:88
+msgid "Select a Post"
+msgstr ""
+
+#: js/tinymce/dialog.php:89
+msgid "THIS POST"
+msgstr ""
+
+#: js/tinymce/dialog.php:98 views/admin/metaboxes/settings-general.php:132
+msgid "Exclude"
+msgstr ""
+
+#: js/tinymce/dialog.php:100
+msgid "comma separated IDs of attachments to exclude"
+msgstr ""
+
+#: models/slide.php:55
+msgid "Please fill in a title"
+msgstr ""
+
+#: models/slide.php:56
+msgid "Please fill in a description"
+msgstr ""
+
+#: models/slide.php:57
+msgid "Please select an image type"
+msgstr ""
+
+#: models/slide.php:74
+msgid "The image did not upload, please try again"
+msgstr ""
+
+#: models/slide.php:75
+msgid ""
+"Image could not be moved from TMP to \"wp-content/uploads/\", please check "
+"permissions"
+msgstr ""
+
+#: models/slide.php:95
+msgid "The image file is too large"
+msgstr ""
+
+#: models/slide.php:98
+msgid "The image was partially uploaded, please try again"
+msgstr ""
+
+#: models/slide.php:101
+msgid "No image was chosen for uploading, please choose an image"
+msgstr ""
+
+#: models/slide.php:104
+msgid ""
+"No TMP directory has been specified for PHP to use, please ask your hosting "
+"provider"
+msgstr ""
+
+#: models/slide.php:107
+msgid "Image cannot be written to disc, please ask your hosting provider"
+msgstr ""
+
+#: models/slide.php:113
+msgid "Please specify an image"
+msgstr ""
+
+#: models/slide.php:139
+msgid "No data was posted"
+msgstr ""
+
+#: vendors/class.paginate.php:175
+msgid "Displaying"
+msgstr ""
+
+#: vendors/class.paginate.php:175
+msgid "of"
+msgstr ""
+
+#: vendors/class.paginate.php:178
+msgid "Previous Page"
+msgstr ""
+
+#: vendors/class.paginate.php:186
+msgid "Page"
+msgstr ""
+
+#: vendors/class.paginate.php:197
+msgid "Next Page"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:5
+msgid "Javascript Framework"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:22
+msgid "Slideshow Theme"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:27
+msgid "no theme"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:28
+msgid "default"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:31
+msgid "custom CSS"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:43
+msgid "Custom Theme CSS location"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:48
+msgid "name of both the current theme sub-folder and the CSS file"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:48
+msgid "e.g. use \"custom\" for /mytheme/custom/custom.css"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:57
+msgid "Auto insert in Home page"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:59
+#: views/admin/metaboxes/settings-general.php:67
+#: views/admin/metaboxes/settings-general.php:275
+#: views/admin/metaboxes/settings-general.php:289
+#: views/admin/metaboxes/settings-general.php:301
+#: views/admin/metaboxes/settings-general.php:325
+#: views/admin/metaboxes/settings-general.php:366
+#: views/admin/metaboxes/settings-general.php:374
+#: views/admin/metaboxes/settings-general.php:401
+#: views/admin/metaboxes/settings-general.php:446
+#: views/admin/metaboxes/settings-general.php:460
+#: views/admin/metaboxes/settings-general.php:474
+#: views/admin/metaboxes/settings-general.php:525
+#: views/admin/metaboxes/settings-styles.php:17
+#: views/admin/metaboxes/settings-styles.php:30
+#: views/admin/metaboxes/settings-styles.php:38
+#: views/admin/slides/index.php:68 views/admin/slides/save.php:107
+msgid "No"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:60
+msgid "Blog"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:61
+#: views/admin/metaboxes/settings-general.php:69
+msgid "Custom Slides"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:65
+msgid "Auto insert in post / page"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:68
+msgid "Gallery"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:73
+msgid "Auto slideshow position"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:75
+msgid "Before the content"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:76
+msgid "After the content"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:80
+msgid "Category"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:83
+msgid "select a category"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:101
+msgid "Custom Slideshow selection"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:104
+msgid "select a gallery"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:123
+msgid "Post limit"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:141
+msgid "Offset"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:154
+msgid "Number of slices"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:173
+#: views/admin/metaboxes/settings-general.php:204
+msgid "Type of Animation"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:242
+msgid "Type of CSS Animation"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:272
+msgid "CSS3 transitions"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:274
+#: views/admin/metaboxes/settings-general.php:288
+#: views/admin/metaboxes/settings-general.php:300
+#: views/admin/metaboxes/settings-general.php:324
+#: views/admin/metaboxes/settings-general.php:365
+#: views/admin/metaboxes/settings-general.php:373
+#: views/admin/metaboxes/settings-general.php:400
+#: views/admin/metaboxes/settings-general.php:445
+#: views/admin/metaboxes/settings-general.php:459
+#: views/admin/metaboxes/settings-general.php:473
+#: views/admin/metaboxes/settings-general.php:524
+#: views/admin/metaboxes/settings-styles.php:16
+#: views/admin/metaboxes/settings-styles.php:29
+#: views/admin/metaboxes/settings-styles.php:37
+#: views/admin/slides/index.php:66 views/admin/slides/save.php:106
+msgid "Yes"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:286
+msgid "Pause on hover"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:298
+msgid "Auto Slide"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:310
+msgid "Auto Speed"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:312
+#: views/admin/metaboxes/settings-general.php:358
+msgid "ms"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:313
+msgid "default:3000"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:313
+msgid "lower number for shorter interval between images"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:322
+msgid "Display Caption"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:335
+msgid "Caption Offset"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:338
+#: views/admin/metaboxes/settings-general.php:386
+#: views/admin/metaboxes/settings-styles.php:54
+#: views/admin/metaboxes/settings-styles.php:71
+msgid "px"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:339
+msgid "fine tune the caption Y position from the bottom"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:340
+msgid "(positive values mean going up)"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:344
+msgid "Caption Opacity"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:346
+msgid "&#37; <!-- percentage -->"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:347
+msgid "opacity of the caption"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:356
+msgid "Image Fading Speed"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:359
+msgid "default:500 recommended:100-1000"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:359
+msgid "lower number for quicker fading of images"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:363
+msgid "Navigation Control"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:367
+msgid "1, 2, 3..."
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:371
+msgid "Show Thumbnails"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:383
+msgid "Navigation Offset"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:387
+msgid "fine tune the navigation control margin-bottom / Y position"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:388
+msgid "(negative values mean going up)"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:398
+msgid "Control Numbers"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:405
+msgid "Control Bullets"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:426
+msgid "Custom Bullets"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:431
+#: views/admin/metaboxes/settings-general.php:511
+msgid "name of the current theme sub-folder"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:431
+msgid "e.g. use \"custom\" for /mytheme/custom/bullet.png"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:443
+msgid "Navigation Tips"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:457
+msgid "Keyboard Navigation"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:461
+msgid "use left & right arrows"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:471
+msgid "Navigation Direction Buttons"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:485
+msgid "Direction Arrows"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:506
+msgid "Custom Direction Arrows"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:511
+msgid "e.g. use \"custom\" for /mytheme/custom/arrow.png"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:522
+msgid "Navigation Hover"
+msgstr ""
+
+#: views/admin/metaboxes/settings-general.php:526
+msgid "show navigation buttons only on hover"
+msgstr ""
+
+#: views/admin/metaboxes/settings-linksimages.php:4
+msgid "Open Images in..."
+msgstr ""
+
+#: views/admin/metaboxes/settings-linksimages.php:8
+msgid "No Link"
+msgstr ""
+
+#: views/admin/metaboxes/settings-linksimages.php:9
+msgid "Window"
+msgstr ""
+
+#: views/admin/metaboxes/settings-linksimages.php:10
+msgid "Thickbox"
+msgstr ""
+
+#: views/admin/metaboxes/settings-linksimages.php:11
+msgid "Shadowbox"
+msgstr ""
+
+#: views/admin/metaboxes/settings-linksimages.php:12
+msgid "PrettyPhoto"
+msgstr ""
+
+#: views/admin/metaboxes/settings-linksimages.php:13
+msgid "Lightbox"
+msgstr ""
+
+#: views/admin/metaboxes/settings-linksimages.php:14
+msgid "Fancybox"
+msgstr ""
+
+#: views/admin/metaboxes/settings-linksimages.php:15
+msgid "Multibox"
+msgstr ""
+
+#: views/admin/metaboxes/settings-linksimages.php:16
+msgid "custom"
+msgstr ""
+
+#: views/admin/metaboxes/settings-linksimages.php:19
+msgid ""
+"Thickbox comes standard with your Wordpress install. Others come only with a "
+"specific theme or plugin"
+msgstr ""
+
+#: views/admin/metaboxes/settings-linksimages.php:28
+msgid "Custom class"
+msgstr ""
+
+#: views/admin/metaboxes/settings-linksimages.php:33
+msgid "name of the class used by the lightbox script"
+msgstr ""
+
+#: views/admin/metaboxes/settings-linksimages.php:42
+msgid "Recommendations"
+msgstr ""
+
+#: views/admin/metaboxes/settings-linksimages.php:49
+msgid "Page Link Target"
+msgstr ""
+
+#: views/admin/metaboxes/settings-linksimages.php:51
+msgid "Current Tab"
+msgstr ""
+
+#: views/admin/metaboxes/settings-linksimages.php:52
+msgid "New Tab"
+msgstr ""
+
+#: views/admin/metaboxes/settings-linksimages.php:53
+msgid ""
+"Same as setting that <em>target</em> pages are &quot;_self&quot; or &quot;"
+"_blank&quot;"
+msgstr ""
+
+#: views/admin/metaboxes/settings-styles.php:3
+msgid ""
+"* Tip: make the best use of the slideshow by loading always content of the "
+"same dimensions"
+msgstr ""
+
+#: views/admin/metaboxes/settings-styles.php:5
+msgid ""
+"and setting the size of the frame (as well as the CSS rules) accordingly."
+msgstr ""
+
+#: views/admin/metaboxes/settings-styles.php:7
+msgid ""
+"Pay attention when using slideshow themes as you could have to adjust the "
+"image size."
+msgstr ""
+
+#: views/admin/metaboxes/settings-styles.php:9
+msgid ""
+"Feel free play around with values but sorry, no support is provided on this "
+"matter."
+msgstr ""
+
+#: views/admin/metaboxes/settings-styles.php:14
+msgid "Resize Images (width)"
+msgstr ""
+
+#: views/admin/metaboxes/settings-styles.php:18
+msgid ""
+"Should images be resized proportionally to fit the width of the slideshow "
+"area"
+msgstr ""
+
+#: views/admin/metaboxes/settings-styles.php:27
+msgid "Resize Images (height)"
+msgstr ""
+
+#: views/admin/metaboxes/settings-styles.php:31
+msgid ""
+"Should images be resized proportionally to fit the height of the slideshow "
+"area. "
+msgstr ""
+
+#: views/admin/metaboxes/settings-styles.php:35
+msgid "Crop Images"
+msgstr ""
+
+#: views/admin/metaboxes/settings-styles.php:39
+msgid "Should images be cropped to fit the height of the slideshow area. "
+msgstr ""
+
+#: views/admin/metaboxes/settings-styles.php:50
+msgid "Slide Images Dimensions"
+msgstr ""
+
+#: views/admin/metaboxes/settings-styles.php:55
+msgid "width and height of the sliding img elements"
+msgstr ""
+
+#: views/admin/metaboxes/settings-styles.php:57
+msgid ""
+"with jQuery Nivo Slider this setting will only force the frame to crop the "
+"slide (as its background image)"
+msgstr ""
+
+#: views/admin/metaboxes/settings-styles.php:67
+msgid "Gallery Dimensions"
+msgstr ""
+
+#: views/admin/metaboxes/settings-styles.php:72
+msgid "width and height of the slideshow gallery"
+msgstr ""
+
+#: views/admin/metaboxes/settings-styles.php:74
+msgid ""
+"jQuery Nivo Slider does not resize images so make sure the source files have "
+"the same size otherwise the frame will be enlarged accordingly"
+msgstr ""
+
+#: views/admin/metaboxes/settings-styles.php:78
+msgid "Slideshow Background"
+msgstr ""
+
+#: views/admin/metaboxes/settings-styles.php:84
+msgid "Caption Background"
+msgstr ""
+
+#: views/admin/metaboxes/settings-styles.php:90
+msgid "Caption Text Color"
+msgstr ""
+
+#: views/admin/metaboxes/settings-submit.php:5
+msgid "Reset all configuration settings to their default values"
+msgstr ""
+
+#: views/admin/metaboxes/settings-submit.php:5
+msgid "Are you sure you wish to reset all configuration settings?"
+msgstr ""
+
+#: views/admin/metaboxes/settings-submit.php:5
+msgid "Reset to Defaults"
+msgstr ""
+
+#: views/admin/metaboxes/settings-submit.php:11
+msgid "Save Configuration"
+msgstr ""
+
+#: views/admin/settings.php:8
+msgid "Configuration Settings"
+msgstr ""
+
+#: views/admin/slides/index.php:2
+msgid "Manage Slides"
+msgstr ""
+
+#: views/admin/slides/index.php:2
+msgid "Add New"
+msgstr ""
+
+#: views/admin/slides/index.php:6
+msgid "slides"
+msgstr ""
+
+#: views/admin/slides/index.php:12
+msgid "Are you sure you wish to execute this action on the selected slides?"
+msgstr ""
+
+#: views/admin/slides/index.php:15
+msgid "Order all your slides"
+msgstr ""
+
+#: views/admin/slides/index.php:15 views/admin/slides/order.php:2
+msgid "Order Slides"
+msgstr ""
+
+#: views/admin/slides/index.php:18
+msgid "Bulk Actions"
+msgstr ""
+
+#: views/admin/slides/index.php:19 views/admin/slides/index.php:61
+msgid "Delete"
+msgstr ""
+
+#: views/admin/slides/index.php:21
+msgid "Apply"
+msgstr ""
+
+#: views/admin/slides/index.php:30 views/admin/slides/index.php:41
+msgid "Image"
+msgstr ""
+
+#: views/admin/slides/index.php:31 views/admin/slides/index.php:42
+#: views/admin/slides/save.php:10
+msgid "Title"
+msgstr ""
+
+#: views/admin/slides/index.php:32 views/admin/slides/index.php:43
+msgid "Link"
+msgstr ""
+
+#: views/admin/slides/index.php:34 views/admin/slides/index.php:45
+#: views/admin/slides/save.php:26
+msgid "Section"
+msgstr ""
+
+#: views/admin/slides/index.php:35 views/admin/slides/index.php:46
+msgid "Order"
+msgstr ""
+
+#: views/admin/slides/index.php:60
+msgid "Edit"
+msgstr ""
+
+#: views/admin/slides/index.php:61
+msgid "Are you sure you want to permanently remove this slide?"
+msgstr ""
+
+#: views/admin/slides/index.php:85 views/admin/slides/order.php:61
+msgid "No slides found"
+msgstr ""
+
+#: views/admin/slides/order.php:4
+msgid "&larr; Manage All Slides"
+msgstr ""
+
+#: views/admin/slides/save.php:2
+msgid "Save a Slide"
+msgstr ""
+
+#: views/admin/slides/save.php:13
+msgid "title/name of your slide as it will be displayed to your users."
+msgstr ""
+
+#: views/admin/slides/save.php:18
+msgid "Description"
+msgstr ""
+
+#: views/admin/slides/save.php:21
+msgid ""
+"description of your slide as it will be displayed to your users below the "
+"title."
+msgstr ""
+
+#: views/admin/slides/save.php:35
+msgid "DISABLED: which custom slideshow would you like this image to apply to?"
+msgstr ""
+
+#: views/admin/slides/save.php:40
+msgid "Image Type"
+msgstr ""
+
+#: views/admin/slides/save.php:42
+msgid "Upload File (recommended)"
+msgstr ""
+
+#: views/admin/slides/save.php:43
+msgid "Specify URL"
+msgstr ""
+
+#: views/admin/slides/save.php:45
+msgid "do you want to upload an image or specify a local/remote image URL?"
+msgstr ""
+
+#: views/admin/slides/save.php:56
+msgid "Choose Image"
+msgstr ""
+
+#: views/admin/slides/save.php:59
+msgid "choose your image file from your computer. JPG, PNG, GIF are supported."
+msgstr ""
+
+#: views/admin/slides/save.php:72
+msgid "Current image. Leave the field above blank to keep this image."
+msgstr ""
+
+#: views/admin/slides/save.php:90
+msgid "Image URL"
+msgstr ""
+
+#: views/admin/slides/save.php:93
+msgid "Local or remote image location eg. http://domain.com/path/to/image.jpg"
+msgstr ""
+
+#: views/admin/slides/save.php:104
+msgid "Use Link"
+msgstr ""
+
+#: views/admin/slides/save.php:108
+msgid "set this to Yes to link this slide to a link/URL of your choice."
+msgstr ""
+
+#: views/admin/slides/save.php:118
+msgid "Link To"
+msgstr ""
+
+#: views/admin/slides/save.php:121
+msgid ""
+"link/URL to go to when a user clicks the slide eg. http://www.domain.com/"
+"mypage/"
+msgstr ""
+
+#: views/admin/slides/save.php:129
+msgid "Save Slide"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Combo Slideshow"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://www.3dolab.net/en"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"The features of the best slideshow javascript effects and WP plugins. Blog "
+"posts highlights, image gallery, custom slides!"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "3dolab"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://www.3dolab.net"
+msgstr ""

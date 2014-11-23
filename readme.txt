@@ -52,8 +52,6 @@ It works great in conjunction with the [Gallery Metabox plugin](http://wordpress
 
 == Other Notes ==
 
-= Additional Parameter Info =
-
 = [slideshow] shortcode & $CMBSLD_Gallery -> slideshow() = 
 * $output (default = true): echoes the content, or just returns it if set to false
 * $post_id (default = null): retrieves attached images from a particular post by id, or from the global $post object if left unspecified
