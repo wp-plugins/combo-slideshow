@@ -1,0 +1,450 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WordPress Slideshow Gallery v1.0.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-01-07 22:56+0200\n"
+"PO-Revision-Date: \n"
+"Last-Translator: 3dolab <boss@3dolab.net>\n"
+"Language-Team: Tribulant Software <support@tribulant.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-Basepath: ../\n"
+"Language: en_ZA\n"
+"X-Generator: Poedit 1.5.5\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#: ../slideshow-gallery/slideshow-gallery-ajax.php:29
+msgid "Slides have been ordered"
+msgstr "Slide ordinate"
+
+#: ../slideshow-gallery/slideshow-gallery-plugin.php:221
+msgid "Uploads folder named \""
+msgstr "La Cartella upload si chiama\""
+
+#: ../slideshow-gallery/slideshow-gallery.php:36
+msgid "Slideshow"
+msgstr "Slideshow"
+
+#: ../slideshow-gallery/slideshow-gallery.php:37
+msgid "Manage Slides"
+msgstr "Gestisci Slide"
+
+#: ../slideshow-gallery/slideshow-gallery.php:38
+msgid "Configuration"
+msgstr "Configurazione"
+
+#: ../slideshow-gallery/slideshow-gallery.php:48
+msgid "Save Settings"
+msgstr "Salva Impostazioni"
+
+#: ../slideshow-gallery/slideshow-gallery.php:49
+msgid "General Settings"
+msgstr "Impostazioni Generali"
+
+#: ../slideshow-gallery/slideshow-gallery.php:50
+msgid "Appearance &amp; Styles"
+msgstr "Aspetto e Stile"
+
+#: ../slideshow-gallery/slideshow-gallery.php:145
+msgid "Slide has been saved"
+msgstr "Slide salvata"
+
+#: ../slideshow-gallery/slideshow-gallery.php:165
+msgid "Selected slides have been removed"
+msgstr "Le Slide selezionate sono state rimosse"
+
+#: ../slideshow-gallery/slideshow-gallery.php:170
+msgid "No slides were selected"
+msgstr "Nessuna slide selezionata"
+
+#: ../slideshow-gallery/slideshow-gallery.php:174
+msgid "No action was specified"
+msgstr "Nessuna azione specificata"
+
+#: ../slideshow-gallery/slideshow-gallery.php:196
+msgid "All configuration settings have been reset to their defaults"
+msgstr "Tutte le impostazioni sono state riportate ai valori predefiniti"
+
+#: ../slideshow-gallery/slideshow-gallery.php:200
+msgid "Configuration settings could not be reset"
+msgstr "La configurazione non può essere reimpostata"
+
+#: ../slideshow-gallery/slideshow-gallery.php:213
+msgid "Configuration has been saved"
+msgstr "Configurazione salvata"
+
+#: ../slideshow-gallery/js/tinymce/dialog.php:17
+msgid "Insert a slideshow"
+msgstr "Inserisci Slideshow"
+
+#: ../slideshow-gallery/js/tinymce/dialog.php:70
+msgid "Images From a Post"
+msgstr "Immagini da un Post"
+
+#: ../slideshow-gallery/js/tinymce/dialog.php:71
+msgid "Custom Added Slides"
+msgstr "Slide Personalizzate"
+
+#: ../slideshow-gallery/js/tinymce/dialog.php:75
+msgid "Post"
+msgstr "Post"
+
+#: ../slideshow-gallery/js/tinymce/dialog.php:78
+msgid "Select a Post"
+msgstr "Scegli Post"
+
+#: ../slideshow-gallery/js/tinymce/dialog.php:87
+msgid "Exclude"
+msgstr "Escludi"
+
+#: ../slideshow-gallery/js/tinymce/dialog.php:89
+msgid "comma separated IDs of attachments to exclude"
+msgstr "lista di ID allegati da escludere, separati da virgola"
+
+#: ../slideshow-gallery/models/slide.php:63
+msgid "Please fill in a title"
+msgstr "Inserisci il titolo"
+
+#: ../slideshow-gallery/models/slide.php:64
+msgid "Please fill in a description"
+msgstr "Inserisci una descrizione"
+
+#: ../slideshow-gallery/models/slide.php:65
+msgid "Please specify an image"
+msgstr "Scegli un'immagine"
+
+#: ../slideshow-gallery/models/slide.php:92
+msgid "No data was posted"
+msgstr "Nessuna data inserita"
+
+#: ../slideshow-gallery/vendors/class.paginate.php:176
+msgid "Displaying"
+msgstr "Visualizzazione"
+
+#: ../slideshow-gallery/vendors/class.paginate.php:176
+msgid "of"
+msgstr "di"
+
+#: ../slideshow-gallery/vendors/class.paginate.php:179
+msgid "Previous Page"
+msgstr "Pagina Precedente"
+
+#: ../slideshow-gallery/vendors/class.paginate.php:187
+msgid "Page"
+msgstr "Pagina"
+
+#: ../slideshow-gallery/vendors/class.paginate.php:198
+msgid "Next Page"
+msgstr "Pagina Successiva"
+
+#: ../slideshow-gallery/views/admin/settings.php:12
+msgid "Configuration Settings"
+msgstr "Impostazioni"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:4
+msgid "Auto Slide"
+msgstr "Automatica"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:6
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:53
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:79
+#: ../slideshow-gallery/views/admin/metaboxes/settings-styles.php:8
+#: ../slideshow-gallery/views/admin/slides/save.php:34
+msgid "Yes"
+msgstr "Sì"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:7
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:54
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:80
+#: ../slideshow-gallery/views/admin/metaboxes/settings-styles.php:9
+#: ../slideshow-gallery/views/admin/slides/save.php:35
+msgid "No"
+msgstr "No"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:17
+msgid "Auto Speed"
+msgstr "Automatica"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:19
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:113
+msgid "speed"
+msgstr "velocità"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:20
+msgid "default:10"
+msgstr "predefinita: 10"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:20
+msgid "lower number for shorter interval between images"
+msgstr "un valore più alto definisce un intervallo più lungo tra le immagini"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:30
+msgid "Image Fading Speed"
+msgstr "Velocità Transizione Immagini"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:33
+msgid "default:10 recommended:1-20"
+msgstr "predefinita: 10, consigliata: 1-20"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:33
+msgid "lower number for quicker fading of images"
+msgstr "un valore più basso per un passaggio più rapido tra le immagini"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:37
+msgid "Navigation Default Opacity"
+msgstr "Opacità predefinita degli elementi di navigazione"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:39
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:46
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:99
+msgid "&#37; <!-- percentage -->"
+msgstr "&#37; <!-- percentuale -->"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:40
+msgid "opacity of the prev/next buttons by default"
+msgstr "opacità predefinita dei pulsanti prec/succ"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:44
+msgid "Navigation Hover Opacity"
+msgstr "Opacità MouseOver"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:47
+msgid "opacity of the prev/next buttons when they are hovered"
+msgstr "opacità dei pulsanti prec/succ al passaggio del cursore"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:51
+msgid "Show Information"
+msgstr "Mostra Informazioni"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:64
+msgid "Information Speed"
+msgstr "Velocità Informazioni"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:67
+msgid "speed at which the information will slide in"
+msgstr "velocità di apparizione delle informazioni"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:77
+msgid "Show Thumbnails"
+msgstr "Mostra Anteprime"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:90
+msgid "Thumbnails Position"
+msgstr "Posizione Anteprime"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:92
+msgid "Top"
+msgstr "in cima"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:93
+msgid "Bottom"
+msgstr "in fondo"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:97
+msgid "Thumbnail Opacity"
+msgstr "Opacità Anteprime"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:100
+msgid "default opacity of thumbnails when they are not hovered"
+msgstr "opacità predefinita delle anteprime"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:104
+msgid "Thumbnail Active Border"
+msgstr "Bordo Anteprima Attiva"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:107
+msgid ""
+"border color (hexidecimal) for the active image thumbnail. default:#FFFFFF"
+msgstr ""
+"colore bordo (esadecimale) per l'immagine di anteprima attiva. valore "
+"predefinito: #FFFFFF"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:111
+msgid "Thumbnails Scroll Speed"
+msgstr "Velocità di scorrimento Anteprime"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:114
+msgid "default:5 recommended:1-20"
+msgstr "predefinita: 5, consigliata: 1-20"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:118
+msgid "Thumbnail Spacing"
+msgstr "Distanza Anteprime"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:120
+#: ../slideshow-gallery/views/admin/metaboxes/settings-styles.php:16
+#: ../slideshow-gallery/views/admin/metaboxes/settings-styles.php:23
+msgid "px"
+msgstr "px"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-general.php:121
+msgid "horizontal margin/spacing between thumbnails"
+msgstr "spazio orizzontale tra le anteprime"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-styles.php:6
+msgid "Resize Images"
+msgstr "Ridimensiona Immagini"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-styles.php:10
+msgid ""
+"should images be resized proportionally to fit the width of the slideshow "
+"area"
+msgstr ""
+"le immagini devono essere ridimensionate proporzionalmente, per adattarsi "
+"all'area della slideshow"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-styles.php:14
+msgid "Gallery Width"
+msgstr "Larghezza Slideshow"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-styles.php:17
+msgid "width of the slideshow gallery"
+msgstr "larghezza della galleria slideshow"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-styles.php:21
+msgid "Gallery Height"
+msgstr "Altezza Slideshow"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-styles.php:24
+msgid "height of the slideshow gallery"
+msgstr "altezza della galleria slideshow"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-styles.php:28
+msgid "Slideshow Border"
+msgstr "Bordo Slideshow"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-styles.php:34
+msgid "Slideshow Background"
+msgstr "Sfondo Slideshow"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-styles.php:40
+msgid "Information Background"
+msgstr "Sfondo Informazioni"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-styles.php:46
+msgid "Information Text Color"
+msgstr "Colore Testo Informazioni"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-submit.php:5
+msgid "Reset all configuration settings to their default values"
+msgstr "Reimposta la configurazione ai valori predefiniti"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-submit.php:5
+msgid "Are you sure you wish to reset all configuration settings?"
+msgstr "Sei sicuro di voler davvero reimpostare la configurazione?"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-submit.php:5
+msgid "Reset to Defaults"
+msgstr "Reset Configurazione"
+
+#: ../slideshow-gallery/views/admin/metaboxes/settings-submit.php:11
+msgid "Save Configuration"
+msgstr "Salva Configurazione"
+
+#: ../slideshow-gallery/views/admin/slides/index.php:2
+msgid "Add New"
+msgstr "Aggiungi Nuova"
+
+#: ../slideshow-gallery/views/admin/slides/index.php:7
+msgid "slides"
+msgstr "slide"
+
+#: ../slideshow-gallery/views/admin/slides/index.php:13
+msgid "Are you sure you wish to execute this action on the selected slides?"
+msgstr "Sei sicuro di voler eseguire questa azione sulle slide selezionate?"
+
+#: ../slideshow-gallery/views/admin/slides/index.php:16
+msgid "Order all your slides"
+msgstr "Ordina tutte le slide"
+
+#: ../slideshow-gallery/views/admin/slides/index.php:16
+#: ../slideshow-gallery/views/admin/slides/order.php:2
+msgid "Order Slides"
+msgstr "Ordina Slide"
+
+#: ../slideshow-gallery/views/admin/slides/index.php:19
+msgid "Bulk Actions"
+msgstr "Azioni Multiple"
+
+#: ../slideshow-gallery/views/admin/slides/index.php:20
+msgid "Delete"
+msgstr "Cancella"
+
+#: ../slideshow-gallery/views/admin/slides/index.php:22
+msgid "Apply"
+msgstr "Applica"
+
+#: ../slideshow-gallery/views/admin/slides/index.php:31
+#: ../slideshow-gallery/views/admin/slides/index.php:40
+msgid "Image"
+msgstr "Immagine"
+
+#: ../slideshow-gallery/views/admin/slides/index.php:32
+#: ../slideshow-gallery/views/admin/slides/index.php:41
+#: ../slideshow-gallery/views/admin/slides/save.php:11
+msgid "Title"
+msgstr "Titolo"
+
+#: ../slideshow-gallery/views/admin/slides/index.php:33
+#: ../slideshow-gallery/views/admin/slides/index.php:42
+msgid "Date"
+msgstr "Data"
+
+#: ../slideshow-gallery/views/admin/slides/index.php:34
+#: ../slideshow-gallery/views/admin/slides/index.php:43
+msgid "Order"
+msgstr "Ordine"
+
+#: ../slideshow-gallery/views/admin/slides/index.php:68
+#: ../slideshow-gallery/views/admin/slides/order.php:51
+msgid "No slides found"
+msgstr "Nessuna slide trovata"
+
+#: ../slideshow-gallery/views/admin/slides/order.php:5
+msgid "&larr; Manage All Slides"
+msgstr "&larr; Gestisci tutte le Slide"
+
+#: ../slideshow-gallery/views/admin/slides/save.php:2
+msgid "Save a Slide"
+msgstr "Salva Slide"
+
+#: ../slideshow-gallery/views/admin/slides/save.php:18
+msgid "Description"
+msgstr "Descrizione"
+
+#: ../slideshow-gallery/views/admin/slides/save.php:25
+msgid "Image URL"
+msgstr "URL Immagine"
+
+#: ../slideshow-gallery/views/admin/slides/save.php:32
+msgid "Use Link"
+msgstr "Usa Link"
+
+#: ../slideshow-gallery/views/admin/slides/save.php:45
+msgid "Link To"
+msgstr "Link a"
+
+#: ../slideshow-gallery/views/admin/slides/save.php:53
+msgid "Save Slide"
+msgstr "Salva Slide"
+
+#: ../slideshow-gallery/views/default/gallery.php:45
+#: ../slideshow-gallery/views/default/gallery.php:69
+msgid "Slide Left"
+msgstr "Slide a Sinistra"
+
+#: ../slideshow-gallery/views/default/gallery.php:49
+#: ../slideshow-gallery/views/default/gallery.php:73
+msgid "Slide Right"
+msgstr "Slide a Destra"
+
+#: ../slideshow-gallery.1/tags/1.0/trunk/views/admin/settings.php:5
+msgid "Styles"
+msgstr "Stile"
+
+#: ../slideshow-gallery.1/tags/1.0/trunk/views/admin/slides/index.php:2
+msgid "add new"
+msgstr "aggiungi nuova"

@@ -1,0 +1,54 @@
+Combo Slideshow Changelog
+
+= 1.9 (2014.11.22) =
+* Tabbed navigation on administration settings
+* Fixed compatibility issue with TinyMCE js module on WP 3.9
+* Fixes to the "no theme" CSS 
+* "default" theme is now really the default option
+* Post Category multiple select
+
+= 1.8 (2013.12.03) =
+* Bugfix: TinyMCE button for gallery shortcodes
+* Bugfix: constants and translations
+* Added Italian Translation
+
+= 1.7 (2013.06.18) =
+* Updated to Nivo Slider jQuery plugin (v.3.2)
+* Full renewal of the slideshow management in admin UI, database and folders
+* Added new "Slideshow" post type
+* Added crop thumbnails option
+
+= 1.6 (2013.02.15) =
+* Bugfix: link in custom slides
+
+= 1.5 (2013.02.02) =
+* Improved output: new parameters available ($size, $width, $height, $custom) in manual functions and shortcodes for multiple independent custom slideshow sizes
+* Improved cropping / resizing of each slide
+* Fixes over caption links generation, auto insert feature, include/exclude parameters
+* Several bugfixes over thumbnail generation
+* Scrolling thumbnails
+* Changed required back-end capability from 'manage_options' to 'edit_others_posts'
+* Direction/Arrow navigation controls also available within the MooTools framework
+* Fixes and improvements over IE6/7 compatibility
+
+= 1.4 (2011.09.30) =
+* Bugfix: custom slideshow gallery output
+
+= 1.3 (2011.09.30) =
+* Enabled auto custom slides in homepage and single post/page
+* Added auto slideshow position (before/after the content)
+* Lightbox enabled for custom slides too
+* Using wrapper div even if no theme is set
+* Code clean up
+
+= 1.2 (2011.08.13) = 
+* Nivo Slider updated to 2.6 and YUI compressed
+* Bugfix: 'title is undefined' .attr() error with jQuery 1.6+
+* Bugfix: blank admin screens
+
+= 1.1 (2011.07.28) = 
+* Bugfix: invalid markup in post slideshows
+* Bugfix: JavaScript errors in MSIE6/7
+
+= 1.0 (2011.07.12) = 
+* First Release
