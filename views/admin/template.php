@@ -1,8 +1,8 @@
 <?php
-class GalleryMetaboxHelper extends CMBSLD_GalleryPlugin {
-	var $name = 'Metabox';
+class Template extends CMBSLD_GalleryPlugin {
+	var $name = 'Template';
 	
-	function GalleryMetaboxHelper() {
+	function Template() {
 		$url = explode("&", $_SERVER['REQUEST_URI']);
 		$this -> url = $url[0];
 	}
@@ -20,6 +20,10 @@ class GalleryMetaboxHelper extends CMBSLD_GalleryPlugin {
 	
 	function settings_styles() {
 		$this -> render('metaboxes' . DS . 'settings-styles', false, true, 'admin');
+	}
+	
+	function settings_slides() {
+		$this -> render('metaboxes' . DS . 'settings-slides', false, true, 'admin');
 	}
 }
 ?>
