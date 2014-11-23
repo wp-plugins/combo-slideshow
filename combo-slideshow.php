@@ -5,10 +5,12 @@ Plugin URI: http://www.3dolab.net/en
 Author: 3dolab
 Author URI: http://www.3dolab.net
 Description: The features of the best slideshow javascript effects and WP plugins. Blog posts highlights, image gallery, custom slides!
-Version: 1.8
+Version: 1.9
 */
-define('DS', DIRECTORY_SEPARATOR);
-define( 'CMBSLD_VERSION', '1.8' );
+if ( ! defined( 'DS' ) )
+	define('DS', DIRECTORY_SEPARATOR);
+if ( ! defined( 'CMBSLD_VERSION' ) )
+	define( 'CMBSLD_VERSION', '1.9' );
 if ( ! defined( 'CMBSLD_PLUGIN_BASENAME' ) )
 	define( 'CMBSLD_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 if ( ! defined( 'CMBSLD_PLUGIN_NAME' ) )
@@ -42,48 +44,70 @@ class CMBSLD_Gallery extends CMBSLD_GalleryPlugin {
 		
 		//WordPress action hooks
 		$this -> add_action('admin_menu');
-		$this -> add_action('admin_head');
+		//$this -> add_action('admin_head');
 		$this -> add_action('admin_notices');
 		// $this -> add_action('cmbsld_enqueue_styles');
-		$this -> add_action('init');
+		$this -> add_action('current_screen');
 		
 		//WordPress filter hooks
 		//$this -> add_filter('mce_external_plugins');
 		//$this -> add_filter('mce_buttons');
-		$this -> add_filter( 'the_content', 'auto_combo_slider' );
-		if($this -> get_option('wpns_auto_position') == 'B')
-			$this -> add_action( 'loop_start', 'auto_combo_slider' );
-		elseif($this -> get_option('wpns_auto_position') == 'A')
-			$this -> add_action( 'loop_end', 'auto_combo_slider' );
+		$this -> add_action('template_redirect','auto_show_context');
+
 		// $this -> add_theme_support('post-thumbnails');
 		$this -> add_filter('attachment_fields_to_edit', 'my_image_attachment_fields_to_edit', null, 2);
 		$this -> add_filter('attachment_fields_to_save', 'my_image_attachment_fields_to_save', null, 2);
 		$styles = $this -> get_option('styles');
-		$crop = $this -> get_option('crop_thumbs') ? true : false;
+		if(isset($styles['crop']) && $styles['crop'])
+			$crop = true;
+		else
+			$crop = false;
 		$combowidth = $styles['width'];
 		$comboheight = $styles['height'];
 		add_image_size( 'comboslide', $combowidth, $comboheight, $crop );
 		add_shortcode('slideshow', array($this, 'embed'));
 	}
+	function auto_show_context() {
+		if ( ( is_main_query() && ( is_home() || is_front_page() ) ) ){
+			$general = $this -> get_option('general');
+			if($general['wpns_auto_position'] == 'B')
+				$this -> add_action( 'loop_start', 'auto_combo_slider' );
+			elseif($general['wpns_auto_position'] == 'A')
+				$this -> add_action( 'loop_end', 'auto_combo_slider' );
+		} elseif ( is_main_query() && ( !is_home() && !is_front_page() && is_singular() ) ){
+			$this -> add_filter( 'the_content', 'auto_combo_slider' );
+		}
+	}
 	function auto_combo_slider( $content ) {
-	    //if ( ( ( is_home() || is_front_page() || is_post_type_archive() ) && $this -> get_option('wpns_home') == 'Y' ) ){
-		if ( ( ( is_home() || is_front_page() ) && $this -> get_option('wpns_home') == 'Y' ) ){
+		global $post;
+		$general = $this -> get_option('general');
+	    //if ( ( ( is_home() || is_front_page() || is_post_type_archive() ) && $general['wpns_home'] == 'Y' ) ){
+		if ( ( is_main_query() && ( is_home() || is_front_page() ) && $general['wpns_home'] == 'Y' && $post->post_type != 'slideshow' ) ){
+			if($general['wpns_auto_position'] == 'B')
+				$this -> remove_action( 'loop_start', 'auto_combo_slider' );
+			elseif($general['wpns_auto_position'] == 'A')
+				$this -> remove_action( 'loop_end', 'auto_combo_slider' );
 			if(is_main_query())
 				$comboslidercode = $this -> show_combo_slider();
-	    } elseif (  ( !is_home() && !is_front_page() && is_singular() ) && $this -> get_option('wpns_auto') == 'Y' ){
+	    } elseif ( is_main_query() && ( !is_home() && !is_front_page() && is_singular() ) && $general['wpns_auto'] == 'Y' && $post->post_type != 'slideshow' ){
 			$comboslidercode = $this -> embed();
-	    } elseif ( ( ( is_home() || is_front_page() ) && $this -> get_option('wpns_home') == 'C' ) || ( is_singular() && $this -> get_option('wpns_auto') == 'C' ) ) {
-		  //$slides = $this -> Slide -> find_all(null, null, array('order', "ASC"), $this -> get_option('postlimit'));
-		  //$comboslidercode = $this -> render('gallery', array('slides' => $slides, 'frompost' => false), false, 'default');
-		  $slideshow_id = $this -> get_option('slide_gallery');
-		  $comboslidercode = $this -> embed(array('custom'=>$slideshow_id));
+	    } elseif ( is_main_query() && ( ( ( is_home() || is_front_page() ) && $general['wpns_home'] == 'C' ) || ( is_singular() && $general['wpns_auto'] == 'C' ) && $post->post_type != 'slideshow' ) ) {
+			if($general['wpns_auto_position'] == 'B')
+				$this -> remove_action( 'loop_start', 'auto_combo_slider' );
+			elseif($general['wpns_auto_position'] == 'A')
+				$this -> remove_action( 'loop_end', 'auto_combo_slider' );
+			  //$slides = $this -> Slide -> find_all(null, null, array('order', "ASC"), $general['postlimit']);
+			  //$comboslidercode = $this -> render('gallery', array('slides' => $slides, 'frompost' => false), false, 'default');
+			$slideshow_id = $general['slide_gallery'];
+			$comboslidercode = $this -> embed(array('custom'=>$slideshow_id));
 	    } elseif($content) {
 			return $content;
-	    }
+	    } else
+			$comboslidercode = '';
 		if( is_string($content) && ( !is_home() && !is_front_page() && !is_post_type_archive() ) ){
-			if ($this -> get_option('wpns_auto_position') == 'B')
+			if ($general['wpns_auto_position'] == 'B')
 			  $content = $comboslidercode.$content;
-			elseif ($this -> get_option('wpns_auto_position') == 'A')
+			elseif ($general['wpns_auto_position'] == 'A')
 			  $content = $content.$comboslidercode;
 			return $content;
 		} elseif (is_object($content)||is_array($content))
@@ -122,33 +146,136 @@ class CMBSLD_Gallery extends CMBSLD_GalleryPlugin {
 		return $post;  
 	}  
 	function admin_menu() {
-	/*
-		add_menu_page(__('Combo Slideshow', $this -> plugin_name), __('Combo Slideshow', $this -> plugin_name), 'edit_others_posts', "slideshow", array($this, 'admin_settings'), CMBSLD_PLUGIN_URL . '/images/icon.png');
-		$this -> menus['slideshow'] = add_submenu_page("slideshow", __('Configuration', $this -> plugin_name), __('Configuration', $this -> plugin_name), 'manage_options', "slideshow", array($this, 'admin_settings'));
-		$this -> menus['slideshow-slides'] = add_submenu_page("slideshow", __('Manage Slides', $this -> plugin_name), __('Manage Slides', $this -> plugin_name), 'edit_others_posts', "slideshow-slides", array($this, 'admin_slides'));		
-	*/
-		//$this -> menus['slideshow'] = add_submenu_page('options-general.php', __('Combo Slideshow', $this -> plugin_name), __('Combo Slideshow', $this -> plugin_name), 'edit_others_posts', 'slideshow', array($this, 'admin_settings'));
 		$this -> menus['slideshow'] = add_submenu_page('edit.php?post_type=slideshow', __('Combo Slideshow Settings', $this -> plugin_name), __('Settings', $this -> plugin_name), 'edit_others_posts', 'settings', array($this, 'admin_settings'));
 		//$this -> menus['slideshow'] = add_menu_page(__('Combo Slideshow', $this -> plugin_name), __('Combo Slideshow', $this -> plugin_name), 'edit_others_posts', "slideshow", array($this, 'admin_settings'), CMBSLD_PLUGIN_URL . '/images/icon.png');
-		add_action('admin_head-' . $this -> menus['slideshow'], array($this, 'admin_head_slideshow_settings'));
+		//add_action('admin_head-' . $this -> menus['slideshow'], array($this, 'admin_head_slideshow_settings'));
+		//add_action('admin_head-' . $this -> menus['slideshow'], array($this, 'admin_settings_page'));
 	}
-	
+	/*
 	function admin_head() {
 		$this -> render('head', false, true, 'admin');
 	}
+	*/
+	function admin_settings() {	
+		if(isset($_REQUEST['method'])){
+			switch ($_REQUEST['method']) {
+				case 'reset' :
+					global $wpdb;
+					$query = "DELETE FROM `" . $wpdb -> prefix . "options` WHERE `option_name` LIKE '" . $this -> pre . "%';";
+					
+					if ($wpdb -> query($query)) {
+						$message = __('All configuration settings have been reset to their defaults', $this -> plugin_name);
+						$msg_type = 'message';
+						$this -> render_msg($message);	
+					} else {
+						$message = __('Configuration settings could not be reset', $this -> plugin_name);
+						$msg_type = 'error';
+						$this -> render_err($message);
+					}
+					
+					$this -> redirect($this -> url, $msg_type, $message);
+					break;
+				case 'settings' :
+					if (!empty($_POST)) {
+						foreach ($_POST as $pkey => $pval) {					
+							$this -> update_option($pkey, $pval);
+						}
+						
+						$message = __('Configuration has been saved', $this -> plugin_name);
+						$this -> render_msg($message);
+					}	
+					break;
+			}
+		}	
+		//$this -> render('settings', false, true, 'admin');
+		$this -> admin_settings_page();
+	}
 	
+	function admin_settings_page() {
+		if(isset( $_REQUEST[ 'tab' ] ))	 {		
+			switch ( $_REQUEST[ 'tab' ] ) {
+				case 'slide':
+					$tab = 'slide';
+				break;
+				case 'style':
+					$tab = 'style';
+				break;
+				case 'link':
+					$tab = 'link';
+				break;	
+				default:
+					$tab = 'general';
+				break;
+			}
+		} else
+			$tab = 'general';
+		?>
+		<!-- ... -->
+		<div class="wrap">
+			<h2><?php _e('Combo Slideshow Settings', $this->plugin_name); ?></h2>
+			<div class="metabox-holder has-right-sidebar">
+				<div id="icon-options-general" class="icon32"></div>
+				<h2 class="nav-tab-wrapper">
+					<a href="<?php echo admin_url( 'edit.php?post_type=slideshow&page=settings'); ?>" class="nav-tab <?php echo ( $tab == 'general' ) ? 'nav-tab-active' : '' ?>">
+						<?php echo __( 'General Settings', $this->plugin_name ); ?>
+					</a>
+					<a href="<?php echo ( 'edit.php?post_type=slideshow&page=settings&tab=slide') ?>" class="nav-tab <?php echo ( $tab == 'slide' ) ? 'nav-tab-active' : '' ?>">
+						<?php echo __( 'Slideshow', $this->plugin_name ); ?>
+					</a>
+					<a href="<?php echo ( 'edit.php?post_type=slideshow&page=settings&tab=style') ?>" class="nav-tab <?php echo ( $tab == 'style' ) ? 'nav-tab-active' : '' ?>">
+						<?php echo __( 'Appearance &amp; Styles', $this->plugin_name ); ?>
+					</a>
+					<a href="<?php echo ( 'edit.php?post_type=slideshow&page=settings&tab=link') ?>" class="nav-tab <?php echo ( $tab == 'link' ) ? 'nav-tab-active' : '' ?>">
+						<?php echo __( 'Links &amp; Images Overlay', $this->plugin_name ); ?>
+					</a>
+				</h2>
+				<div class="inner-sidebar">
+				</div>
+				<form action="<?php echo $_SERVER['REQUEST_URI']; //echo $this -> url; ?>" name="post" id="post" method="post">
+					<div id="poststuff" class="metabox-holder">			
+						<div id="post-body">
+					<?php
+					//$this->settings_page_sidebar();
+					 
+					switch ( $tab ) {
+						case 'general':
+							$this -> Template -> settings_general();
+						break;
+						case 'slide':
+							$this -> Template -> settings_slides();
+						break;
+						case 'style':
+							$this -> Template -> settings_styles();
+						break;	
+						case 'link':
+							$this -> Template -> settings_linksimages();
+						break;
+					}
+					?>
+							<div id="save-box">
+								<?php $this -> Template -> settings_submit(); ?>
+							</div>
+						</div>
+						<br class="clear" />
+					</div>
+				</form>
+			</div> <!-- .metabox-holder -->
+			<!-- ... -->
+		</div>
+		<?php
+	}
 	function admin_head_slideshow_settings() {		
-		add_meta_box('submitdiv', __('Save Settings', $this -> plugin_name), array($this -> Metabox, "settings_submit"), $this -> menus['slideshow'], 'side', 'core');
-		add_meta_box('generaldiv', __('General Settings', $this -> plugin_name), array($this -> Metabox, "settings_general"), $this -> menus['slideshow'], 'normal', 'core');
-		add_meta_box('stylesdiv', __('Appearance &amp; Styles', $this -> plugin_name), array($this -> Metabox, "settings_styles"), $this -> menus['slideshow'], 'normal', 'core');
-		add_meta_box('linksimagesdiv', __('Links &amp; Images Overlay', $this -> plugin_name), array($this -> Metabox, "settings_linksimages"), $this -> menus['slideshow'], 'normal', 'core');
+		add_meta_box('submitdiv', __('Save Settings', $this -> plugin_name), array($this -> Template, "settings_submit"), $this -> menus['slideshow'], 'side', 'core');
+		add_meta_box('generaldiv', __('General Settings', $this -> plugin_name), array($this -> Template, "settings_general"), $this -> menus['slideshow'], 'normal', 'core');
+		add_meta_box('stylesdiv', __('Appearance &amp; Styles', $this -> plugin_name), array($this -> Template, "settings_styles"), $this -> menus['slideshow'], 'normal', 'core');
+		add_meta_box('linksimagesdiv', __('Links &amp; Images Overlay', $this -> plugin_name), array($this -> Template, "settings_linksimages"), $this -> menus['slideshow'], 'normal', 'core');
 		
 		do_action('do_meta_boxes', $this -> menus['slideshow'], 'normal');
 		do_action('do_meta_boxes', $this -> menus['slideshow'], 'side');	
 	}
 	
 	function admin_notices() {
-		$this -> check_uploaddir();
+		//$this -> check_uploaddir();
 	
 		if (!empty($_GET[$this -> pre . 'message'])) {		
 			$msg_type = (!empty($_GET[$this -> pre . 'updated'])) ? 'msg' : 'err';
@@ -167,209 +294,140 @@ class CMBSLD_Gallery extends CMBSLD_GalleryPlugin {
 		return $plugins;
 	}
 	
-	function init() {
-		$this -> add_filter('mce_external_plugins');
-		$this -> add_filter('mce_buttons');
+	function current_screen() {
+		$screen = get_current_screen();
+		if($screen->post_type != 'slideshow'){
+			$this -> add_filter('mce_external_plugins');
+			$this -> add_filter('mce_buttons');
+		}
 	}
-
-	function slideshow($output = true, $post_id = null, $exclude = null, $include = null, $custom = null, $width = null, $height = null, $thumbs = null, $caption = null, $auto = null, $nolink = null, $slug = null, $limit = null, $size = null) {
-//	function slideshow() {
-	
-		$args = func_get_args();
-		global $wpdb, $post;
-		$post_id_orig = $post -> ID;
-
-		if ($this -> get_option('information')=='Y') { $this -> update_option('information_temp', 'Y'); }
-		elseif ($this -> get_option('information')=='N') { $this -> update_option('information_temp', 'N'); }
-		if ($this -> get_option('thumbnails')=='Y') { $this -> update_option('thumbnails_temp', 'Y'); }
-		elseif ($this -> get_option('thumbnails')=='N') { $this -> update_option('thumbnails_temp', 'N'); }
-		if ($this -> get_option('autoslide')=='Y') { $this -> update_option('autoslide_temp', 'Y'); }
-		elseif ($this -> get_option('autoslide')=='N') { $this -> update_option('autoslide_temp', 'N'); }
-
+	function parse_temp_options($args) {
+		$caption = $args['caption'];
+		$auto = $args['auto'];
+		$thumbs = $args['thumbs'];
+		$nolink = $args['nolink'];
+		$slides = $this -> get_option('slides');
+		//$general = $this -> get_option('general');
+		$general = array();
+		$temps = array();
+		
+		$temps['information_temp'] = $slides['information'];
+		$temps['thumbnails_temp'] = $slides['thumbnails'];
+		$temps['autoslide_temp'] = $slides['autoslide'];
+		
 		if (!empty($caption)) { 
-			if (($this -> get_option('information')=='Y') && ($caption == 'off')) {
-				$this -> update_option('information_temp', 'N');	
-			} elseif (($this -> get_option('information')=='N') && ($caption == 'on')) {
-				$this -> update_option('information_temp', 'Y');
+			if ($slides('information')=='Y' && $caption == 'off') {
+				$temps['information_temp'] = 'N';
+			} elseif ($slides('information')=='N' && $caption == 'on') {
+				$temps['information_temp'] = 'Y';
 			}
 		}
 		if (!empty($thumbs)) { 
-			if (($this -> get_option('thumbnails')=='Y') && ($thumbs == 'off')) {
-				$this -> update_option('thumbnails_temp', 'N');
-			} elseif (($this -> get_option('thumbnails')=='N') && ($thumbs == 'on')) {
-				$this -> update_option('thumbnails_temp', 'Y');
+			if ($slides('thumbnails')=='Y' && $thumbs == 'off') {
+				$temps['thumbnails_temp'] = 'N';
+			} elseif ($slides('thumbnails')=='N' && $thumbs == 'on') {
+				$temps['thumbnails_temp'] = 'Y';
 			}
 		}
 		if (!empty($auto)) { 
-			if (($this -> get_option('autoslide')=='Y') && ($auto == 'off')) {
-				$this -> update_option('autoslide_temp', 'N');	
-			} elseif (($this -> get_option('autoslide')=='N') && ($auto == 'on')) {
-				$this -> update_option('autoslide_temp', 'Y');
+			if ($slides('autoslide')=='Y' && $auto == 'off') {
+				$temps['autoslide_temp'] = 'N';
+			} elseif ($slides('autoslide')=='N' && $auto == 'on') {
+				$temps['autoslide_temp'] = 'Y';
 			}
-		} elseif ($this -> get_option('autoslide') == 'Y') { 
-			$this -> update_option('autoslide_temp', 'Y'); 
-		} else {
-			$this -> update_option('autoslide_temp', 'N'); 
 		}
-		if (!empty($nocaption)) { $this -> update_option('information', 'N'); }
-		if (!empty($nolink)) { $this -> update_option('linker', 'N'); }
-			else { $this -> update_option('linker', 'Y'); }
-
+		if (!empty($temps)) { 
+			foreach($temps as $option => $value) { 
+				$slides[$option] = $value; 			
+			}
+			$this -> update_option('slides', $slides); 
+		}
+		
+		$links = $this -> get_option('links'); 
+		if (!empty($nolink))			
+			$links['imagesbox_temp'] = 'N';
+		else
+			$links['imagesbox_temp'] = $links['imagesbox'];
+		$this -> update_option('links', $links); 
+		
+		return array('general'=>$general,'slides'=>$slides,'links'=>$links);
+	}
+	
+	function get_slide_content($post, $custom, $w, $h, $exclude, $include, $size){ 
+		$post_id_orig = $post -> ID;
+		if (!empty($custom)) {
+			if(is_bool($custom) === true) { 
+				$general = $this -> get_option('general');
+				$pid = $general['slide_gallery'];
+				$custom = $pid;
+			} elseif(is_numeric($custom))
+				$pid = intval($custom);
+			elseif(is_string($custom)) {
+				$slideshow = get_page_by_path($custom, '', 'slideshow');
+				$pid = $slideshow->ID;
+			}
+		} elseif (empty($slug)) {
+			$pid = (empty($post_id)) ? $post -> ID : $post_id;
+		} else {
+			$page = get_page_by_path('$slug');
+			if ($page) {
+				$pid = $page->ID;
+			} else {
+				$page = get_page_by_path($slug, '', 'post');
+				if ($page) {
+					$pid = $page->ID;
+				} else {
+					$pid = (empty($post_id)) ? $post -> ID : $post_id;
+				}
+			}
+		}
+		$general = $this -> get_option('general');
+		if ($general['postlimit'] != null && empty($limit))
+			$limit = $general['postlimit'];
+		$content = '';
+		//if (!empty($pid) && $post = get_post($pid)) {
+			if ($attachments = get_children("post_parent=" . $pid . "&post_type=attachment&post_mime_type=image&orderby=menu_order ASC, ID ASC")) {
+					if ($limit != null)
+						$attachments = array_slice($attachments,0,$limit);
+					$content = $this->exclude_ids($attachments, $exclude, $include, $w, $h, $custom, $size);
+			}
+		//}
+		$post -> ID = $post_id_orig;
+		return $content;
+	}
+	function slideshow($output = true, $post_id = null, $exclude = null, $include = null, $custom = null, $width = null, $height = null, $thumbs = null, $caption = null, $auto = null, $nolink = null, $slug = null, $limit = null, $size = null) {
+		global $wpdb, $post;
+		$args = func_get_args();
+		
+		$opt_args = array('caption' => $caption, 'thumbs' => $thumbs, 'auto' => $auto, 'nolink' => $nolink);
+		$options = $this -> parse_temp_options($opt_args);
+		if (empty($w) && !empty($width))
+			$w = $width;
+		if (empty($h) && !empty($height))
+			$h = $height;		
+/*
 		if ( ((! empty($width)) || (! empty($height))) ) {
 		      if (CMBSLD_PRO)
 			require CMBSLD_PLUGIN_DIR . 'pro/custom_sizing.php';
 		}
-//		$this -> add_action( 'wp_print_styles', 'gs_enqueue_styles' );
-
-/*
-		if (!empty($custom) && empty($post_id) && empty($slug)) {
-		//elseif ( ! empty( $custom ) ){
-			if ($limit != null)
-			  $slides = $this -> Slide -> find_all(null, null, array('order', "ASC"), $limit);
-			else
-			  $slides = $this -> Slide -> find_all(null, null, array('order', "ASC"));
-			$content = $this -> render('gallery', array('slides' => $slides, 'frompost' => false, 'width' => $width, 'height' => $height, 'size' => $size), false, 'default');
-		} else {
 */
-			if (!empty($custom)) {
-				if(is_bool($custom) === true) {
-					$pid = $this -> get_option('slide_gallery');
-					$custom = $pid;
-				} elseif(is_numeric($custom))
-					$pid = intval($custom);
-				elseif(is_string($custom)) {
-					$slideshow = get_page_by_path($custom, '', 'slideshow');
-					$pid = $slideshow->ID;
-				}
-			} elseif (empty($slug)) {
-				$pid = (empty($post_id)) ? $post -> ID : $post_id;
-			} else {
-				$page = get_page_by_path('$slug');
-				if ($page) {
-					$pid = $page->ID;
-				} else {
-					$page = get_page_by_path($slug, '', 'post');
-					if ($page) {
-						$pid = $page->ID;
-					} else {
-						$pid = (empty($post_id)) ? $post -> ID : $post_id;
-					}
-				}
-			}
-
-		//if ( ! empty($post_id) && $post = get_post($post_id)) {
-			if ($attachments = get_children("post_parent=" . $pid . "&post_type=attachment&post_mime_type=image&orderby=menu_order ASC, ID ASC")) {
-				if ($limit != null)
-					$attachments = array_slice($attachments,0,$limit);
-				$content = $this -> exclude_ids($attachments, $exclude, $include, $width, $height, $custom, $size);
-			}
-		//}
-/*		elseif ( ! empty( $custom ) && is_numeric($custom) ) {
-			$slides = $this -> Slide -> find_all(array('section'=>(int) stripslashes($custom)), null, array('order', "ASC"));
-			$content = $this -> render('gallery', array('slides' => $slides, 'frompost' => false), false, 'default');
-		}*/
-		
-		$post -> ID = $post_id_orig;
+		$content = $this -> get_slide_content($post, $custom, $w, $h, $exclude, $include, $size);
 		if ($output) { echo $content; } else { return $content; }
 	}
+	
 	function embed($atts = array(), $content = null) {
 		//global variables
-		global $wpdb;
+		global $wpdb, $post;
 		$defaults = array('post_id' => null, 'exclude' => null, 'include' => null, 'custom' => null, 'caption' => null, 'auto' => null, 'w' => null, 'h' => null, 'nolink' => null, 'slug' => null, 'thumbs' => null, 'limit' => null, 'size' => null, 'width' => null, 'height' => null);
 		extract(shortcode_atts($defaults, $atts));
-		// This section allows for using _temp variable only (esp in gallery.php)
-		if ($this -> get_option('information')=='Y') { $this -> update_option('information_temp', 'Y'); }
-		elseif ($this -> get_option('information')=='N') { $this -> update_option('information_temp', 'N'); }
-		if ($this -> get_option('thumbnails')=='Y') { $this -> update_option('thumbnails_temp', 'Y'); }
-		elseif ($this -> get_option('thumbnails')=='N') { $this -> update_option('thumbnails_temp', 'N'); }
-		if ($this -> get_option('autoslide')=='Y') { $this -> update_option('autoslide_temp', 'Y'); }
-		elseif ($this -> get_option('autoslide')=='N') { $this -> update_option('autoslide_temp', 'N'); }
-		if ($this -> get_option('postlimit') != null && empty($limit))
-			$limit = $this -> get_option('postlimit');
+		
+		$opt_args = array('caption' => $caption, 'thumbs' => $thumbs, 'auto' => $auto, 'nolink' => $nolink);
+		$options = $this -> parse_temp_options ($opt_args);
 		if (empty($w) && !empty($width))
 			$w = $width;
 		if (empty($h) && !empty($height))
-			$h = $height;
-		if (!empty($caption)) { 
-			if (($this -> get_option('information')=='Y') && ($caption == 'off')) {
-				$this -> update_option('information_temp', 'N');	
-			} elseif (($this -> get_option('information')=='N') && ($caption == 'on')) {
-				$this -> update_option('information_temp', 'Y');
-			}
-		}
-		if (!empty($thumbs)) { 
-			if (($this -> get_option('thumbnails')=='Y') && ($thumbs == 'off')) {
-				$this -> update_option('thumbnails_temp', 'N');
-			} elseif (($this -> get_option('thumbnails')=='N') && ($thumbs == 'on')) {
-				$this -> update_option('thumbnails_temp', 'Y');
-			}
-		}
-		if (!empty($auto)) { 
-			if (($this -> get_option('autoslide')=='Y') && ($auto == 'off')) {
-				$this -> update_option('autoslide_temp', 'N');	
-			} elseif (($this -> get_option('autoslide')=='N') && ($auto == 'on')) {
-				$this -> update_option('autoslide_temp', 'Y');
-			}
-		} elseif ($this -> get_option('autoslide') == 'Y') { 
-			$this -> update_option('autoslide_temp', 'Y'); 
-		} else {
-			$this -> update_option('autoslide_temp', 'N'); 
-		}
-		/******** PRO ONLY **************/
-		if ( CMBSLD_PRO ) {
-			require CMBSLD_PLUGIN_DIR . 'pro/custom_sizing.php';
-		}
-		//$this -> add_action(array($this, 'pro_custom_wh'));
-		/******** END PRO ONLY **************/
-		if (!empty($nocaption)) { $this -> update_option('information', 'N'); }
-		if (!empty($nolink)) { $this -> update_option('linker', 'N'); }
-			else { $this -> update_option('linker', 'Y'); }
-/*
-		if (!empty($custom) && empty($post_id) && empty($slug)) {
-			  if ($limit != null)
-			  $slides = $this -> Slide -> find_all(null, null, array('order', "ASC"), $limit);
-			  else
-			  $slides = $this -> Slide -> find_all(null, null, array('order', "ASC"));
-			  $content = $this -> render('gallery', array('slides' => $slides, 'frompost' => false, 'width' => $w, 'height' => $h, 'size' => $size), false, 'default');
-//			} 
-		} else }
-*/
-			global $post;
-			$post_id_orig = $post -> ID;
-			if (!empty($custom)) {
-				if(is_bool($custom) === true) { 
-					$pid = $this -> get_option('slide_gallery');
-					$custom = $pid;
-				} elseif(is_numeric($custom))
-					$pid = intval($custom);
-				elseif(is_string($custom)) {
-					$slideshow = get_page_by_path($custom, '', 'slideshow');
-					$pid = $slideshow->ID;
-				}
-			} elseif (empty($slug)) {
-				$pid = (empty($post_id)) ? $post -> ID : $post_id;
-			} else {
-				$page = get_page_by_path('$slug');
-				if ($page) {
-					$pid = $page->ID;
-				} else {
-					$page = get_page_by_path($slug, '', 'post');
-					if ($page) {
-						$pid = $page->ID;
-					} else {
-						$pid = (empty($post_id)) ? $post -> ID : $post_id;
-					}
-				}
-			}
-			//if (!empty($pid) && $post = get_post($pid)) {
-				if ($attachments = get_children("post_parent=" . $pid . "&post_type=attachment&post_mime_type=image&orderby=menu_order ASC, ID ASC")) {
-						if ($limit != null)
-							$attachments = array_slice($attachments,0,$limit);
-						$content = $this->exclude_ids($attachments, $exclude, $include, $w, $h, $custom, $size);
-				}
-			//}
-			$post -> ID = $post_id_orig;
-		//}
+			$h = $height;	
+		$content = $this -> get_slide_content($post, $custom, $w, $h, $exclude, $include, $size);
 		return $content;
 	}
 	
@@ -408,108 +466,16 @@ class CMBSLD_Gallery extends CMBSLD_GalleryPlugin {
 
 		if(empty($custom))
 			$custom = false;
-		if(!empty($attachments))
+		if(!empty($attachments)&&count($attachments)>1)
 			$content = $this -> render('gallery', array('slides' => $attachments, 'custom' => $custom, 'width' => $width, 'height' => $height, 'size' => $size), false, 'default');
+		elseif(!empty($attachments)&&count($attachments)==1){
+			$first = reset($attachments);
+			$content = '<div class="slider-wrapper">';
+			$content .= wp_get_attachment_image( $first->ID, $size );
+			$content .= '</div>';
+		}
 		return $content;
 	}	
-	
-	function admin_slides() {	
-		switch ($_GET['method']) {
-			case 'delete'			:
-				if (!empty($_GET['id'])) {
-					if ($this -> Slide -> delete($_GET['id'])) {
-						$msg_type = 'message';
-						$message = __('Slide has been removed', $this -> plugin_name);
-					} else {
-						$msg_type = 'error';
-						$message = __('Slide cannot be removed', $this -> plugin_name);	
-					}
-				} else {
-					$msg_type = 'error';
-					$message = __('No slide was specified', $this -> plugin_name);
-				}
-				
-				$this -> redirect($this -> referer, $msg_type, $message);
-				break;
-			case 'save'				:
-				if (!empty($_POST)) {
-					if ($this -> Slide -> save($_POST, true)) {
-						$message = __('Slide has been saved', $this -> plugin_name);
-						$this -> redirect($this -> url, "message", $message);
-					} else {
-						$this -> render('slides' . DS . 'save', false, true, 'admin');
-					}
-				} else {
-					$this -> Db -> model = $this -> Slide -> model;
-					$this -> Slide -> find(array('id' => $_GET['id']));
-					$this -> render('slides' . DS . 'save', false, true, 'admin');
-				}
-				break;
-			case 'mass'				:
-				if (!empty($_POST['action'])) {
-					if (!empty($_POST['Slide']['checklist'])) {						
-						switch ($_POST['action']) {
-							case 'delete'				:							
-								foreach ($_POST['Slide']['checklist'] as $slide_id) {
-									$this -> Slide -> delete($slide_id);
-								}
-								
-								$message = __('Selected slides have been removed', $this -> plugin_name);
-								$this -> redirect($this -> url, 'message', $message);
-								break;
-						}
-					} else {
-						$message = __('No slides were selected', $this -> plugin_name);
-						$this -> redirect($this -> url, "error", $message);
-					}
-				} else {
-					$message = __('No action was specified', $this -> plugin_name);
-					$this -> redirect($this -> url, "error", $message);
-				}
-				break;
-			case 'order'			:
-				$slides = $this -> Slide -> find_all(null, null, array('order', "ASC"));
-				$this -> render('slides' . DS . 'order', array('slides' => $slides), true, 'admin');
-				break;
-			default					:
-				$data = $this -> paginate('Slide');				
-				$this -> render('slides' . DS . 'index', array('slides' => $data[$this -> Slide -> model], 'paginate' => $data['Paginate']), true, 'admin');
-				break;
-		}
-	}
-	
-	function admin_settings() {
-		switch ($_GET['method']) {
-			case 'reset'			:
-				global $wpdb;
-				$query = "DELETE FROM `" . $wpdb -> prefix . "options` WHERE `option_name` LIKE '" . $this -> pre . "%';";
-				
-				if ($wpdb -> query($query)) {
-					$message = __('All configuration settings have been reset to their defaults', $this -> plugin_name);
-					$msg_type = 'message';
-					$this -> render_msg($message);	
-				} else {
-					$message = __('Configuration settings could not be reset', $this -> plugin_name);
-					$msg_type = 'error';
-					$this -> render_err($message);
-				}
-				
-				$this -> redirect($this -> url, $msg_type, $message);
-				break;
-			default					:
-				if (!empty($_POST)) {
-					foreach ($_POST as $pkey => $pval) {					
-						$this -> update_option($pkey, $pval);
-					}
-					
-					$message = __('Configuration has been saved', $this -> plugin_name);
-					$this -> render_msg($message);
-				}	
-				break;
-		}
-				
-		$this -> render('settings', false, true, 'admin');
-	}
 	
 }
 //initialize a Gallery object

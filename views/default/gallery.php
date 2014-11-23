@@ -8,162 +8,140 @@
 		elseif(is_numeric($custom))
 			$combo_id .= $custom;
 	}
-	if ($this -> get_option('imagesbox') == "T") 
+	
+	$general = $this -> get_option('general');
+	$slideopts	= $this -> get_option('slides');
+	$styles	= $this -> get_option('styles');
+	$links = $this -> get_option('links');
+	
+	if ($links['imagesbox_temp'] == "T") 
 		$imgbox = "thickbox";
-	elseif ($this -> get_option('imagesbox') == "S") 
+	elseif ($links['imagesbox_temp'] == "S") 
 		$imgbox = "shadowbox";
-	elseif ($this -> get_option('imagesbox') == "P") 
+	elseif ($links['imagesbox_temp'] == "P") 
 		$imgbox = "prettyphoto";
-	elseif ($this -> get_option('imagesbox') == "L") 
+	elseif ($links['imagesbox_temp'] == "L") 
 		$imgbox = "lightbox";
-	elseif ($this -> get_option('imagesbox') == "F")
+	elseif ($links['imagesbox_temp'] == "F")
 		$imgbox = "fancybox";
-	elseif ($this -> get_option('imagesbox') == "M")
+	elseif ($links['imagesbox_temp'] == "M")
 		$imgbox = "multibox";
-	elseif ($this -> get_option('imagesbox') == "custom")
-		$imgbox = $this -> get_option('custombox');
-	elseif ($this -> get_option('imagesbox') == "N") 
+	elseif ($links['imagesbox_temp'] == "custom")
+		$imgbox = $links['custombox'];
+	elseif ($links['imagesbox_temp'] == "N") 
 		$imgbox = "nolink";
 	else 
 		$imgbox = "window";
 
-	      $styles 		= $this -> get_option('styles');
-	     
-	      $jsframe 		= $this -> get_option('jsframe');
-	      $wpns_effect 	= $this -> get_option('wpns_effect');
-	      $wpns_slices 	= $this -> get_option('wpns_slices');
-	      $fadespeed 	= $this -> get_option('fadespeed');
-	      $autospeed 	= $this -> get_option('autospeed');
-	      $navigation 	= $this -> get_option('navigation');
+	$jsframe = $general['jsframe'];
+	$wpns_effect = $slideopts['wpns_effect'];
+	$wpns_slices = $slideopts['wpns_slices'];
+	$fadespeed = $slideopts['fadespeed'];
+	$autospeed = $slideopts['autospeed'];
+	$navigation = $slideopts['navigation'];
 
-	      $navhover 	= $this -> get_option('navhover');
-	      $controlnav 	= $this -> get_option('controlnav');
-	      $thumbnails_temp 	= $this -> get_option('thumbnails_temp');
+	$navhover = $slideopts['navhover'];
+	$controlnav = $slideopts['controlnav'];
+	$thumbnails_temp = $slideopts['thumbnails_temp'];
 
-	      $keyboardnav 	= $this -> get_option('keyboardnav');
-	      $pausehover 	= $this -> get_option('pausehover');
-	      $autoslide_temp 	= $this -> get_option('autoslide_temp');
-	      $captionopacity 	= $this -> get_option('captionopacity');
+	$keyboardnav = $slideopts['keyboardnav'];
+	$pausehover = $slideopts['pausehover'];
+	$autoslide_temp = $slideopts['autoslide_temp'];
+	$captionopacity = $slideopts['captionopacity'];
 
-	      $information_temp = $this -> get_option('information_temp');
-	      $csstransform 	= $this -> get_option('csstransform');
-	      $wprfss_effect 	= $this -> get_option('wprfss_effect');
-	      $wprfss_cssfx 	= $this -> get_option('wprfss_cssfx');
-	      $wprfss_tips 	= $this -> get_option('wprfss_tips');
-	      $slide_theme 	= $this -> get_option('slide_theme');
-/*
-	     if($params['frompost'] == true){
-		    $args = array(
-			'post_type' => 'attachment',
-			'numberposts' => $featured_num,
-			'post_status' => null,
-			'post_parent' => $combo_id,
-			'post_mime_type' => 'image'
-		);
-		$attachments = get_posts($args);
-		if ($attachments) {
-		    foreach ($attachments as $indexatt => $attachment) {
-			$att_info = wp_get_attachment_image_src( $attachment->ID, 'comboslide' );
-			if(!empty($att_info[1]) && $att_info[1]>=560)
-			    $img_width[] = $att_info[1];
-			else unset($attachments[$indexatt]);
-			if(!empty($att_info[2]) && $att_info[2]>=120)
-			    $img_height[] = $att_info[2];
-			else unset($attachments[$indexatt]);
-		    }
-		    if(!empty($img_width) && !empty($img_height)){
-			    //$width = $styles['wpns_width'] = ((int)min($img_width));
-			    //$height = $styles['wpns_height'] = ((int)min($img_height));			    
-		    }
-		}
-	      }
-*/
-		if(empty($size))
-			$size = $params['size'];
-		if(empty($size))
-			$size = 'comboslide';
-	      $totalwidth = (count($slides) * (get_option( 'thumbnail_size_w' ) + 10) + 2);
-	      $additional_style = '<style type="text/css">';
-	      if(empty($width))
-			$width 	= $params['width'];
-	      if(empty($height))
-			$height = $params['height'];
-	      if(!empty($width) || !empty($height)){
-			$additional_style .= '
-				  #ngslideshow-'.$combo_id.' {';
-			if(!empty($width))
+	$information_temp = $slideopts['information_temp'];
+	$csstransform = $slideopts['csstransform'];
+	$wprfss_effect = $slideopts['wprfss_effect'];
+	$wprfss_cssfx = $slideopts['wprfss_cssfx'];
+	$wprfss_tips = $slideopts['wprfss_tips'];
+	$slide_theme = $general['slide_theme'];
+
+	if(empty($size))
+		$size = $params['size'];
+	if(empty($size))
+		$size = 'comboslide';
+	$totalwidth = (count($slides) * (get_option( 'thumbnail_size_w' ) + 10) + 2);
+	$additional_style = '<style type="text/css">';
+	if(empty($width))
+		$width 	= $params['width'];
+	if(empty($height))
+		$height = $params['height'];
+	if(!empty($width) || !empty($height)){
+		$additional_style .= '
+			#ngslideshow-'.$combo_id.' {';
+	if(!empty($width))
+		$additional_style .= '
+			width:'.$width.'px;';
+	if(!empty($height))
+		$additional_style .= '
+			height:'.$height.'px;';
+		$additional_style .= '
+			margin: 0 auto;
+			overflow: hidden;
+		  }';
+	}
+	if(empty($width))
+		$width 	= $styles['width'];
+	if(empty($height))
+		$height = $styles['height'];
+
+	if ((!empty($styles['resizeimages']) && $styles['resizeimages'] == "Y") || (!empty($styles['resizeimages2']) && $styles['resizeimages2'] == "Y")){
+	}
+	if (!empty($styles['resizeimages']) && $styles['resizeimages'] == "Y")
+		  $additional_style .= '
+		  #ngslideshow-'.$combo_id.' img { width:'.$width.'px;} ';
+	if (!empty($styles['resizeimages2']) && $styles['resizeimages2'] == "Y")
+		  $additional_style .= '
+		  #ngslideshow-'.$combo_id.' img { height:'.$height.'px;} ';
+	if (empty($styles['resizeimages']) || $styles['resizeimages'] == "Y")
+		  $additional_style .= '
+		  #ngslideshow-'.$combo_id.' .nivo-controlNav { width:'.$width.'px;} ';
+	if ($thumbnails_temp == "Y"){
+		$additional_style .= '
+			#ngslideshow-'.$combo_id.' .nivo-controlNav, .nivo-controlNav {
+			position: relative;
+			//margin: 0 auto;
+			//bottom: '.(int)$styles['offsetnav'].'px;
+			top:'.$height.'px;
+			text-align:center;
+			float:left;
+			}
+			#ngslideshow-'.$combo_id.'.controlnav-thumbs .nivo-controlNav .nivo-controlNavScroll{ width:'.$totalwidth.'px; position:relative; margin:0 auto;}
+			#ngslideshow-'.$combo_id.' .nivo-controlNav img, .nivo-controlNav img  {
+				display:inline; /* Unhide the thumbnails */
+				position:relative;
+				margin-right:6px;
+				height: auto;
+				width: auto;
+			}
+			#ngslideshow-'.$combo_id.' .nivo-controlNav a.active img {
+				border: 2px solid #000;
+			}
+			#ngslideshow-'.$combo_id.' .nivo-controlNav a, .nivo-controlNav a {';
+		if (empty($styles['controlnumbers']) || $styles['controlnumbers'] == "N")
 				$additional_style .= '
-					width:'.$width.'px;';
-			if(!empty($height))
-				$additional_style .= '
-					height:'.$height.'px;';
-			$additional_style .= '
-				  }';
-	      }
-	      if(empty($width))
-			$width 	= $styles['width'];
-	      if(empty($height))
-			$height = $styles['height'];
-
-		    if ((!empty($styles['resizeimages']) && $styles['resizeimages'] == "Y") || (!empty($styles['resizeimages2']) && $styles['resizeimages2'] == "Y")){
-		    }
-		    if (!empty($styles['resizeimages']) && $styles['resizeimages'] == "Y")
-			  $additional_style .= '
-			  #ngslideshow-'.$combo_id.' img { width:'.$width.'px;} ';
-		    if (!empty($styles['resizeimages2']) && $styles['resizeimages2'] == "Y")
-			  $additional_style .= '
-			  #ngslideshow-'.$combo_id.' img { height:'.$height.'px;} ';
-		    if (empty($styles['resizeimages']) || $styles['resizeimages'] == "Y")
-			  $additional_style .= '
-			  #ngslideshow-'.$combo_id.' .nivo-controlNav { width:'.$width.'px;} ';
-		    if ($thumbnails_temp == "Y"){
-			  $additional_style .= '
-			  #ngslideshow-'.$combo_id.' .nivo-controlNav, .nivo-controlNav {
-			  	position:relative;
-			  	//margin: 0 auto;
-			  	//bottom: '.(int)$styles['offsetnav'].'px;
-				top:'.$height.'px;
-			  	text-align:center;
-				float:left;
-			  }
-			  #ngslideshow-'.$combo_id.'.controlnav-thumbs .nivo-controlNav .nivo-controlNavScroll{ width:'.$totalwidth.'px; position:relative; margin:0 auto;}
-			  #ngslideshow-'.$combo_id.' .nivo-controlNav img, .nivo-controlNav img  {
-			  	display:inline; /* Unhide the thumbnails */
-			  	position:relative;
-			  	margin-right:6px;
-			  	height: auto;
-			  	width: auto;
-			  }
-			  #ngslideshow-'.$combo_id.' .nivo-controlNav a.active img {
-				  border: 2px solid #000;
-			  }
-			  #ngslideshow-'.$combo_id.' .nivo-controlNav a, .nivo-controlNav a {';
-			if (empty($styles['controlnumbers']) || $styles['controlnumbers'] == "N")
-			    $additional_style .= '
 				font-size: 0;
 				line-height: 0;
 				text-indent:-9999px;';
-			$additional_style .= '
+		$additional_style .= '
 				display:inline;
 				margin-right:0;
 			  }';
-		    }
-		    if($additional_style != '<style type="text/css">')
-			  echo $additional_style.'</style>';
-		    echo '<!--[if lte IE 7]>
-		    <style type="text/css">
-		    .nivo-directionNav{ width:100%; }
-		    a.nivo-prevNav{ float:left; }
-		    a.nivo-nextNav{ float:right; }
-		    </style>
-		    <![endif]-->';
+	}
+	if($additional_style != '<style type="text/css">')
+		echo $additional_style.'</style>';
+	echo '<!--[if lte IE 7]>
+		<style type="text/css">
+		.nivo-directionNav{ width:100%; }
+		a.nivo-prevNav{ float:left; }
+		a.nivo-nextNav{ float:right; }
+		</style>
+		<![endif]-->';
 
-
-//echo '<pre>id'.$combo_id.'</pre>';
-//echo '<pre>';echo 'TT'.$thumbnails_temp;print_r($slides);echo '</pre>';
 ?>
 	<?php if($slide_theme != '0') : ?>
-		<div class="slider-wrapper theme-<?php echo $use_theme; ?>">
+		<?php $use_themes = $slide_theme; ?>
+		<div class="slider-wrapper theme-<?php echo $use_themes; ?>">
 			<div class="ribbon"></div>
 	<?php else : ?>
 		<div class="slider-wrapper">
@@ -230,7 +208,7 @@
 					slideshowEnd: function(){}, //Triggers after all slides have been shown
 					lastSlide: function(){}, //Triggers when last slide is shown
 				});
-				<?php if ($params['frompost'] == true && $attachments) : ?>
+				<?php if (isset($params['frompost']) && $params['frompost'] == true && $attachments) : ?>
 					jQuery('#ngslideshow-<?php echo $combo_id; ?>').width(<?php echo $width; ?>);
 				<?php endif; ?>
 
@@ -495,9 +473,12 @@
 		    });
 		</script>
 	<?php endif; // END MOOTOOLS ?>
-				<div id="ngslideshow-<?php echo $combo_id; ?>" class="ngslideshow">
+		<div id="ngslideshow-<?php echo $combo_id; ?>" class="ngslideshow">
 			<?php foreach ($slides as $slide) : ?>
-				<?php // echo $slide -> post_title;
+				<?php
+				//echo '<pre>'; print_r($slide); echo '</pre>';
+				if(!is_object($slide))
+					echo 'stocazzo'.$slide;
 				$full_image_href = wp_get_attachment_image_src($slide -> ID, $size, false);
 				$full_slide_href = wp_get_attachment_image_src($slide -> ID, 'full', false);
 				$thumbnail_link = wp_get_attachment_image_src($slide -> ID, 'thumbnail', false);
@@ -505,13 +486,17 @@
 					require CMBSLD_PLUGIN_DIR . '/pro/image_tall_frompost.php';
 				} else {
 					// echo "<h4>&nbsp;</h4>";
-				} if ($thumbnails_temp == "Y") {
+				} 
+				if ($thumbnails_temp == "Y") {
 					$thumbrel = 'rel="'. $thumbnail_link[0] .'" ';
-				} if ($information_temp == "Y") {
-					$captitle = 'title="#slide_caption-'. $slide -> ID .'"';
-				}
+				} else
+					$thumbrel = '';
+				if ($information_temp == "Y") {
+					$captitle = 'title="slide_caption-'. $slide -> ID .'"';
+				} else
+					$captitle = '';
+				$resize = '';
 				if ($jsframe == 'jquery'){
-				    $resize = '';
 				    if( !empty($styles['resizeimages']) && $styles['resizeimages'] == "Y") {
 					$resize .= ' width="'. $styles['wpns_width'] .'"';
 				    }
@@ -522,12 +507,12 @@
 				?>
 				<?php if ($imgbox != "nolink") : ?>
 					<?php if ($params['custom'] == false && $custom == false) : ?>
-						<a href="<?php echo $full_slide_href[0]; ?>" class="<?php echo $imgbox; ?>">fkldsjfksd
+						<a href="<?php echo $full_slide_href[0]; ?>" class="<?php echo $imgbox; ?>">
 					<?php else: ?>
 						<a href="<?php echo get_post_meta($slide -> ID, '_comboslide_link', true); //echo get_attachment_link($slide -> ID); ?>">
 					<?php endif; ?>
 				<?php endif; ?>
-						<img id="slide-<?php echo $slide -> ID; ?>" src="<?php echo $full_image_href[0]; ?>" alt="<?php echo $this -> Html -> sanitize($slide -> post_title); ?>" <?php echo $thumbrel.$captitle; ?> />
+						<img id="slide-<?php echo $slide -> ID; ?>" src="<?php echo $full_image_href[0]; ?>" alt="<?php echo sanitize_title($slide -> post_title); ?>" <?php echo $thumbrel.$captitle; ?> />
 				<?php if ($imgbox != "nolink") : ?>
 					</a>
 				<?php endif; ?>
@@ -538,14 +523,14 @@
 			<?php endif; ?>
 			<?php if ($jsframe == 'mootools' && $navigation == "Y") : ?>
 				<div class='nivo-directionNav' style='display:none'>
-					    <a class='nivo-prevNav'>Prev</a>
-					    <a class='nivo-nextNav'>Next</a>
+					    <a class='nivo-prevNav'><?php _e('Prev', $this -> plugin_name); ?></a>
+					    <a class='nivo-nextNav'><?php _e('Next', $this -> plugin_name); ?></a>
 				</div>
 			<?php endif; ?>
 			<?php if ($jsframe == 'mootools' && ($controlnav == "Y" || $thumbnails_temp == "Y")) : ?>
 					<div class="nivo-controlNav">
 				<?php foreach ($slides as $index => $slide) : ?>
-						<a class="nivo-control" href="#slide-<?php echo $slide -> ID; ?>" title="<?php echo $slide -> post_title; ?>">
+						<a class="nivo-control" href="#slide-<?php echo $slide -> ID; ?>" title="<?php echo sanitize_title($slide -> post_title) ?>">
 						<?php if ($thumbnails_temp == "Y") : ?>
 						      <?php $thumbnail_link = wp_get_attachment_image_src($slide -> ID, 'thumbnail', false); ?>
 						      <img src="<?php echo $thumbnail_link[0]; ?>" alt="slideshow-thumbnail-<?php echo $index+1; ?>" />
@@ -559,7 +544,7 @@
 			<?php if ($information_temp == "Y") : ?>
 			    <?php foreach ($slides as $slide) : ?>
 				<div id="slide_caption-<?php echo ($slide -> ID); ?>" class="nivo-html-caption">
-					<a href="<?php echo get_permalink($slide -> ID); ?>" title="<?php echo $slide -> post_title; ?>"><?php echo $slide -> post_title; ?></a>
+					<a href="<?php echo get_permalink($slide -> ID); ?>" title="<?php echo sanitize_title($slide -> post_title); ?>"><?php echo sanitize_title($slide -> post_title); ?></a>
 				</div>
 			    <?php endforeach; ?>
 			<?php endif; ?>

@@ -1,5 +1,12 @@
 Combo Slideshow Changelog
 
+= 1.9 (2014.11.22) =
+* Tabbed navigation on administration settings
+* Fixed compatibility issue with TinyMCE js module on WP 3.9
+* Fixes to the "no theme" CSS 
+* "default" theme is now really the default option
+* Post Category multiple select
+
 = 1.8 (2013.12.03) =
 * Bugfix: TinyMCE button for gallery shortcodes
 * Bugfix: constants and translations

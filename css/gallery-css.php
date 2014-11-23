@@ -56,6 +56,8 @@ ELSEIF ($styles['navbullets'] == 'custom') { $controlimg = get_stylesheet_direct
 	background:url("<?php echo "../images/loading.gif"; ?>") no-repeat scroll 50% 50% <?php echo $styles['background']; ?>;
 	width:<?php echo ((int) $styles['width']);?>px; /* Change this to your images width */
     height:<?php echo ((int) $styles['height'] );?>px; /* Change this to your images height */
+	margin: 0 auto;
+	overflow: hidden;
 text-align:center;
 }
 .ngslideshow img {
@@ -86,7 +88,7 @@ height:<?php echo ((int) $styles['wpns_height']);?>px;
 	position:relative;
 }
 .nivoSlider img {
-	/* position:absolute; */
+	position: absolute;
 	top:0px;
 	left:0px;
 	width:100%;
@@ -97,6 +99,12 @@ height:<?php echo ((int) $styles['wpns_height']);?>px;
 	left:0px;
 	display:block;
 	visibility:visible;
+	max-width: none;
+}
+.nivo-main-image {
+	display: block !important;
+	position: relative !important; 
+	width: 100% !important;
 }
 /* If an image is wrapped in a link */
 .nivoSlider a.nivo-imageLink {

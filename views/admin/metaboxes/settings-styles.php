@@ -1,5 +1,6 @@
 <?php $styles = $this -> get_option('styles');
-	  $crop =  $this -> get_option('crop_thumbs'); ?>
+	$generaloptions = $this -> get_option('general');
+	$crop =  $styles['crop']; ?>
 <span class="howto"><strong><?php _e('* Tip: make the best use of the slideshow by loading always content of the same dimensions', $this -> plugin_name); ?>
 <br />
 <?php _e('and setting the size of the frame (as well as the CSS rules) accordingly.', $this -> plugin_name); ?></strong>
@@ -34,8 +35,8 @@
 		<tr>
 			<th><label for="crop_thumbs"><?php _e('Crop Images', $this -> plugin_name); ?></label></th>
 			<td>
-				<label><input <?php echo ($crop == "Y") ? 'checked="checked"' : ''; ?> type="radio" name="crop_thumbs" value="Y" id="crop_thumbs_Y" /> <?php _e('Yes', $this -> plugin_name); ?></label>
-				<label><input <?php echo (empty($crop) || $crop == "N") ? 'checked="checked"' : ''; ?>  type="radio" name="crop_thumbs" value="N" id="crop_thumbs_N" /> <?php _e('No', $this -> plugin_name); ?></label>
+				<label><input <?php echo ($crop == "Y") ? 'checked="checked"' : ''; ?> type="radio" name="styles[crop]" value="Y" id="crop_thumbs_Y" /> <?php _e('Yes', $this -> plugin_name); ?></label>
+				<label><input <?php echo (empty($crop) || $crop == "N") ? 'checked="checked"' : ''; ?>  type="radio" name="styles[crop]" value="N" id="crop_thumbs_N" /> <?php _e('No', $this -> plugin_name); ?></label>
 				<span class="howto"><?php _e('Should images be cropped to fit the height of the slideshow area. ', $this -> plugin_name); ?></span>
 			</td>
 		</tr>
@@ -53,7 +54,7 @@
 				<input style="width:45px;" id="styles.wpns_height" type="text" name="styles[wpns_height]" value="<?php echo $styles['wpns_height']; ?>" /> 
 				<?php _e('px', $this -> plugin_name); ?>
 				<span class="howto"><?php _e('width and height of the sliding img elements', $this -> plugin_name); ?></span>
-				<span class="howto jquery-powered" style="display:<?php echo ($this -> get_option('jsframe') == "jquery") ? 'inline' : 'none'; ?>;">
+				<span class="howto jquery-powered" style="display:<?php echo ($generaloptions['jsframe'] == "jquery") ? 'inline' : 'none'; ?>;">
 				<?php _e('with jQuery Nivo Slider this setting will only force the frame to crop the slide (as its background image)', $this -> plugin_name); ?></span>
 			</td>
 		</tr>
@@ -70,7 +71,7 @@
 				<input style="width:45px;" id="styles.height" type="text" name="styles[height]" value="<?php echo $styles['height']; ?>" /> 
 				<?php _e('px', $this -> plugin_name); ?>
 				<span class="howto"><?php _e('width and height of the slideshow gallery', $this -> plugin_name); ?></span>
-				<span class="howto jquery-powered" style="display:<?php echo ($this -> get_option('jsframe') == "jquery") ? 'inline' : 'none'; ?>;">
+				<span class="howto jquery-powered" style="display:<?php echo ($generaloptions['jsframe'] == "jquery") ? 'inline' : 'none'; ?>;">
 				<?php _e('jQuery Nivo Slider does not resize images so make sure the source files have the same size otherwise the frame will be enlarged accordingly', $this -> plugin_name); ?></span>
 			</td>
 		</tr>  

@@ -3,8 +3,8 @@ Contributors: 3dolab
 Donate link: http://www.3dolab.net/en/combo-slideshow
 Tags: slideshow, slide show, combo, slideshow gallery, slides, image, gallery, content, highlight, showcase, javascript, jquery, mootools, nivo, nivo slider
 Requires at least: 2.8
-Tested up to: 3.7.1
-Stable tag: 1.8
+Tested up to: 4.0.1
+Stable tag: 1.9
 The features of the best slideshow javascript effects and WP plugins:
 blog posts highlights, image galleries, custom slides and more!
 
@@ -35,6 +35,9 @@ It works great in conjunction with the [Gallery Metabox plugin](http://wordpress
 
 [Running Demo](http://www.3dolab.net/en/ "Combo Slideshow Running Demo")
 
+*[banner image by batintherain](https://www.flickr.com/photos/batintherain/3261025426/)*
+*[icon by fdecomite](https://www.flickr.com/photos/fdecomite/3489799838/)*
+
 == Installation ==
 
 = Manual Installation: = 
@@ -47,7 +50,9 @@ It works great in conjunction with the [Gallery Metabox plugin](http://wordpress
 
 * Please take care when updating, due to the new slide administration system any custom slideshow created with previous versions of the plugin will not work and won't even be shown
 
-== Additional Parameter Info ==
+== Other Notes ==
+
+= Additional Parameter Info =
 
 = [slideshow] shortcode & $CMBSLD_Gallery -> slideshow() = 
 * $output (default = true): echoes the content, or just returns it if set to false
@@ -102,10 +107,21 @@ Make sure you have at least 6 thumbnails for that to work properly. Otherwise th
 In /views/default/gallery.php find this line: slideshow.letterbox = "#000"; Change #000 to #FFF for white, or any other hex color code.
 
 = How can I achieve a liquid layout? =
-First of all, disable the built-in width & height crop adjustment in the settings, and then simply apply the "width:100%" rule in your stylesheet using both the ".ngslideshow.nivoSlider" classes: it will override the default fixed width
+First of all disable the built-in width & height crop adjustment in the settings, and then simply apply the "width:100%" rule in your stylesheet using both the ".ngslideshow.nivoSlider" classes: it will override the default fixed width
 
+== Screenshots ==
+
+1. the slideshow in action on a default Twenty Fourteen theme
+2. the Admin Settings page
 
 == Changelog ==
+
+= 1.9 (2014.11.22) =
+* Tabbed navigation on administration settings
+* Fixed compatibility issue with TinyMCE js module on WP 3.9
+* Fixes to the "no theme" CSS 
+* "default" theme is now really the default option
+* Post Category multiple select
 
 = 1.8 (2013.12.03) =
 * Bugfix: TinyMCE button for gallery shortcodes

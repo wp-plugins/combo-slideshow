@@ -1,6 +1,6 @@
 <?php
 class CMBSLD_GalleryPlugin {
-	var $version = '1.8';
+	var $version = '1.9';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
@@ -10,15 +10,15 @@ class CMBSLD_GalleryPlugin {
 		//'slideshow'		=>	'slideshow-slides',
 		'settings'		=>	'settings',
 	);
-	var $helpers = array('Db', 'Html', 'Form', 'Metabox');
-	var $models = array('Slide');
+	//var $helpers = array('Db', 'Html', 'Form', 'Metabox');
+	//var $models = array('Slide');
 	
 	function register_plugin($name, $base) {
 		$this -> plugin_name = $name;
 		$this -> plugin_base = rtrim(dirname($base), DS);
 		//$this -> enqueue_scripts();
-		$this -> initialize_classes();
 		$this -> initialize_options();
+		$this -> initialize_adminpage();
 		if (function_exists('load_plugin_textdomain')) {
 			load_plugin_textdomain( $this -> plugin_name, false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 			/*
@@ -62,110 +62,260 @@ class CMBSLD_GalleryPlugin {
 		return false;
 	}
 	
-	function initialize_classes() {
-		if (!empty($this -> helpers)) {
-			foreach ($this -> helpers as $helper) {
-				$hfile = dirname(__FILE__) . DS . 'helpers' . DS . strtolower($helper) . '.php';
-				if (file_exists($hfile)) {
-					require_once($hfile);
-					if (empty($this -> {$helper}) || !is_object($this -> {$helper})) {
-						$classname = $this -> pre . $helper . 'Helper';
-						if (class_exists($classname)) {
-							$this -> {$helper} = new $classname;
-						}
-					}
-				} 
-			}
-		}
-		if (!empty($this -> models)) {
-			foreach ($this -> models as $model) {
-				$mfile = dirname(__FILE__) . DS . 'models' . DS . strtolower($model) . '.php';
-				if (file_exists($mfile)) {
-					require_once($mfile);
-					if (empty($this -> {$model}) || !is_object($this -> {$model})) {
-						$classname = $this -> pre . $model;
-					
-						if (class_exists($classname)) {
-							$this -> {$model} = new $classname;
-						}
-					}
-				} 
+	function initialize_adminpage() {
+		$helper = 'Template';
+		$hfile = dirname(__FILE__) . DS . 'views' . DS . 'admin' . DS . strtolower($helper) . '.php';
+		if (file_exists($hfile)) {
+			require_once($hfile);
+			if (empty($this -> {$helper}) || !is_object($this -> {$helper})) {
+				$classname = $helper;
+				if (class_exists($classname)) {
+					$this -> {$helper} = new $classname;
+				}
 			}
 		}
 	}
 	
-	function initialize_options() {
-		$styles = array(
-			'width'			=>	"450",
-			'height'		=>	"300",
-			'wpns_width'		=>	"450",
-			'wpns_height'		=>	"300",
-			'border'		=>	"1px solid #CCCCCC",
-			'background'		=>	"#FFFFFF",
-			'infobackground'	=>	"#000000",
-			'infocolor'		=>	"#FFFFFF",
-			'resizeimages'		=>	"Y",
-			'resizeimages2'		=>	"N",
-			'thumbs'		=>	"N",
-			'navbuttons'		=>	"0",
-			'navbullets'		=>	"0",
-			'controlnumbers'	=>	"N",
-			'offsetnav'		=>	"0",
-			'offsetcap'		=>	"0",
-			'customnav'		=>	"",
-			'custombul'		=>	""
+	function initialize_options() {	
+	
+		$general = array(
+			'jsframe' 		=> 'jquery',
+			'slide_theme'	=> '1',
+			'customtheme'	=> '',
+			'wpns_home'		=> 'N',
+			'wpns_auto'		=> 'N',
+			'wpns_auto_position'	=> 'B',
+			'wpns_category'	=> array('1'),
+			'slide_gallery'	=> '',
+			'exclude'		=> '',
+			'offset'		=> '',
+			'postlimit'		=> ''
 		);
+		if($this -> get_option('jsframe')) {
+			$general['jsframe'] = $this -> get_option('jsframe');
+			$this -> delete_option('jsframe');
+		}
+		if($this -> get_option('wpns_home')) {
+			$general['wpns_home'] = $this -> get_option('wpns_home');
+			$this -> delete_option('wpns_home');
+		}
+		if($this -> get_option('wpns_auto')) {
+			$general['wpns_auto'] = $this -> get_option('wpns_auto');
+			$this -> delete_option('wpns_auto');
+		}
+		if($this -> get_option('wpns_auto_position')) {
+			$general['wpns_auto_position'] = $this -> get_option('wpns_auto_position');
+			$this -> delete_option('wpns_auto_position');
+		}
+		if($this -> get_option('wpns_effect')) {
+			$general['wpns_effect'] = $this -> get_option('wpns_effect');
+			$this -> delete_option('wpns_effect');
+		}
+		if($this -> get_option('wpns_category')) {
+			$general['wpns_category'] = $this -> get_option('wpns_category');
+			$this -> delete_option('wpns_category');
+		}
+		if($this -> get_option('slide_theme')) {
+			$general['slide_theme'] = $this -> get_option('slide_theme');
+			$this -> delete_option('slide_theme');
+		}
+		if($this -> get_option('customtheme')) {
+			$general['customtheme'] = $this -> get_option('customtheme');
+			$this -> delete_option('customtheme');
+		}
+		if($this -> get_option('postlimit')) {
+			$general['postlimit'] = $this -> get_option('postlimit');
+			$this -> delete_option('postlimit');
+		}
+		if($this -> get_option('exclude')) {
+			$general['exclude'] = $this -> get_option('exclude');
+			$this -> delete_option('exclude');
+		}
+		if($this -> get_option('offset')) {
+			$general['offset'] = $this -> get_option('offset');
+			$this -> delete_option('offset');
+		}
+		if($this -> get_option('slide_gallery')) {
+			$general['slide_gallery'] = $this -> get_option('slide_gallery');
+			$this -> delete_option('slide_gallery');
+		}
 		
+		$slides = array(
+			'wpns_slices'	=> '10',
+			'wpns_effect'	=> 'random',
+			'wprfss_effect'	=> 'fade',
+			'wprfss_cssfx'	=> 'pushLeftCSS',
+			'wprfss_tips'	=> 'N',
+			'csstransform'	=> 'N',
+			'pausehover'	=> 'Y',
+			'autoslide'		=> 'Y',
+			'autoslide_temp'	=> 'Y',
+			'autospeed'		=> '3000',
+			'information'	=> 'Y',
+			'information_temp'	=> 'Y',
+			'captionopacity'	=> '80',
+			'fadespeed'		=> '500',
+			'controlnav'	=> 'Y',			
+			'keyboardnav'	=> 'N',
+			'thumbnails'	=> 'N',
+			'thumbnails_temp'	=> 'N',
+			'navigation'	=> 'Y',
+			'navhover'		=> 'Y'			
+		);
+		if($this -> get_option('navigation')) {
+			$slides['navigation'] = $this -> get_option('navigation');
+			$this -> delete_option('navigation');
+		}
+		if($this -> get_option('navhover')) {
+			$slides['navhover'] = $this -> get_option('navhover');
+			$this -> delete_option('navhover');
+		}
+		if($this -> get_option('controlnav')) {
+			$slides['controlnav'] = $this -> get_option('controlnav');
+			$this -> delete_option('controlnav');
+		}
+		if($this -> get_option('keyboardnav')) {
+			$slides['keyboardnav'] = $this -> get_option('keyboardnav');
+			$this -> delete_option('keyboardnav');
+		}
+		if($this -> get_option('pausehover')) {
+			$slides['navigation'] = $this -> get_option('pausehover');
+			$this -> delete_option('pausehover');
+		}
+		if($this -> get_option('fadespeed')) {
+			$slides['fadespeed'] = $this -> get_option('fadespeed');
+			$this -> delete_option('fadespeed');
+		}
+		if($this -> get_option('captionopacity')) {
+			$slides['captionopacity'] = $this -> get_option('captionopacity');
+			$this -> delete_option('captionopacity');
+		}
+		if($this -> get_option('information')) {
+			$slides['information'] = $this -> get_option('information');
+			$this -> delete_option('information');
+		}
+		if($this -> get_option('information_temp')) {
+			$slides['information_temp'] = $this -> get_option('information_temp');
+			$this -> delete_option('information_temp');
+		}
+		if($this -> get_option('thumbnails')) {
+			$slides['thumbnails'] = $this -> get_option('thumbnails');
+			$this -> delete_option('thumbnails');
+		}
+		if($this -> get_option('thumbnails_temp')) {
+			$slides['thumbnails_temp'] = $this -> get_option('thumbnails_temp');
+			$this -> delete_option('thumbnails_temp');
+		}
+		if($this -> get_option('autoslide')) {
+			$slides['autoslide'] = $this -> get_option('autoslide');
+			$this -> delete_option('autoslide');
+		}
+		if($this -> get_option('autoslide_temp')) {
+			$slides['autoslide_temp'] = $this -> get_option('autoslide_temp');
+			$this -> delete_option('autoslide_temp');
+		}
+		if($this -> get_option('autospeed')) {
+			$slides['autospeed'] = $this -> get_option('autospeed');
+			$this -> delete_option('autospeed');
+		}
+		if($this -> get_option('captionopacity')) {
+			$slides['captionopacity'] = $this -> get_option('captionopacity');
+			$this -> delete_option('captionopacity');
+		}
+		if($this -> get_option('pausehover')) {
+			$slides['pausehover'] = $this -> get_option('pausehover');
+			$this -> delete_option('pausehover');
+		}
+		if($this -> get_option('keyboardnav')) {
+			$slides['keyboardnav'] = $this -> get_option('keyboardnav');
+			$this -> delete_option('keyboardnav');
+		}
+		if($this -> get_option('csstransform')) {
+			$slides['csstransform'] = $this -> get_option('csstransform');
+			$this -> delete_option('csstransform');
+		}
+		if($this -> get_option('wprfss_cssfx')) {
+			$slides['wprfss_cssfx'] = $this -> get_option('wprfss_cssfx');
+			$this -> delete_option('wprfss_cssfx');
+		}
+		if($this -> get_option('wprfss_tips')) {
+			$slides['wprfss_tips'] = $this -> get_option('wprfss_tips');
+			$this -> delete_option('wprfss_tips');
+		}
+		if($this -> get_option('wpns_slices')) {
+			$slides['wpns_slices'] = $this -> get_option('wpns_slices');
+			$this -> delete_option('wpns_slices');
+		}
+
+		$slidestyles = array(
+			'thumbs'		=>	'N',
+			'navbuttons'		=>	'0',
+			'navbullets'		=>	'0',
+			'controlnumbers'	=>	'N',
+			'offsetnav'		=>	'0',
+			'offsetcap'		=>	'0',
+			'customnav'		=>	'',
+			'custombul'		=>	'',
+		);
+		$savedstyles = $this -> get_option('styles');
+		if($savedstyles && isset($savedstyles['resizeimages']) && !empty($savedstyles['resizeimages'])) {
+			//$slidestyles = array_intersect($savedstyles, $slidestyles);
+			$slidestyles['resizeimages'] = $savedstyles['resizeimages'];
+		}
+
+		$styles = array(
+			'width'			=>	'450',
+			'height'		=>	'300',
+			'wpns_width'		=>	'450',
+			'wpns_height'		=>	'300',
+			'border'		=>	'1px solid #CCCCCC',
+			'background'		=>	'#FFFFFF',
+			'infobackground'	=>	'#000000',
+			'infocolor'		=>	'#FFFFFF',
+			'resizeimages'		=>	'Y',
+			'resizeimages2'		=>	'N',
+			'thumbs'		=>	'N',
+			'navbuttons'		=>	'0',
+			'navbullets'		=>	'0',
+			'controlnumbers'	=>	'N',
+			'offsetnav'		=>	'0',
+			'offsetcap'		=>	'0',
+			'customnav'		=>	'',
+			'custombul'		=>	'',
+			'crop'			=>  'N'
+		);
+		if($this -> get_option('crop_thumbs')) {
+			$styles['crop'] = $this -> get_option('crop_thumbs');
+			$this -> delete_option('crop_thumbs');
+		}
+		$links = array(
+			'imagesbox'		=>	'T',
+			'imagesbox_temp'=>	'N',
+			'custombox'		=>	'',
+			'pagelink'		=>  'S'
+		);	
+		if($this -> get_option('pagelink')) {
+			$links['pagelink'] = $this -> get_option('pagelink');
+			$this -> delete_option('pagelink');
+		}
+		if($this -> get_option('imagesbox')) {
+			$links['imagesbox'] = $this -> get_option('imagesbox');
+			$this -> delete_option('imagesbox');
+		}
+		if($this -> get_option('imagesbox_temp')) {
+			$links['imagesbox_temp'] = $this -> get_option('imagesbox_temp');
+			$this -> delete_option('imagesbox_temp');
+		}
+		if($this -> get_option('custombox')) {
+			$links['custombox'] = $this -> get_option('custombox');
+			$this -> delete_option('custombox');
+		}
+		
+		$this -> add_option('general', $general);
+		$this -> add_option('slides', $slides);
 		$this -> add_option('styles', $styles);
-		//General Settings
-		$this -> add_option('navigation', 'Y');
-		$this -> add_option('navhover', 'Y');
-		$this -> add_option('controlnav', 'Y');
-		$this -> add_option('keyboardnav', 'Y');
-		$this -> add_option('pausehover', 'Y');
-		$this -> add_option('fadespeed', 500);
-		$this -> add_option('captionopacity', 80);
-		$this -> add_option('navhover', "N");
-		$this -> add_option('linker', "Y");
-		$this -> add_option('nolinkpage', "N");
-		$this -> add_option('pagelink', "S");
-		$this -> add_option('information', "Y");
-		$this -> add_option('information_temp', "Y");
-		// $this -> add_option('infospeed', 10);
-		$this -> add_option('thumbnails', "N");
-		$this -> add_option('thumbnails_temp', "N");
-		// $this -> add_option('thumbposition', "bottom");
-		// $this -> add_option('thumbopacity', 70);
-		// $this -> add_option('thumbscrollspeed', 5);
-		// $this -> add_option('thumbspacing', 5);
-		// $this -> add_option('thumbactive', "#FFFFFF");
-		$this -> add_option('autoslide', "Y");
-		$this -> add_option('autoslide_temp', "Y");
-		$this -> add_option('autospeed', 3000);
-		$this -> add_option('imagesbox', "T");
-		$this -> add_option('wpns_category','1');
-		$this -> add_option('wpns_effect','random');
-		$this -> add_option('wpns_slices','10');	
-		$this -> add_option('wpns_home','N');
-		//$this -> add_option('wpns_autocustom_home','0');
-		$this -> add_option('wpns_auto','N');
-		//$this -> add_option('wpns_autocustom_post','0');
-		$this -> add_option('wpns_auto_position','B');
-		$this -> add_option('pausehover','Y');
-		$this -> add_option('keyboardnav','N');
-		$this -> add_option('slide_theme','0');
-		$this -> add_option('jsframe','jquery');
-		$this -> add_option('wprfss_effect','fade');
-		$this -> add_option('wprfss_cssfx','pushLeftCSS');
-		$this -> add_option('wprfss_tips','N');
-		$this -> add_option('customtheme','');
-		$this -> add_option('custombox','');
-		$this -> add_option('css_transform','N');
-		$this -> add_option('postlimit','');
-		$this -> add_option('exclude','');
-		$this -> add_option('offset','');
-		$this -> add_option('crop_thumbs', 'Y');
-		$this -> add_option('slide_gallery','');
+		$this -> add_option('slidestyles', $slidestyles);
+		$this -> add_option('links', $links);
 	}
 	
 	function render_msg($message = '') {
@@ -193,65 +343,14 @@ class CMBSLD_GalleryPlugin {
 		flush();
 	}
 	
-	function paginate($model = null, $fields = '*', $sub = null, $conditions = null, $searchterm = null, $per_page = 10, $order = array('modified', "DESC")) {
-		global $wpdb;
-	
-		if (!empty($model)) {
-			global $paginate;
-			$paginate = $this -> vendor('Paginate');
-			$paginate -> table = $this -> {$model} -> table;
-			$paginate -> sub = (empty($sub)) ? $this -> {$model} -> controller : $sub;
-			$paginate -> fields = (empty($fields)) ? '*' : $fields;
-			$paginate -> where = (empty($conditions)) ? false : $conditions;
-			$paginate -> searchterm = (empty($searchterm)) ? false : $searchterm;
-			$paginate -> per_page = $per_page;
-			$paginate -> order = $order;
-			$data = $paginate -> start_paging($_GET[$this -> pre . 'page']);
-			if (!empty($data)) {
-				$newdata = array();
-				foreach ($data as $record) {
-					$newdata[] = $this -> init_class($model, $record);
-				}
-				$data = array();
-				$data[$model] = $newdata;
-				$data['Paginate'] = $paginate;
-			}
-			return $data;
-		}
-		return false;
-	}
-	
-	function vendor($name = '', $folder = '') {
-		if (!empty($name)) {
-			$filename = 'class.' . strtolower($name) . '.php';
-			$filepath = rtrim(dirname(__FILE__), DS) . DS . 'vendors' . DS . $folder . '';
-			$filefull = $filepath . $filename;
-			if (file_exists($filefull)) {
-				require_once($filefull);
-				$class = 'Gallery' . $name;
-				if (${$name} = new $class) {
-					return ${$name};
-				}
-			}
-		}
-		return false;
-	}
-	function check_uploaddir() {
-		$uploaddir = ABSPATH . 'wp-content' . DS . 'uploads' . DS . $this -> plugin_name . DS;
-		if (!file_exists($uploaddir)) {
-			if (@mkdir($uploaddir, 0777)) {
-				@chmod($uploaddir, 0777);
-				return true;
-			} else {
-				$message = __('Uploads folder named "' . $this -> plugin_name . '" cannot be created inside "wp-content/uploads"', $this -> plugin_name);
-				$this -> render_msg($message);
-			}
-		}
-		return false;
-	}
-	
 	function add_action($action, $function = null, $priority = 10, $params = 1) {
 		if (add_action($action, array($this, (empty($function)) ? $action : $function), $priority, $params)) {
+			return true;
+		}
+		return false;
+	}
+	function remove_action($action, $function = null) {
+		if (remove_action($action, array($this, (empty($function)) ? $action : $function))) {
 			return true;
 		}
 		return false;
@@ -265,16 +364,19 @@ class CMBSLD_GalleryPlugin {
 	
 //	IF ( CMBSLD_LOAD_CSS )
 	function cmbsld_enqueue_styles() {
-		global $version;
-		$galleryStyleUrl = CMBSLD_PLUGIN_URL . 'css/gallery-css.php?v='. $version .'&amp;pID=' . $GLOBALS['post']->ID;
-		if($_SERVER['HTTPS']) {
+		global $version, $post;
+		$galleryStyleUrl = false;
+		if(isset($GLOBALS['post']))
+			$galleryStyleUrl = CMBSLD_PLUGIN_URL . 'css/gallery-css.php?v='. $version .'&amp;pID=' . $GLOBALS['post']->ID;
+		//$galleryStyleUrl = CMBSLD_PLUGIN_URL . 'css/gallery-css.php?v='. $version .'&amp;pID=' .$post->ID;
+		if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']) {
 			$galleryStyleUrl = str_replace("http:","https:",$galleryStyleUrl);
 		}		
         $galleryStyleFile = CMBSLD_PLUGIN_DIR . 'css/gallery-css.php';
 //		$src = WP_PLUGIN_DIR.'/' . $this -> plugin_name . '/css/gallery-css.php?2=1&site='.WP_PLUGIN_DIR;
 //		define $infogal = $this;
 		$infogal = $this;
-		if ( file_exists($galleryStyleFile) ) {
+		if ( file_exists($galleryStyleFile) && $galleryStyleUrl ) {
 			if ($styles = $this -> get_option('styles')) {
 				foreach ($styles as $skey => $sval) {
 					$galleryStyleUrl .= "&amp;" . $skey . "=" . urlencode($sval);
@@ -308,33 +410,19 @@ class CMBSLD_GalleryPlugin {
 					$galleryStyleUrl .= "&amp;thumbs=Y";
 			}
 			wp_register_style( 'combo-slideshow', $galleryStyleUrl);
-			wp_enqueue_style( 'combo-slideshow', $galleryStyleUrl,	array(), CMBSLDVERSION, 'all' );
+			wp_enqueue_style( 'combo-slideshow', $galleryStyleUrl,	array(), CMBSLD_VERSION, 'all' );
 		}
-
-$use_themes = $this -> get_option('slide_theme');
-if ($use_themes != '0'){
-		if ($use_themes == 'custom'){
-			$use_themes = $this -> get_option('customtheme');
-			$galleryThemeUrl = get_stylesheet_directory_uri().'/'.$use_themes.'/'.$use_themes.'.css';
+		$general = $this -> get_option('general');
+		$use_themes = $general['slide_theme'];
+		if ($use_themes != '0'){
+			if ($use_themes == 'custom'){
+				$use_themes = $general['customtheme'];
+				$galleryThemeUrl = get_stylesheet_directory_uri().'/'.$use_themes.'/'.$use_themes.'.css';
+			}
+			$galleryThemeUrl = CMBSLD_PLUGIN_URL . 'css/'.$use_themes.'/'.$use_themes.'.css';
+				wp_register_style( 'combo-slideshow-'.$use_themes, $galleryThemeUrl);
+				wp_enqueue_style( 'combo-slideshow-'.$use_themes, $galleryThemeUrl, array(), CMBSLD_VERSION, 'all' );
 		}
-		$galleryThemeUrl = CMBSLD_PLUGIN_URL . 'css/'.$use_themes.'/'.$use_themes.'.css';
-			wp_register_style( 'combo-slideshow-'.$use_themes, $galleryThemeUrl);
-			wp_enqueue_style( 'combo-slideshow-'.$use_themes, $galleryThemeUrl, array(), CMBSLDVERSION, 'all' );
-}
-
-/*		function cmbsld_style_head($url) {
-			print "<link rel='stylesheet' type='text/css' href='" . get_bloginfo('wpurl') . "/wp-content/plugins/combo-slideshow-2/?my-custom-content=css'/>";
-		}
-		function cmbsld_style_cheat( $wp ) {
-			print"<link id='combo-slideshow' rel='stylesheet' type='text/css' href='" . $wp . "'/>";
-		}
-		/* Known Issue - passing a function into the second string makes the link info go above <html> */
-		/* FIX for QTranslate - Uncomment for this plugin */
-	/*	if (!is_admin) {
-			add_filter('wp_print_styles', cmbsld_style_cheat($galleryStyleUrl) );
-		}*/
-		
-		
 	}
 	function enqueue_scripts($hook=false) {
 		
@@ -364,8 +452,8 @@ if ($use_themes != '0'){
 			wp_enqueue_script($this -> plugin_name . 'admin', CMBSLD_PLUGIN_URL . 'js/admin.js', 'jquery', '1.0');
 
 		} else {
-
-		    $js_framework = $this -> get_option('jsframe');
+			$general = $this -> get_option('general');
+		    $js_framework = $general['jsframe'];
 
 		    if($js_framework == 'mootools') {
 
@@ -375,7 +463,7 @@ if ($use_themes != '0'){
 			wp_enqueue_script('moomore');
 			wp_enqueue_script('moo_loop', '/' . CMBSLD_PLUGIN_URL . 'js/Loop.js', array('moocore','moomore'), '1.3');
 			wp_enqueue_script('moo_slideshow', '/' . CMBSLD_PLUGIN_URL . 'js/SlideShow.js', array('moocore','moomore','moo_loop'), '1.3');
-			if($this -> get_option('css_transform') == 'Y') {
+			if($general['csstransform'] == 'Y') {
 			      wp_enqueue_script('cssanimation', $this -> plugin_name, '/' . CMBSLD_PLUGIN_URL . 'js/CSSAnimation.js', false, '1.3');
 			      wp_enqueue_script('moo_cssanimation', $this -> plugin_name, '/' . CMBSLD_PLUGIN_URL . 'js/CSSAnimation.MooTools.js', array('moocore','moomore','cssanimation'), '1.3');
 			      wp_enqueue_script('slideshow_css', $this -> plugin_name, '/' . CMBSLD_PLUGIN_URL . 'js/SlideShow.CSS.js', array('moocore','moomore','moo_slideshow','moo_cssanimation'), '1.3');
@@ -386,8 +474,9 @@ if ($use_themes != '0'){
 			wp_enqueue_script('jquery');
 
 			wp_enqueue_script($this -> plugin_name, CMBSLD_PLUGIN_URL . 'js/jquery.nivo.slider.js', array('jquery'), '2.6' );
-			
-			if ($this -> get_option('imagesbox') == "T") {
+
+			$links = $this -> get_option('links');
+			if ($links['imagesbox'] == "T") {
 				add_thickbox();
 			}
 
@@ -415,6 +504,12 @@ if ($use_themes != '0'){
 		}
 		return false;
 	}
+	function delete_option($name = '', $value = '') {
+		if (delete_option($this -> pre . $name, $value)) {
+			return true;
+		}
+		return false;
+	}
 	function get_option($name = '', $stripslashes = true) {
 		if ($option = get_option($this -> pre . $name)) {
 			if (@unserialize($option) !== false) {
@@ -427,144 +522,6 @@ if ($use_themes != '0'){
 		}
 		return false;
 	}
-	function debug($var = array()) {
-		if ($this -> debugging) {
-			echo '<pre>' . print_r($var, true) . '</pre>';
-			return true;
-		}
-		
-		return false;
-	}
-	
-	function check_table($model = null) {
-		global $wpdb;
-	
-		if (!empty($model)) {			
-			if (!empty($this -> fields) && is_array($this -> fields)) {			
-				if (!$wpdb -> get_var("SHOW TABLES LIKE '" . $this -> table . "'")) {				
-					$query = "CREATE TABLE `" . $this -> table . "` (";
-					$c = 1;
-				
-					foreach ($this -> fields as $field => $attributes) {
-						if ($field != "key") {
-							$query .= "`" . $field . "` " . $attributes . "";
-						} else {
-							$query .= "" . $attributes . "";
-						}
-						if ($c < count($this -> fields)) {
-							$query .= ",";
-						}
-						$c++;
-					}
-					
-					$query .= ") ENGINE=MyISAM AUTO_INCREMENT=1 CHARSET=UTF8;";
-					
-					if (!empty($query)) {
-						$this -> table_query[] = $query;
-					}
-				} else {
-					$field_array = $this -> get_fields($this -> table);
-					
-					foreach ($this -> fields as $field => $attributes) {					
-						if ($field != "key") {
-							$this -> add_field($this -> table, $field, $attributes);
-						}
-					}
-				}
-				
-				if (!empty($this -> table_query)) {				
-					require_once(ABSPATH . 'wp-admin' . DS . 'upgrade-functions.php');
-					dbDelta($this -> table_query, true);
-				}
-			}
-		}
-		
-		return false;
-	}
-	
-	function get_fields($table = null) {	
-		global $wpdb;
-	
-		if (!empty($table)) {
-			$fullname = $table;
-			if (($tablefields = mysql_list_fields(DB_NAME, $fullname, $wpdb -> dbh)) !== false) { 
-				$columns = mysql_num_fields($tablefields);
-				$field_array = array();
-				for ($i = 0; $i < $columns; $i++) {
-					$fieldname = mysql_field_name($tablefields, $i);
-					$field_array[] = $fieldname;
-				}
-	
-				return $field_array;
-			}
-		}
-		return false;
-	}
-	
-	function delete_field($table = '', $field = '') {
-		global $wpdb;
-		
-		if (!empty($table)) {
-			if (!empty($field)) {
-				$query = "ALTER TABLE `" . $wpdb -> prefix . "" . $table . "` DROP `" . $field . "`";
-				
-				if ($wpdb -> query($query)) {
-					return false;
-				}
-			}
-		}
-		
-		return false;
-	}
-	
-	function change_field($table = '', $field = '', $newfield = '', $attributes = "TEXT NOT NULL") {
-		global $wpdb;
-		
-		if (!empty($table)) {		
-			if (!empty($field)) {			
-				if (!empty($newfield)) {
-					$field_array = $this -> get_fields($table);
-					
-					if (!in_array($field, $field_array)) {
-						if ($this -> add_field($table, $newfield)) {
-							return true;
-						}
-					} else {
-						$query = "ALTER TABLE `" . $table . "` CHANGE `" . $field . "` `" . $newfield . "` " . $attributes . ";";
-						
-						if ($wpdb -> query($query)) {
-							return true;
-						}
-					}
-				}
-			}
-		}
-		
-		return false;
-	}
-	
-	function add_field($table = '', $field = '', $attributes = "TEXT NOT NULL") {
-		global $wpdb;
-	
-		if (!empty($table)) {
-			if (!empty($field)) {
-				$field_array = $this -> get_fields($table);
-				
-				if (!empty($field_array)) {				
-					if (!in_array($field, $field_array)) {					
-						$query = "ALTER TABLE `" . $table . "` ADD `" . $field . "` " . $attributes . ";";
-						
-						if ($wpdb -> query($query)) {
-							return true;
-						}
-					}
-				}
-			}
-		}
-		
-		return false;
-	}
-	
 	function render($file = '', $params = array(), $output = true, $folder = 'admin') {
 		if (!empty($file)) {
 			$filename = $file . '.php';
@@ -634,6 +591,11 @@ if ($use_themes != '0'){
                 break;
         }
     }
+	function combo_gallery_metabox_add_post_type($types) {
+		if(is_array($types))
+			$types[] = 'slideshow';
+		return $types;
+	}
 function register_slideshow_post_type() {
 	$labels = array(
 		'name' 					=> _x( 'Slideshows', 'post type general name', $this -> plugin_name ),
@@ -664,12 +626,15 @@ function register_slideshow_post_type() {
 		'capability_type' 		=> 'post',
 		'hierarchical' 			=> false,
 		'menu_position' 		=> null,
-		'menu_icon'				=> CMBSLD_PLUGIN_URL . 'images/icon.png',
-		'supports' 				=> array( 'title', 'editor', 'thumbnail', 'excerpt', 'comments', 'revisions', 'custom-fields' )
+		//'menu_icon'				=> CMBSLD_PLUGIN_URL . 'images/icon.png',
+		'menu_icon'				=> 'dashicons-format-gallery',
+		'supports' 				=> array( 'title', 'editor', 'thumbnail', 'excerpt', 'comments', 'revisions', 'custom-fields', 'be_gallery_metabox' )
 	);
 
 	register_post_type( 'slideshow' , apply_filters( 'slideshow_posttype_args', $args ) );
-
+	
+	$this -> add_filter( 'be_gallery_metabox_post_types', 'combo_gallery_metabox_add_post_type' );
+	
 	$labels['name'] = __( 'Slideshow Categories', $this -> plugin_name );
 
 	register_taxonomy( 'slideshow_category', array( 'slideshow' ), array(
@@ -681,77 +646,84 @@ function register_slideshow_post_type() {
 	) );
 	//remove_post_type_support( 'slideshow', 'editor' );
 }
-    function show_combo_slider($category = null, $n_slices = null, $exclude = null, $offset = null, $size = null, $width = null, $height = null) {
+function show_combo_slider($category = null, $n_slices = null, $exclude = null, $offset = null, $size = null, $width = null, $height = null) {
 	global $post;
 	$post_switch = $post;
 	$combo_id = get_the_ID();
-
-	if ($this -> get_option('imagesbox') == "T") 
+	$opt_args = array('caption' => '', 'thumbs' => '', 'auto' => '', 'nolink' => '');
+	$options = $this -> parse_temp_options($opt_args);
+	
+	$general = $this -> get_option('general');
+	$slides	= $this -> get_option('slides');
+	$styles	= $this -> get_option('styles');
+	$links = $this -> get_option('links');
+	
+	if ($links['imagesbox_temp'] == "T") 
 		$imgbox = "thickbox";
-	elseif ($this -> get_option('imagesbox') == "S") 
+	elseif ($links['imagesbox_temp'] == "S") 
 		$imgbox = "shadowbox";
-	elseif ($this -> get_option('imagesbox') == "P") 
+	elseif ($links['imagesbox_temp'] == "P") 
 		$imgbox = "prettyphoto";
-	elseif ($this -> get_option('imagesbox') == "L") 
+	elseif ($links['imagesbox_temp'] == "L") 
 		$imgbox = "lightbox";
-	elseif ($this -> get_option('imagesbox') == "F")
+	elseif ($links['imagesbox_temp'] == "F")
 		$imgbox = "fancybox";
-	elseif ($this -> get_option('imagesbox') == "M")
+	elseif ($links['imagesbox_temp'] == "M")
 		$imgbox = "multibox";
-	elseif ($this -> get_option('imagesbox') == "custom")
-		$imgbox = $this -> get_option('custombox');
-	elseif ($this -> get_option('imagesbox') == "N") 
+	elseif ($links['imagesbox_temp'] == "custom")
+		$imgbox = $links['custombox'];
+	elseif ($links['imagesbox_temp'] == "N") 
 		$imgbox = "nolink";
 	else 
-		$imgbox = "window";
+		$imgbox = "window";	
+	
+	$jsframe = $general['jsframe'];
+	$wpns_effect = $slides['wpns_effect'];
+	$wpns_slices = $slides['wpns_slices'];
+	$fadespeed = $slides['fadespeed'];
+	$autospeed = $slides['autospeed'];
+	$navigation = $slides['navigation'];
 
-	      $styles 		= $this -> get_option('styles'); 
-	      $jsframe 		= $this -> get_option('jsframe');
-	      $wpns_effect 	= $this -> get_option('wpns_effect');
-	      $wpns_slices 	= $this -> get_option('wpns_slices');
-	      $fadespeed 	= $this -> get_option('fadespeed');
-	      $autospeed 	= $this -> get_option('autospeed');
-	      $navigation 	= $this -> get_option('navigation');
+	$navhover = $slides['navhover'];
+	$controlnav = $slides['controlnav'];
+	$thumbnails = $slides['thumbnails_temp'];
 
-	      $navhover 	= $this -> get_option('navhover');
-	      $controlnav 	= $this -> get_option('controlnav');
-	      $thumbnails 	= $this -> get_option('thumbnails');
+	$keyboardnav = $slides['keyboardnav'];
+	$pausehover = $slides['pausehover'];
+	$autoslide = $slides['autoslide_temp'];
+	$captionopacity = $slides['captionopacity'];
 
-	      $keyboardnav 	= $this -> get_option('keyboardnav');
-	      $pausehover 	= $this -> get_option('pausehover');
-	      $autoslide 	= $this -> get_option('autoslide');
-	      $captionopacity 	= $this -> get_option('captionopacity');
-
-	      $information 	= $this -> get_option('information');
-	      $csstransform 	= $this -> get_option('csstransform');
-	      $wprfss_effect 	= $this -> get_option('wprfss_effect');
-	      $wprfss_cssfx 	= $this -> get_option('wprfss_cssfx');
-	      $wprfss_tips 	= $this -> get_option('wprfss_tips');
-	      $slide_theme 	= $this -> get_option('slide_theme');
-
+	$information = $slides['information_temp'];
+	$csstransform = $slides['csstransform'];
+	$wprfss_effect = $slides['wprfss_effect'];
+	$wprfss_cssfx = $slides['wprfss_cssfx'];
+	$wprfss_tips = $slides['wprfss_tips'];
+	$slide_theme = $general['slide_theme'];
 
 	// $category = get_option('wpns_category');
 	// $n_slices = get_option('wpns_slices');
 	if (empty($category))
-		$category = $this -> get_option('wpns_category');
+		$category = $general['wpns_category'];
+	if(!is_array($category))
+		$category = explode(',',$category);
 	if (empty($n_slices))
 		$n_slices = $wpns_slices;
-		//$n_slices = $this -> get_option('postlimit');
 	if (empty($exclude))
-		$exclude = $this -> get_option('exclude');
+		$exclude = $general['exclude'];
 	if (empty($offset))
-		$offset = $this -> get_option('offset');
+		$offset = $general['offset'];
 	$use_themes = $slide_theme;
 	if(empty($size))
 		$size = 'comboslide';
 	$exclude = explode(',',$exclude);
-	$slided = get_posts( 'category='.$category.'&numberposts='.$n_slices );
+	//$slides = get_posts( 'category='.$category.'&numberposts='.$n_slices );
 	//query_posts( 'cat='.$category.'&posts_per_page='.$n_slices );
-	$query_args = array( 'cat' => $category, 'posts_per_page' => $n_slices, 'post__not_in' => $exclude, 'offset' => $offset );
-	$slided = new WP_Query($query_args);
+	//$query_args = array( 'cat' => $category, 'posts_per_page' => $n_slices, 'post__not_in' => $exclude, 'offset' => $offset );
+	$query_args = array( 'category__in' => $category, 'posts_per_page' => $n_slices, 'post__not_in' => $exclude, 'offset' => $offset );
+	$slides = new WP_Query($query_args);
 //print_r($query_args);
-//print_r($slided);
-	if( $slided->have_posts() ){
+//print_r($slides);
+	if( $slides->have_posts() ){
 		$append = '';
 
 	      $totalwidth = (count($slides) * (get_option( 'thumbnail_size_w' ) + 10) + 2);
@@ -766,6 +738,8 @@ function register_slideshow_post_type() {
 				$additional_style .= '
 					height:'.$height.'px;';
 			$additional_style .= '
+				  	margin: 0 auto;
+					overflow: hidden;
 				  }';
 	      }
 	      if(empty($width))
@@ -989,7 +963,7 @@ function register_slideshow_post_type() {
 		}
 			$append .= "$('ngslideshow-".$slideshow_id."').addClass('nivoSlider');
 				    $('ngslideshow-".$slideshow_id."').setStyle('overflow','hidden');
-				    $$('.slider-wrapper .nivoSlider img').setStyle('display','block');
+				    $('.slider-wrapper .nivoSlider img').setStyle('display','block');
 				    $('ngslideshow-".$slideshow_id."').getParent().setStyle('position','relative');
 				    ";
 		if ($navigation=="Y"){
@@ -1132,7 +1106,7 @@ function register_slideshow_post_type() {
 				   </script>";
 	}
 	$append .= '<div id="ngslideshow-'.get_the_ID().'" class="ngslideshow">';
-			  while( $slided->have_posts() ) : $slided->the_post();
+			  while( $slides->have_posts() ) : $slides->the_post();
 				$full_image_href = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), $size, false);
 				//$full_slide_href = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'full', false);
 				$thumbnail_link = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'thumbnail', false);
@@ -1140,26 +1114,31 @@ function register_slideshow_post_type() {
 					require CMBSLD_PLUGIN_DIR . 'pro/image_tall_frompost.php';
 				if ($thumbnails == "Y")
 					$thumbrel = 'rel="'. $thumbnail_link[0] .'" ';
+				else
+					$thumbrel = '';
 				if ($information == "Y")
-					$captitle = 'title="#'. $post -> ID .'-'.$post -> post_title.'"';
+					$captitle = 'title="'. $post -> ID .'-'.sanitize_title($post -> post_title).'"';
+				else
+					$captitle = '';
+			    $resize = '';
 				if ($jsframe == 'jquery'){
-				    $resize = '';
-				    if( !empty($styles['resizeimages']) && $styles['resizeimages'] == "Y") {
-					$resize .= ' width="'. $styles['wpns_width'] .'"';
+					if( !empty($styles['resizeimages']) && $styles['resizeimages'] == "Y") {
+						$resize .= ' width="'. $styles['wpns_width'] .'"';
 				    }
 				    if( !empty($styles['resizeimages2']) && $styles['resizeimages2'] == "Y") {
-					$resize .= ' height="'. $styles['wpns_height'] .'"';
+						$resize .= ' height="'. $styles['wpns_height'] .'"';
 				    }
 				}
 				if(has_post_thumbnail()){
 					//$append .= '<a href="'. post_permalink() .'" title="'. the_title('','',false).'">';
 					//$append .= get_the_post_thumbnail();
 					//$append .= '</a>';
-					if ($imagesbox != "nolink")
+					if ($imgbox != "nolink")
 						$append .= '<a href="'.post_permalink().'">';
-					$append .= '<img src="'.$full_image_href[0].'" alt="'.$this -> Html -> sanitize($post -> post_title).'" '.$thumbrel.' '.$captitle.' />';
+					//$append .= '<img src="'.$full_image_href[0].'" alt="'.$this -> Html -> sanitize($post -> post_title).'" '.$thumbrel.' '.$captitle.' />';
+					$append .= '<img src="'.$full_image_href[0].'" alt="'.sanitize_title($post -> post_title).'" '.$thumbrel.' '.$captitle.' />';
 					//$append .= get_the_post_thumbnail($post->ID,$size,$attr);
-					if ($imagesbox != "nolink")
+					if ($imgbox != "nolink")
 						$append .= '</a>';
 				}
 			  endwhile;
@@ -1174,20 +1153,20 @@ function register_slideshow_post_type() {
 	}
 	if ($jsframe == 'mootools' && ($controlnav == "Y" || $thumbnails == "Y")){
 				$append .= "<div class='nivo-controlNav'>";
-		while( $slided->have_posts() ) : $slided->the_post();
+		while( $slides->have_posts() ) : $slides->the_post();
 				$append .= "<a class='nivo-control' href='#slide-". $post -> ID ."' title='".$post -> post_title."'>";
 		if ($thumbnails == "Y"){
 				$thumbnail_link = wp_get_attachment_image_src(get_post_thumbnail_id( $post -> ID ), 'thumbnail', false);
 				$append .= "<img src='".$thumbnail_link[0]."' alt='slideshow-thumbnail-".$post -> ID."' />";
 		} else {
-				$append .= $slided->current_post+1;
+				$append .= $slides->current_post+1;
 		}
 				$append .= "</a>";
 			  endwhile;
 				$append .= '</div>';
 	}
 		$append .= '</div>';
-			  while( $slided->have_posts() ) : $slided->the_post();
+			  while( $slides->have_posts() ) : $slides->the_post();
 			    $append .= '<div id="slide_caption-'. $post -> ID .'" class="nivo-html-caption">';
 			    if(has_post_thumbnail()){
 			    //$append .= '<a href="'. get_permalink(get_the_ID()) .'" title="'. $slide -> post_title .'">'. $slide -> post_title .'</a>';
