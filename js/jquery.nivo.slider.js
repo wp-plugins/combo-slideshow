@@ -95,7 +95,8 @@
             var nivoCaption = $('.nivo-caption', slider);
             if(vars.currentImage.attr('title') != '' && vars.currentImage.attr('title') != undefined){
                 var title = vars.currentImage.attr('title');
-                if(title.substr(0,1) == '#') title = $(title).html();   
+                //if(title.substr(0,1) == '#') 
+					title = $('#'+title).html();   
 
                 if(nivoCaption.css('display') == 'block'){
                     setTimeout(function(){

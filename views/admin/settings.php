@@ -1,8 +1,8 @@
 <?php
 global $post, $post_ID;
 $post_ID = 1;
-wp_nonce_field('closedpostboxes', 'closedpostboxesnonce', false);
-wp_nonce_field('meta-box-order', 'meta-box-order-nonce', false);
+//wp_nonce_field('closedpostboxes', 'closedpostboxesnonce', false);
+//wp_nonce_field('meta-box-order', 'meta-box-order-nonce', false);
 ?>
 <div class="wrap">
 	<h2><?php _e('Configuration Settings', CMBSLD_PLUGIN_NAME); ?></h2>

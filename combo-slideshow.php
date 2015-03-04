@@ -5,12 +5,12 @@ Plugin URI: http://www.3dolab.net/en
 Author: 3dolab
 Author URI: http://www.3dolab.net
 Description: The features of the best slideshow javascript effects and WP plugins. Blog posts highlights, image gallery, custom slides!
-Version: 1.9
+Version: 1.91
 */
 if ( ! defined( 'DS' ) )
 	define('DS', DIRECTORY_SEPARATOR);
 if ( ! defined( 'CMBSLD_VERSION' ) )
-	define( 'CMBSLD_VERSION', '1.9' );
+	define( 'CMBSLD_VERSION', '1.91' );
 if ( ! defined( 'CMBSLD_PLUGIN_BASENAME' ) )
 	define( 'CMBSLD_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 if ( ! defined( 'CMBSLD_PLUGIN_NAME' ) )
@@ -48,6 +48,8 @@ class CMBSLD_Gallery extends CMBSLD_GalleryPlugin {
 		$this -> add_action('admin_notices');
 		// $this -> add_action('cmbsld_enqueue_styles');
 		$this -> add_action('current_screen');
+		
+		register_activation_hook( __FILE__, array( $this, 'auto_update_options' ) );
 		
 		//WordPress filter hooks
 		//$this -> add_filter('mce_external_plugins');
@@ -177,8 +179,9 @@ class CMBSLD_Gallery extends CMBSLD_GalleryPlugin {
 					break;
 				case 'settings' :
 					if (!empty($_POST)) {
-						foreach ($_POST as $pkey => $pval) {					
-							$this -> update_option($pkey, $pval);
+						foreach ($_POST as $pkey => $pval) {
+							if(!in_array($pkey,array('method','save')))
+								$this -> update_option($pkey, $pval);
 						}
 						
 						$message = __('Configuration has been saved', $this -> plugin_name);
@@ -316,23 +319,23 @@ class CMBSLD_Gallery extends CMBSLD_GalleryPlugin {
 		$temps['autoslide_temp'] = $slides['autoslide'];
 		
 		if (!empty($caption)) { 
-			if ($slides('information')=='Y' && $caption == 'off') {
+			if ($slides['information']=='Y' && $caption == 'off') {
 				$temps['information_temp'] = 'N';
-			} elseif ($slides('information')=='N' && $caption == 'on') {
+			} elseif ($slides['information']=='N' && $caption == 'on') {
 				$temps['information_temp'] = 'Y';
 			}
 		}
 		if (!empty($thumbs)) { 
-			if ($slides('thumbnails')=='Y' && $thumbs == 'off') {
+			if ($slides['thumbnails']=='Y' && $thumbs == 'off') {
 				$temps['thumbnails_temp'] = 'N';
-			} elseif ($slides('thumbnails')=='N' && $thumbs == 'on') {
+			} elseif ($slides['thumbnails']=='N' && $thumbs == 'on') {
 				$temps['thumbnails_temp'] = 'Y';
 			}
 		}
 		if (!empty($auto)) { 
-			if ($slides('autoslide')=='Y' && $auto == 'off') {
+			if ($slides['autoslide']=='Y' && $auto == 'off') {
 				$temps['autoslide_temp'] = 'N';
-			} elseif ($slides('autoslide')=='N' && $auto == 'on') {
+			} elseif ($slides['autoslide']=='N' && $auto == 'on') {
 				$temps['autoslide_temp'] = 'Y';
 			}
 		}
@@ -353,7 +356,7 @@ class CMBSLD_Gallery extends CMBSLD_GalleryPlugin {
 		return array('general'=>$general,'slides'=>$slides,'links'=>$links);
 	}
 	
-	function get_slide_content($post, $custom, $w, $h, $exclude, $include, $size){ 
+	function get_slide_content($post, $custom, $w, $h, $exclude, $include, $size, $limit){ 
 		$post_id_orig = $post -> ID;
 		if (!empty($custom)) {
 			if(is_bool($custom) === true) { 
@@ -411,7 +414,7 @@ class CMBSLD_Gallery extends CMBSLD_GalleryPlugin {
 			require CMBSLD_PLUGIN_DIR . 'pro/custom_sizing.php';
 		}
 */
-		$content = $this -> get_slide_content($post, $custom, $w, $h, $exclude, $include, $size);
+		$content = $this -> get_slide_content($post, $custom, $w, $h, $exclude, $include, $size, $limit);
 		if ($output) { echo $content; } else { return $content; }
 	}
 	
@@ -427,7 +430,7 @@ class CMBSLD_Gallery extends CMBSLD_GalleryPlugin {
 			$w = $width;
 		if (empty($h) && !empty($height))
 			$h = $height;	
-		$content = $this -> get_slide_content($post, $custom, $w, $h, $exclude, $include, $size);
+		$content = $this -> get_slide_content($post, $custom, $w, $h, $exclude, $include, $size, $limit);
 		return $content;
 	}
 	

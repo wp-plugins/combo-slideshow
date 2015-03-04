@@ -1,6 +1,6 @@
 <?php
 class CMBSLD_GalleryPlugin {
-	var $version = '1.9';
+	var $version = '1.91';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
@@ -76,7 +76,15 @@ class CMBSLD_GalleryPlugin {
 		}
 	}
 	
-	function initialize_options() {	
+	function initialize_options() {
+	
+		$general = $this -> get_option('general');
+		if(!isset($general['version'])||$general['version']<$this->version)
+			$this -> auto_update_options();
+			
+	}
+	
+	function auto_update_options() {
 	
 		$general = array(
 			'jsframe' 		=> 'jquery',
@@ -85,7 +93,10 @@ class CMBSLD_GalleryPlugin {
 			'wpns_home'		=> 'N',
 			'wpns_auto'		=> 'N',
 			'wpns_auto_position'	=> 'B',
-			'wpns_category'	=> array('1'),
+			//'wpns_category'	=> array('1'),
+			'wpns_taxonomies' => array('category'),
+			'wpns_terms'	=> array('1'),
+			'wpns_post_types' => array('post'),
 			'slide_gallery'	=> '',
 			'exclude'		=> '',
 			'offset'		=> '',
@@ -111,8 +122,15 @@ class CMBSLD_GalleryPlugin {
 			$general['wpns_effect'] = $this -> get_option('wpns_effect');
 			$this -> delete_option('wpns_effect');
 		}
+		/*
 		if($this -> get_option('wpns_category')) {
 			$general['wpns_category'] = $this -> get_option('wpns_category');
+			$this -> delete_option('wpns_category');
+		}
+		*/
+		if($this -> get_option('wpns_category')) {
+			$general['wpns_taxonomies'][] = 'category';
+			$general['wpns_terms'] = $this -> get_option('wpns_category');
 			$this -> delete_option('wpns_category');
 		}
 		if($this -> get_option('slide_theme')) {
@@ -311,11 +329,34 @@ class CMBSLD_GalleryPlugin {
 			$this -> delete_option('custombox');
 		}
 		
-		$this -> add_option('general', $general);
-		$this -> add_option('slides', $slides);
-		$this -> add_option('styles', $styles);
-		$this -> add_option('slidestyles', $slidestyles);
-		$this -> add_option('links', $links);
+		$tabs = array( 
+				'general' => $general, 
+				'slides' => $slides, 
+				'slidestyles' => $slidestyles, 
+				'styles' => $styles, 
+				'links' => $links );
+		foreach($tabs as $name => $tab)
+			$this -> add_option($name, $tab);
+			
+		//$general = $this -> get_option('general');
+		$general = wp_parse_args($this -> get_option('general'), $tabs['general']);
+		if(isset($general['wpns_category'])&&!empty($general['wpns_category'])){
+			if(!isset($general['wpns_taxonomies'])||empty($general['wpns_taxonomies']))
+				$general['wpns_taxonomies'] = array('category');
+			if(!isset($general['wpns_terms'])||empty($general['wpns_terms']))
+				$general['wpns_terms'] = array('1');
+			unset($general['wpns_category']);			
+		}elseif(isset($general['wpns_category'])&&empty($general['wpns_category'])){
+			unset($general['wpns_category']);
+		}
+		if(!isset($general['wpns_taxonomies'])||empty($general['wpns_taxonomies'])){
+			$general['wpns_taxonomies'] = array('category');
+		}
+		if( !isset($general['wpns_terms'])||empty($general['wpns_terms']) ){
+			if(in_array('category',$general['wpns_taxonomies']))
+				$general['wpns_terms'] = array('1');
+		}
+		$this -> update_option('general', $general);
 	}
 	
 	function render_msg($message = '') {
@@ -432,24 +473,24 @@ class CMBSLD_GalleryPlugin {
 			wp_enqueue_script('jquery');
 			if (!empty($_GET['page']) && in_array($_GET['page'], (array) $this -> sections)) {
 				wp_enqueue_script('autosave');
-			
+				/*
 				if ($_GET['page'] == 'slideshow') {
 					wp_enqueue_script('common');
 					wp_enqueue_script('wp-lists');
 					wp_enqueue_script('postbox');
 					
 					wp_enqueue_script('settings-editor', '/' . CMBSLD_PLUGIN_URL . 'js/settings-editor.js', array('jquery'), '1.0');
-				}
-				
+				}				
 				if ($_GET['page'] == "slideshow-slides" && $_GET['method'] == "order") {
 					wp_enqueue_script('jquery-ui-sortable');
 				}
 				wp_enqueue_script('jquery-ui-sortable');
 				
 				add_thickbox();
+				*/
 			}
 			
-			wp_enqueue_script($this -> plugin_name . 'admin', CMBSLD_PLUGIN_URL . 'js/admin.js', 'jquery', '1.0');
+			//wp_enqueue_script($this -> plugin_name . 'admin', CMBSLD_PLUGIN_URL . 'js/admin.js', 'jquery', $this->version);
 
 		} else {
 			$general = $this -> get_option('general');
@@ -457,23 +498,23 @@ class CMBSLD_GalleryPlugin {
 
 		    if($js_framework == 'mootools') {
 
-			wp_register_script('moocore', '/' . CMBSLD_PLUGIN_URL . 'js/mootools-core-1.3.2-full-nocompat-yc.js', false, '1.3');
-			wp_register_script('moomore', '/' . CMBSLD_PLUGIN_URL . 'js/mootools-more-1.3.2.1-yc.js', false, '1.3');
+			wp_register_script('moocore', '/' . CMBSLD_PLUGIN_URL . 'js/moo/mootools-core-1.3.2-full-nocompat-yc.js', false, '1.3');
+			wp_register_script('moomore', '/' . CMBSLD_PLUGIN_URL . 'js/moo/mootools-more-1.3.2.1-yc.js', false, '1.3');
 			wp_enqueue_script('moocore');
 			wp_enqueue_script('moomore');
-			wp_enqueue_script('moo_loop', '/' . CMBSLD_PLUGIN_URL . 'js/Loop.js', array('moocore','moomore'), '1.3');
-			wp_enqueue_script('moo_slideshow', '/' . CMBSLD_PLUGIN_URL . 'js/SlideShow.js', array('moocore','moomore','moo_loop'), '1.3');
+			wp_enqueue_script('moo_loop', '/' . CMBSLD_PLUGIN_URL . 'js/moo/Loop.js', array('moocore','moomore'), '1.3');
+			wp_enqueue_script('moo_slideshow', '/' . CMBSLD_PLUGIN_URL . 'js/moo/SlideShow.js', array('moocore','moomore','moo_loop'), '1.3');
 			if($general['csstransform'] == 'Y') {
-			      wp_enqueue_script('cssanimation', $this -> plugin_name, '/' . CMBSLD_PLUGIN_URL . 'js/CSSAnimation.js', false, '1.3');
-			      wp_enqueue_script('moo_cssanimation', $this -> plugin_name, '/' . CMBSLD_PLUGIN_URL . 'js/CSSAnimation.MooTools.js', array('moocore','moomore','cssanimation'), '1.3');
-			      wp_enqueue_script('slideshow_css', $this -> plugin_name, '/' . CMBSLD_PLUGIN_URL . 'js/SlideShow.CSS.js', array('moocore','moomore','moo_slideshow','moo_cssanimation'), '1.3');
+			      wp_enqueue_script('cssanimation', $this -> plugin_name, '/' . CMBSLD_PLUGIN_URL . 'js/moo/CSSAnimation.js', false, '1.3');
+			      wp_enqueue_script('moo_cssanimation', $this -> plugin_name, '/' . CMBSLD_PLUGIN_URL . 'js/moo/CSSAnimation.MooTools.js', array('moocore','moomore','cssanimation'), '1.3');
+			      wp_enqueue_script('slideshow_css', $this -> plugin_name, '/' . CMBSLD_PLUGIN_URL . 'js/moo/SlideShow.CSS.js', array('moocore','moomore','moo_slideshow','moo_cssanimation'), '1.3');
 			}
 
 		    } elseif ($js_framework == 'jquery'){
 
 			wp_enqueue_script('jquery');
 
-			wp_enqueue_script($this -> plugin_name, CMBSLD_PLUGIN_URL . 'js/jquery.nivo.slider.js', array('jquery'), '2.6' );
+			wp_enqueue_script($this -> plugin_name, CMBSLD_PLUGIN_URL . 'js/jquery.nivo.slider.js', array('jquery'), '3.2' );
 
 			$links = $this -> get_option('links');
 			if ($links['imagesbox'] == "T") {
@@ -512,7 +553,7 @@ class CMBSLD_GalleryPlugin {
 	}
 	function get_option($name = '', $stripslashes = true) {
 		if ($option = get_option($this -> pre . $name)) {
-			if (@unserialize($option) !== false) {
+			if (!is_array($option) && @unserialize($option) !== false) {
 				return unserialize($option);
 			}
 			if ($stripslashes == true) {
@@ -646,7 +687,7 @@ function register_slideshow_post_type() {
 	) );
 	//remove_post_type_support( 'slideshow', 'editor' );
 }
-function show_combo_slider($category = null, $n_slices = null, $exclude = null, $offset = null, $size = null, $width = null, $height = null) {
+function show_combo_slider($terms = null, $postlimit = null, $exclude = null, $offset = null, $size = null, $width = null, $height = null, $taxonomies = null, $post_types = null) {
 	global $post;
 	$post_switch = $post;
 	$combo_id = get_the_ID();
@@ -678,8 +719,9 @@ function show_combo_slider($category = null, $n_slices = null, $exclude = null, 
 		$imgbox = "window";	
 	
 	$jsframe = $general['jsframe'];
+	$post_limit = $general['postlimit'];
+		
 	$wpns_effect = $slides['wpns_effect'];
-	$wpns_slices = $slides['wpns_slices'];
 	$fadespeed = $slides['fadespeed'];
 	$autospeed = $slides['autospeed'];
 	$navigation = $slides['navigation'];
@@ -699,15 +741,22 @@ function show_combo_slider($category = null, $n_slices = null, $exclude = null, 
 	$wprfss_cssfx = $slides['wprfss_cssfx'];
 	$wprfss_tips = $slides['wprfss_tips'];
 	$slide_theme = $general['slide_theme'];
-
+	$wpns_slices = $slides['wpns_slices'];
 	// $category = get_option('wpns_category');
-	// $n_slices = get_option('wpns_slices');
-	if (empty($category))
-		$category = $general['wpns_category'];
-	if(!is_array($category))
-		$category = explode(',',$category);
-	if (empty($n_slices))
-		$n_slices = $wpns_slices;
+	
+	if (empty($terms)&&isset($general['wpns_terms'])&&!empty($general['wpns_terms']))
+		$terms = $general['wpns_terms'];
+	elseif(!empty($terms)&&!is_array($terms)&&empty($taxonomies)){
+		$terms = explode(',',$terms);
+		$taxonomies = array('category');
+	} 
+	if (empty($taxonomies)&&isset($general['wpns_taxonomies'])&&!empty($general['wpns_taxonomies']))
+		$taxonomies = $general['wpns_taxonomies'];
+	if (empty($post_types)&&isset($general['wpns_post_types'])&&!empty($general['wpns_taxonomies']))
+		$post_types = $general['wpns_post_types'];
+	
+	if (empty($postlimit))
+		$postlimit = $post_limit;
 	if (empty($exclude))
 		$exclude = $general['exclude'];
 	if (empty($offset))
@@ -716,13 +765,36 @@ function show_combo_slider($category = null, $n_slices = null, $exclude = null, 
 	if(empty($size))
 		$size = 'comboslide';
 	$exclude = explode(',',$exclude);
-	//$slides = get_posts( 'category='.$category.'&numberposts='.$n_slices );
-	//query_posts( 'cat='.$category.'&posts_per_page='.$n_slices );
-	//$query_args = array( 'cat' => $category, 'posts_per_page' => $n_slices, 'post__not_in' => $exclude, 'offset' => $offset );
-	$query_args = array( 'category__in' => $category, 'posts_per_page' => $n_slices, 'post__not_in' => $exclude, 'offset' => $offset );
+	
+	$query_args = array( 'posts_per_page' => $postlimit, 'post__not_in' => $exclude, 'offset' => $offset );
+	
+	if(!empty($post_types))
+		$query_args['post_type'] = $post_types;
+
+	$tax_query = array();
+	if(!empty($taxonomies))
+		foreach($taxonomies as $tax){
+			$query_terms = array();
+			$tax_terms = get_terms($tax, array('fields'=>'ids'));
+			if(!empty($tax_terms)&&!is_wp_error($tax_terms))
+				if(!empty($terms))
+					$query_terms = array_intersect($terms, $tax_terms);
+				else
+					$query_terms = $tax_terms;
+			if(!empty($query_terms))
+				$tax_query[] = array(
+								'taxonomy' => $tax,
+								'field'    => 'id',
+								'terms'    => $query_terms
+							);
+		}
+	if(!empty($tax_query)){
+		$tax_query['relation'] = 'AND';
+		$query_args['tax_query'] = $tax_query;
+	}
+	
 	$slides = new WP_Query($query_args);
-//print_r($query_args);
-//print_r($slides);
+
 	if( $slides->have_posts() ){
 		$append = '';
 

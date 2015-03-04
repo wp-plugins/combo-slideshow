@@ -1,5 +1,10 @@
 Combo Slideshow Changelog
 
+= 1.91 (2015.03.05) =
+* Added Auto slider post type general option
+* Auto slider category replaced with taxonomies and terms multiselect
+* Options table cleaning and update on plugin activation, uninstall and updates
+
 = 1.9 (2014.11.22) =
 * Tabbed navigation on administration settings
 * Fixed compatibility issue with TinyMCE js module on WP 3.9

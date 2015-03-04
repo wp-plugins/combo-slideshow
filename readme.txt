@@ -1,18 +1,18 @@
 === Combo Slideshow ===
 Contributors: 3dolab
 Donate link: http://www.3dolab.net/en/combo-slideshow
-Tags: slideshow, slide show, combo, slideshow gallery, slides, image, gallery, content, highlight, showcase, javascript, jquery, mootools, nivo, nivo slider
+Tags: slideshow, slide show, combo, slider, slideshow gallery, slides, image, gallery, nivo, nivo slider, content, post_types, highlight, showcase, javascript, jquery, mootools
 Requires at least: 2.8
 Tested up to: 4.0.1
-Stable tag: 1.9
-The features of the best slideshow javascript effects and WP plugins:
-blog posts highlights, image galleries, custom slides and more!
-
+Stable tag: 1.91
+Featuring a slideshow javascript with multiple settings and transition effects:
+blog highlights, post types & taxonomies, galleries, custom slides and more!
 
 == Description ==
 
-Combo Slideshow is a photo and image viewing mash-up plugin that integrates the features of the best available javascript slideshow effects and WordPress plugins.
-It works natively in conjunction with the WordPress image upload and gallery system, through the javascript frameworks JQuery or MooTools.
+Combo Slideshow is a photo and image viewing mash-up plugin that integrates the features of the acclaimed jQuery based javascript slideshow Nivo Slider 
+with multiple settings, transition effects and a compatible fallback to the MooTools framework for older or outdated setups.
+It works natively in conjunction with the WordPress media library.
 
 = Enjoy: = 
 * Full control over speed, transition and navigation options
@@ -20,11 +20,11 @@ It works natively in conjunction with the WordPress image upload and gallery sys
 * Custom CSS supported
 * Lightbox, FancyBox, MultiBox and custom class names supported
 * Navigation Arrows (jQuery) and Tips (MooTools)
-* Auto insertion of latest posts (category-based) slideshow in home or single page/post
+* Auto insertion of latest posts (taxonomy-based) slideshow in home or single page/post
 * Custom slides management
 * Page/Post gallery shortcode <code>[slideshow]</code> (with optional <code>post_id</code>, <code>custom</code>, <code>exclude</code>, <code>exclude</code>, and <code>auto</code>  parameters)
 * Hardcode into any PHP file of a WordPress theme with <code><?php if (class_exists('CMBSLD_Gallery')) { $CMBSLD_Gallery = new CMBSLD_Gallery(); $CMBSLD_Gallery -> slideshow($output = true, $post_id, $exclude, $include, $custom, $width, $height, $thumbs, $caption, $auto, $nolink, $slug, $limit, $size); } ?></code> and the required <code>$post_id</code> or <code>$custom</code> parameters accordingly specified
-* Global post slideshow: auto mode in Homepage and/or Posts + manual function show_combo_slider($category, $postlimit, $exclude, $offset, $n_slices, $size, $width, $height)
+* Global post slideshow: auto mode in Homepage and/or Posts + manual function show_combo_slider($terms, $postlimit, $exclude, $offset, $n_slices, $size, $width, $height, $taxonomies, $post_types)
 
 Administration and Settings have been completely renewed! 
 (whereas in previous versions they were heavily borrowed from the Slideshow Gallery Pro plugin (free version) by Cameron Preston and WP Nivo Slider by Rafael Cirolini)
@@ -48,9 +48,11 @@ It works great in conjunction with the [Gallery Metabox plugin](http://wordpress
 5. Add and manage your slides in the 'Slideshow' section (or just use the built in wordpress gallery)
 6. Put the shortcode `[slideshow post_id="X" exclude="" caption="on/off"]` to embed a slideshow with the images of a post into your posts/pages or use `[slideshow custom=1]` to embed a slideshow with your custom added slides or `<?php if (class_exists('CMBSLD_Gallery')) { $CMBSLD_Gallery = new CMBSLD_Gallery(); $CMBSLD_Gallery -> slideshow($output = true, $post_id = null); }; ?>` into your WordPress theme
 
-* Please take care when updating, due to the new slide administration system any custom slideshow created with previous versions of the plugin will not work and won't even be shown
+* Please take care when updating from versions older than 1.7: due to the new slide administration system, any custom slideshow created with previous versions of the plugin will not work and won't even be shown
 
 == Other Notes ==
+
+= Additional Parameter Info =
 
 = [slideshow] shortcode & $CMBSLD_Gallery -> slideshow() = 
 * $output (default = true): echoes the content, or just returns it if set to false
@@ -68,11 +70,13 @@ It works great in conjunction with the [Gallery Metabox plugin](http://wordpress
 * $size (default = null): sets dimensions as in the Media Settings screen (e.g. 'thumbnail', 'medium', etc), or 'comboslide' if nothing specified even in pixels
 
 = $CMBSLD_Gallery -> show_combo_slider() =
-* $category (default = null): loads only posts from the specified category
-* $n_slices (default = null): limits the amount of slides loaded in the slideshow, or uses the global post limit setting
+* $terms (default = null): loads only posts from the specified taxonomy terms
+* $postlimit (default = null): limits the amount of slides loaded in the slideshow, or uses the global post limit setting
 * $exclude (default = null): removes the specified attachment IDs (set in a comma-separated list) from the slideshow 
 * $offset (default = null): starts the slideshow from the nth post
 * $width, $height, $size (default = null): sets dimensions in pixels or as in the Media Settings screen
+* $taxonomy (default = null)
+* $post_types (default = null)
 * please note that, unlike in shortcodes, only the main settings are in use for the caption, links, thumbs and auto options 
 
 == Frequently Asked Questions ==
@@ -113,6 +117,11 @@ First of all disable the built-in width & height crop adjustment in the settings
 2. the Admin Settings page
 
 == Changelog ==
+
+= 1.91 (2015.03.05) =
+* Added Auto slider post type general option
+* Auto slider category replaced with taxonomies and terms multiselect
+* Options table cleaning and update on plugin activation, updates and uninstall
 
 = 1.9 (2014.11.22) =
 * Tabbed navigation on administration settings
